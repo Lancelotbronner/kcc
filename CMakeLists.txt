@@ -54,7 +54,7 @@ foreach(peep ${peep_defs})
     )
     set(rules ${PROJECT_SOURCE_DIR}/src/backend/${rules}.rul)
     add_custom_command(OUTPUT ${rules}
-        COMMAND awk -f ${PROJECT_SOURCE_DIR}/src/SDCCpeeph.awk ${peep} > ${rules}
+        COMMAND awk -f ${PROJECT_SOURCE_DIR}/src/peeph.awk ${peep} > ${rules}
         DEPENDS ${peep_defs}
     )
     list(APPEND peep_rules ${rules})

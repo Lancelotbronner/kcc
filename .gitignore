@@ -10,3 +10,5 @@ install_manifest.txt
 *.rul
 sdcc/gen/
 build/
+.build
+.swiftpm/xcode
