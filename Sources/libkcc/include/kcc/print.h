@@ -1,0 +1,17 @@
+//
+//  ast_print.h
+//  kcc
+//
+//  Created by Christophe Bronner on 2024-07-20.
+//
+
+#include "token.h"
+#include "ast_node.h"
+
+char *token_nameof(enum token_kind kind);
+char *ast_nameof(enum ast_kind kind);
+
+void token_print(struct token token);
+void ast_print(struct ast_node *node);
+
+void ast_write(struct ast_node *node);
