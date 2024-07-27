@@ -16,6 +16,10 @@
 
 #pragma mark - Specialized Nodes
 
+struct ast_unit {
+	struct ast_storage declarations;
+};
+
 struct ast_integer_literal {
 	/// The value of this integer literal.
 	size_t value;
@@ -185,6 +189,9 @@ struct ast_cast_expression {
 enum ast_kind : unsigned char {
 	N_UNKNOWN,
 
+	// Translation Unit
+	N_UNIT,
+
 	// Declarations
 	N_DECLARATION,
 	N_FUNCTION,
@@ -296,6 +303,7 @@ struct ast_node {
 	/// "Operation" to be performed on this tree.
 	enum ast_kind op;
 	union {
+		struct ast_unit unit;
 		struct ast_integer_literal integer_literal;
 		struct ast_unary_expression unary_expression;
 		struct ast_binary_expression binary_expression;

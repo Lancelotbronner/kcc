@@ -23,17 +23,27 @@ void print_node(struct tprinter *printer, struct ast_node *node, char *name, boo
 	tprinter_unindent(printer);
 }
 
-void print_nodes(struct tprinter *printer, struct ast_storage *nodes) {
+void print_nodes(struct tprinter *printer, struct ast_storage *nodes, bool leaf) {
 	if (ast_empty(nodes)) return;
 	size_t length = ast_length(nodes);
-	for (int i = 0; i < length; i++)
-		print_node(printer, ast_at(nodes, i), "", i == length - 1);
+
+	if (leaf)
+		for (int i = 0; i < length; i++)
+			print_node(printer, ast_at(nodes, i), "", i == length - 1);
+	else
+		for (int i = 0; i < length; i++)
+			print_node(printer, ast_at(nodes, i), "", false);
 }
 
 #pragma mark - AST Summary Printing
 
 void print_node_summary(struct ast_node *node) {
 	switch (node->op) {
+		// Translation Unit
+	case N_UNIT:
+		//TODO: print filename?
+		print_name(node);
+		break;
 		// Literal Expressions
 	case N_INTEGER_LITERAL:
 		printf("%zu", node->integer_literal.value);
@@ -120,9 +130,14 @@ void print_node_body(struct tprinter *printer, struct ast_node *node) {
 		print_node(printer, node->if_statement.then_tree, "then", !node->if_statement.else_tree);
 		print_node(printer, node->if_statement.else_tree, "else", true);
 		break;
+		// Translation Unit
+	case N_UNIT:
+		print_nodes(printer, &node->unit.declarations, true);
+		break;
 		// Declarations
 	case N_DECLARATION:
-		print_nodes(printer, &node->declaration.declarators);
+		print_node(printer, node->declaration.type_tree, "", ast_empty(&node->declaration.declarators));
+		print_nodes(printer, &node->declaration.declarators, true);
 		break;
 	case N_DECLARATOR:
 		print_node(printer, node->declarator.declarator, nullptr, !node->declarator.initializer);

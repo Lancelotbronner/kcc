@@ -14,6 +14,8 @@ struct ast_node *ast_alloc();
 
 #pragma mark - Node Constructors
 
+void ast_unit(struct ast_node *node, struct ast_storage declarations);
+
 /// Initializes a binary AST node.
 /// - Parameters:
 ///   - node: The node to initialize.

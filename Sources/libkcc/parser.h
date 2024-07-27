@@ -15,6 +15,8 @@
 struct type Type;
 struct symbol *Symbol;
 
+struct ast_node *parse_unit();
+
 #pragma mark - Declaration Parsing
 
 struct type parse_type();

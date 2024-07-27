@@ -23,6 +23,11 @@ struct ast_node *ast_alloc() {
 
 #pragma mark - Node Constructors
 
+void ast_unit(struct ast_node *node, struct ast_storage declarations) {
+	node->op = N_UNIT;
+	node->unit.declarations = declarations;
+}
+
 void ast_binary_expression(struct ast_node *node, enum ast_kind op, struct ast_node *left, struct ast_node *right) {
 	node->op = op;
 	node->binary_expression.lhs = left;

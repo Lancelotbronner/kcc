@@ -13,7 +13,7 @@
 
 struct ast_node *parser_parse() {
 	scan();
-	return parse_declaration();
+	return parse_unit();
 }
 
 void match(enum token_kind t, char *what) {

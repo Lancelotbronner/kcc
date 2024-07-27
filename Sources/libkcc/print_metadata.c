@@ -9,6 +9,8 @@
 
 char *ast_nameof(enum ast_kind kind) {
 	static char *names[AST_MAX] = {
+		// Translation Unit
+		[N_UNIT] = "unit",
 		// Common
 		[N_IDENTIFIER] = "identifier",
 		// Literals

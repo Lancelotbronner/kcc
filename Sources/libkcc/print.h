@@ -32,4 +32,4 @@ void print_node_summary(struct ast_node *node);
 void print_node_body(struct tprinter *printer, struct ast_node *node);
 
 void print_node(struct tprinter *printer, struct ast_node *node, char *name, bool leaf);
-void print_nodes(struct tprinter *printer, struct ast_storage *nodes);
+void print_nodes(struct tprinter *printer, struct ast_storage *nodes, bool leaf);

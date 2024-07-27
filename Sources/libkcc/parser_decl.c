@@ -212,6 +212,8 @@ struct ast_node *parse_declaration() {
 		}
 	}
 
+	semi();
+
 	struct ast_node *node = ast_alloc();
 	ast_declaration(node, type, declarators);
 	return node;
