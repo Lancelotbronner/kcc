@@ -96,16 +96,56 @@ struct ast_call_expression {
 	struct ast_storage arguments;
 };
 
+struct ast_declaration {
+	/// The base type of this declaration.
+	struct type type;
+	struct ast_node *type_tree;
+	/// The declarators of this declaration.
+	struct ast_storage declarators;
+};
+
+struct ast_declarator {
+	/// The type of this declarator.
+	struct type type;
+	/// The symbol of this declarator, if any.
+	struct symbol *symbol;
+	/// The inner declarator of this declarator.
+	struct ast_node *declarator;
+	/// The initialization of this declarator, if any..
+	struct ast_node *initializer;
+};
+
 struct ast_pointer_declarator {
-	/// The declaration associated with the declarator.
-	struct ast_node *declaration;
+	/// The inner declarator of this declarator.
+	struct ast_node *declarator;
 	//TODO: attribute list
 	//TODO: type qualifiers
+};
+
+struct ast_group_declarator {
+	/// The inner declarator of this declarator.
+	struct ast_node *declarator;
 };
 
 struct ast_identifier_declarator {
 	/// The symbol associated with this declarator.
 	struct symbol *symbol;
+	//TODO: attribute list
+};
+
+struct ast_array_declarator {
+	/// The inner declarator of this declarator.
+	struct ast_node *declarator;
+	/// The expression of the array's size.
+	struct ast_node *size_tree;
+	//TODO: type qualifiers
+	//TODO: static flag
+	//TODO: variable length flag
+};
+
+struct ast_function_declarator {
+	/// The inner declarator of this declarator.
+	struct ast_node *declarator;
 	//TODO: attribute list
 };
 
@@ -148,7 +188,12 @@ enum ast_kind : unsigned char {
 	// Declarations
 	N_DECLARATION,
 	N_FUNCTION,
+	N_DECLARATOR,
 	N_POINTER_DECLARATOR,
+	N_GROUP_DECLARATOR,
+	N_IDENTIFIER_DECLARATOR,
+	N_ARRAY_DECLARATOR,
+	N_FUNCTION_DECLARATOR,
 
 	// Statements
 	N_STATEMENTS,
@@ -261,7 +306,13 @@ struct ast_node {
 		struct ast_for for_statement;
 		struct ast_function function_declaration;
 		struct ast_call_expression call_expression;
+		struct ast_declaration declaration;
+		struct ast_declarator declarator;
 		struct ast_pointer_declarator pointer_declarator;
+		struct ast_group_declarator group_declarator;
+		struct ast_identifier_declarator identifier_declarator;
+		struct ast_array_declarator array_declarator;
+		struct ast_function_declarator function_declarator;
 		struct ast_generic_expression generic_expression;
 		struct ast_generic_association generic_association;
 		struct ast_parenthesized_expression parenthesized_expression;

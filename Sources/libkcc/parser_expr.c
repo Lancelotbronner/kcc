@@ -13,8 +13,6 @@
 #include <kcc/scanner.h>
 #include <kcc/symtable.h>
 
-#include <string.h>
-
 #pragma mark - Utilities
 
 static struct ast_node *produce_unary(enum ast_kind op, struct ast_node *operand) {
@@ -48,7 +46,7 @@ static struct ast_node *parse_identifier_expression() {
 	// Lookup or create the symbol
 	struct symbol *symbol = symtable_find(SymbolTable, Text);
 	if (!symbol) {
-		symbol = symtable_insert(SymbolTable, strdup(Text));
+		symbol = symtable_insert(SymbolTable, Text);
 		//TODO: Warning with diagnostics
 //		fatals("Unknown variable", Text);
 	}

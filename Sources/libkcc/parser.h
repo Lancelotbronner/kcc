@@ -12,31 +12,20 @@
 #include <kcc/ast_node.h>
 #include <kcc/token_kind.h>
 
+struct type Type;
+struct symbol *Symbol;
+
 #pragma mark - Declaration Parsing
 
 struct type parse_type();
 
 struct ast_node *parse_declaration();
 
-struct ast_node *parse_function_declaration(struct type type);
+struct ast_node *parse_initializer();
 
 struct ast_node *parse_declarator(struct type type);
 
-struct ast_node *parse_declarator_prefix(struct type type);
-
-struct ast_node *parse_declarator_suffix(struct type type);
-
-struct ast_node *parse_primary_declarator(struct type type);
-
-struct ast_node *parse_direct_declarator(struct type type);
-
-struct ast_node *parse_identifier_declarator(struct type type);
-
-struct ast_node *parse_grouped_declarator(struct type type);
-
-struct ast_node *parse_function_declarator(struct ast_node *declaration);
-
-struct ast_node *parse_pointer_declarator(struct type type);
+struct ast_node *parse_function_declaration(struct type type);
 
 #pragma mark - Expression Parsing
 
@@ -111,6 +100,12 @@ void lbrace();
 
 /// Match a `}` and fetch the next token.
 void rbrace();
+
+/// Match a `[` and fetch the next token.
+void lbracket();
+
+/// Match a `]` and fetch the next token.
+void rbracket();
 
 /// Match a `(` and fetch the next token.
 void lparen();

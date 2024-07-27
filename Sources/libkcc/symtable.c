@@ -34,6 +34,6 @@ struct symbol *symtable_insert(struct symtable *symtable, char *name) {
 		fatal("Ran out of space for symbol table");
 
 	struct symbol *symbol = &symtable->symbols[symtable->next++];
-	*symbol = (struct symbol) { .name = name };
+	*symbol = (struct symbol) { .name = strdup(name) };
 	return symbol;
 }

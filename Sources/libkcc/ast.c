@@ -92,18 +92,51 @@ void ast_function(struct ast_node *node, struct symbol *symbol, struct ast_node 
 	node->function_declaration.definition = definition;
 }
 
-void ast_identifier_declarator(struct ast_node *node, struct type type, struct symbol *symbol) { }
+void ast_declaration(struct ast_node *node, struct type type, struct ast_storage declarators) {
+	node->op = N_DECLARATION;
+	node->declaration.type = type;
+	node->declaration.declarators = declarators;
+}
 
-void ast_function_declarator(struct ast_node *node, struct ast_node *declaration/* TODO: parameters */) {}
+void ast_declarator(struct ast_node *node, struct symbol *symbol, struct type type, struct ast_node *declarator, struct ast_node *initializer) {
+	node->op = N_DECLARATOR;
+	node->declarator.symbol = symbol;
+	node->declarator.type = type;
+	node->declarator.declarator = declarator;
+	node->declarator.initializer = initializer;
+}
 
-void ast_pointer_declarator(struct ast_node *node, struct ast_node *declarator) {}
-void ast_group_declarator(struct ast_node *node, struct ast_node *declarator) {}
+void ast_pointer_declarator(struct ast_node *node, struct ast_node *declarator) {
+	node->op = N_POINTER_DECLARATOR;
+	node->pointer_declarator.declarator = declarator;
+}
+
+void ast_group_declarator(struct ast_node *node, struct ast_node *declarator) {
+	node->op = N_GROUP_DECLARATOR;
+	node->group_declarator.declarator = declarator;
+}
+
+void ast_identifier_declarator(struct ast_node *node, struct type type, struct symbol *symbol) {
+	node->op = N_IDENTIFIER_DECLARATOR;
+	node->identifier_declarator.symbol = symbol;
+}
+
+void ast_array_declarator(struct ast_node *node, struct ast_node *declarator, struct ast_node *size) {
+	node->op = N_ARRAY_DECLARATOR;
+	node->array_declarator.declarator = declarator;
+	node->array_declarator.size_tree = size;
+}
+
+void ast_function_declarator(struct ast_node *node, struct ast_node *declarator) {
+	node->op = N_FUNCTION_DECLARATOR;
+	node->function_declarator.declarator = declarator;
+}
 
 #pragma mark - Node Properties
 
 struct type ast_type(struct ast_node *node) {
 	switch (node->op) {
-	case N_INTEGER_LITERAL: 
+	case N_INTEGER_LITERAL:
 		return type_init(TYP_INT);
 	case N_ADD:
 	case N_SUBTRACT:

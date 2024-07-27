@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <stdbool.h>
 #include <stddef.h>
 
 #define AST_INLINE_CAPACITY 4
@@ -28,13 +29,17 @@ struct ast_storage {
 
 /// Returns the length of the specified storage.
 /// - Parameter storage: The storage whose length to return.
-size_t ast_length(struct ast_storage *storage);
+size_t ast_length(const struct ast_storage *storage);
 
 /// Access the specified element.
 /// - Parameters:
 ///   - storage: The storage to access.
 ///   - i: The element to access.
-struct ast_node *ast_at(struct ast_storage *storage, size_t i);
+struct ast_node *ast_at(const struct ast_storage *storage, size_t i);
+
+/// Returns whether the specified storage is empty.
+/// - Parameter storage: The storage to query.
+bool ast_empty(const struct ast_storage *storage);
 
 /// Inserts an AST node into the specified storage.
 /// - Parameters:

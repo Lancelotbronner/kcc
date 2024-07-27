@@ -76,12 +76,14 @@ void ast_function(struct ast_node *node, struct symbol *symbol, struct ast_node 
 
 void ast_call(struct ast_node *node, struct ast_node *function, struct ast_storage arguments);
 
-void ast_identifier_declarator(struct ast_node *node, struct type type, struct symbol *symbol);
+void ast_declaration(struct ast_node *node, struct type type, struct ast_storage declarators);
 
-void ast_function_declarator(struct ast_node *node, struct ast_node *declaration/* TODO: parameters */);
-
+void ast_declarator(struct ast_node *node, struct symbol *symbol, struct type type, struct ast_node *declarator, struct ast_node *initializer);
 void ast_pointer_declarator(struct ast_node *node, struct ast_node *declarator);
 void ast_group_declarator(struct ast_node *node, struct ast_node *declarator);
+void ast_identifier_declarator(struct ast_node *node, struct type type, struct symbol *symbol);
+void ast_array_declarator(struct ast_node *node, struct ast_node *declarator, struct ast_node *size);
+void ast_function_declarator(struct ast_node *node, /* TODO: parameters , */ struct ast_node *declarator);
 
 #pragma mark - Node Properties
 

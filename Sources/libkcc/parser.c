@@ -13,7 +13,7 @@
 
 struct ast_node *parser_parse() {
 	scan();
-	return parse_expression();
+	return parse_declaration();
 }
 
 void match(enum token_kind t, char *what) {
@@ -44,6 +44,14 @@ void lbrace() {
 
 void rbrace() {
 	match(T_RCURLY, "}");
+}
+
+void lbracket() {
+	match(T_LBRACKET, "[");
+}
+
+void rbracket() {
+	match(T_RBRACKET, "]");
 }
 
 void comma() {

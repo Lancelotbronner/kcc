@@ -12,6 +12,6 @@ char *token_nameof(enum token_kind kind);
 char *ast_nameof(enum ast_kind kind);
 
 void token_print(struct token token);
-void ast_print(struct ast_node *node);
+void print_ast(struct ast_node *node);
 
 void ast_write(struct ast_node *node);

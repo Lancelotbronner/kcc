@@ -33,14 +33,18 @@ enum token_kind scan_fixed_len(int c) {
 	switch (c) {
 	case EOF: return T_EOF;
 	case '\0': return T_EOF;
+	case '(': return T_LPAREN;
+	case ')': return T_RPAREN;
+	case '[': return T_LBRACKET;
+	case ']': return T_RBRACKET;
+	case '{': return T_LCURLY;
+	case '}': return T_RCURLY;
 	case '*': return T_ASTERISK;
 	case '/': return T_DIVIDE;
 	case ',': return T_COMMA;
 	case ';': return T_SEMICOLON;
 	case '.': return T_ACCESS;
 	case '^': return T_CARET;
-	case '(': return T_LPAREN;
-	case ')': return T_RPAREN;
 
 	case '#':
 		Preprocessor = true;

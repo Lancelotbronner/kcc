@@ -13,25 +13,29 @@
 #define AST_INITIAL_CAPACITY 16
 static_assert(AST_INITIAL_CAPACITY > AST_INLINE_CAPACITY, "Must be larger to copy inline to initial on resize.");
 
-size_t ast_length(struct ast_storage *storage) {
+size_t ast_length(const struct ast_storage *storage) {
 	return storage->length;
 }
 
-struct ast_node *ast_at(struct ast_storage *storage, size_t i) {
-	if (storage->contents)
-		return storage->contents[i];
-	return storage->storage[i];
+struct ast_node *ast_at(const struct ast_storage *storage, size_t i) {
+	if (storage->length < AST_INLINE_CAPACITY)
+		return storage->storage[i];
+	if (!storage->contents)
+		return nullptr;
+	return storage->contents[i];
+}
+
+bool ast_empty(const struct ast_storage *storage) {
+	return !storage->length;
 }
 
 void ast_insert(struct ast_storage *storage, struct ast_node *node) {
-	if (!storage->contents) {
-		if (storage->length < AST_INLINE_CAPACITY) {
-			storage->storage[storage->length++] = node;
-			return;
-		}
-
-		ast_reserve(storage, AST_INLINE_CAPACITY + 1);
+	if (storage->length < AST_INLINE_CAPACITY) {
+		storage->storage[storage->length++] = node;
+		return;
 	}
+
+	ast_reserve(storage, AST_INLINE_CAPACITY + 1);
 
 	if (storage->length == storage->capacity)
 		ast_reserve(storage, storage->length + 1);

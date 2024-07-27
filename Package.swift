@@ -4,14 +4,14 @@
 import PackageDescription
 
 let package = Package(
-	name: "kcc",
+	name: "kcc2",
 	products: [
 		.library(name: "libkcc", targets: ["libkcc"]),
 	],
 	targets: [
 		.target(name: "libkcc"),
-		.testTarget(name: "Tests", dependencies: ["libkcc"], path: "Tests"),
-		.executableTarget(name: "kcc", dependencies: ["libkcc"]),
+		.testTarget(name: "KccTests", dependencies: ["libkcc"], path: "Tests"),
+		.executableTarget(name: "kcc2", dependencies: ["libkcc"]),
 	],
 	cLanguageStandard: .c2x,
 	cxxLanguageStandard: .cxx2b
