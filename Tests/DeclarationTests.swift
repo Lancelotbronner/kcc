@@ -8,7 +8,7 @@
 import XCTest
 import libkcc
 
-class DeclarationTests: XCTestCase {
+class DeclarationTests: XCCompilerTestCase {
 
 	func testSingleDeclaration() {
 		let expression = "int x;"

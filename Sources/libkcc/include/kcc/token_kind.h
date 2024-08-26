@@ -25,7 +25,7 @@ enum token_kind : unsigned char {
 
 	// Literals
 
-	TL_STRING,
+	T_STRING_LITERAL,
 	TL_CHAR,
 	TL_CHARS,
 	TL_FLOAT,
@@ -76,7 +76,7 @@ enum token_kind : unsigned char {
 	// Operators
 
 	/// `+`
-	T_ADD,
+	T_PLUS,
 	/// `++`
 	T_INCREMENT,
 	/// `-`
@@ -112,52 +112,51 @@ enum token_kind : unsigned char {
 	/// `|`
 	T_PIPE,
 	/// `||`
-	T_OR,
+	T_LOGICAL_OR,
 	/// `^`
 	T_CARET,
 	/// `&&`
-	T_AND,
+	T_LOGICAL_AND,
 	/// `.`
-	T_ACCESS,
+	T_PERIOD,
 	/// `->`
-	T_INDIRECT_ACCESS,
+	T_ARROW,
 	/// `<<`
 	T_LSHIFT,
 	/// `>>`
 	T_RSHIFT,
 
+	/// `::`
+	T_MODULE,
+	/// `...`
+	T_ELLIPSIS,
+	/// `#`
+	T_POUND,
+	/// `##`
+	T_STRINGIFY,
+
 	// Assignment Operators
 
 	/// `=`
 	T_ASSIGN,
-
 	/// `*=`
 	T_ASSIGN_MULTIPLY,
-
 	/// `/=`
 	T_ASSIGN_DIVIDE,
-
 	/// `%=`
 	T_ASSIGN_MODULO,
-
 	/// `+=`
 	T_ASSIGN_ADD,
-
 	/// `-=`
 	T_ASSIGN_SUBTRACT,
-
 	/// `<<=`
 	T_ASSIGN_LSHIFT,
-
 	/// `>>=`
 	T_ASSIGN_RSHIFT,
-
 	/// `&=`
 	T_ASSIGN_BITWISE_AND,
-
 	/// `^=`
 	T_ASSIGN_BITWISE_XOR,
-
 	/// `|=`
 	T_ASSIGN_BITWISE_OR,
 

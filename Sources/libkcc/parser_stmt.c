@@ -134,7 +134,7 @@ struct ast_node *parse_var_declaration() {
 	struct symbol *symbol;
 	struct type type;
 
-	type = parse_type();
+//	type = parse_type();
 
 	identifier();
 	symbol = symtable_insert(SymbolTable, Text);

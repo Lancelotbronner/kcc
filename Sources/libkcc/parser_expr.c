@@ -160,8 +160,8 @@ static struct ast_node *parse_postfix_operation(struct ast_node *operand) {
 	switch (Token.kind) {
 	case T_LBRACKET: return 0; //TODO: parse subscript expression
 	case T_LPAREN: return parse_call_operation(operand);
-	case T_ACCESS: return 0; //TODO: parse_access_expression()
-	case T_INDIRECT_ACCESS: return 0; //TODO: parse_indirect_access_expression()
+	case T_PERIOD: return 0; //TODO: parse_access_expression()
+	case T_ARROW: return 0; //TODO: parse_indirect_access_expression()
 	case T_INCREMENT: return 0; //TODO: parse_postfix_increment_expression();
 	case T_DECREMENT: return 0; //TODO: parse_postfix_decrement_expression();
 		//TODO: Support compound-literal
@@ -184,9 +184,9 @@ static struct ast_node *parse_postfix_expression(bool required) {
 
 static enum ast_kind prefix_cast_operation(enum token_kind token) {
 	switch (Token.kind) {
-	case T_AND: return N_ADDRESSOF;
+	case T_LOGICAL_AND: return N_ADDRESSOF;
 	case T_ASTERISK: return N_DEREFERENCE;
-	case T_ADD: return N_POSITIVE;
+	case T_PLUS: return N_POSITIVE;
 	case T_SUBTRACT: return N_NEGATIVE;
 	case T_TILDE: return N_BITWISE_NOT;
 	case T_EXCLAIM: return N_LOGICAL_NOT;
@@ -196,9 +196,9 @@ static enum ast_kind prefix_cast_operation(enum token_kind token) {
 
 static struct ast_node *parse_prefix_expression(bool required) {
 	switch (Token.kind) {
-	case T_AND:
+	case T_LOGICAL_AND:
 	case T_ASTERISK:
-	case T_ADD:
+	case T_PLUS:
 	case T_SUBTRACT:
 	case T_TILDE:
 	case T_EXCLAIM:
@@ -264,7 +264,7 @@ struct ast_node *parse_additive_expression(bool required) {
 	if (!operand) return nullptr;
 
 	switch (Token.kind) {
-	case T_ADD: return produce_binary(N_ADD, operand, parse_multiplicative_expression);
+	case T_PLUS: return produce_binary(N_ADD, operand, parse_multiplicative_expression);
 	case T_SUBTRACT: return produce_binary(N_SUBTRACT, operand, parse_multiplicative_expression);
 	default: return operand;
 	}
@@ -354,7 +354,7 @@ struct ast_node *parse_logical_and_expression(bool required) {
 	if (!operand) return nullptr;
 
 	switch (Token.kind) {
-	case T_AND: return produce_binary(N_LOGICAL_AND, operand, parse_bitwise_or_expression(true));
+	case T_LOGICAL_AND: return produce_binary(N_LOGICAL_AND, operand, parse_bitwise_or_expression(true));
 	default: return operand;
 	}
 }
@@ -366,7 +366,7 @@ struct ast_node *parse_logical_or_expression(bool required) {
 	if (!operand) return nullptr;
 
 	switch (Token.kind) {
-	case T_OR: return produce_binary(N_LOGICAL_OR, operand, parse_logical_and_expression(true));
+	case T_LOGICAL_OR: return produce_binary(N_LOGICAL_OR, operand, parse_logical_and_expression(true));
 	default: return operand;
 	}
 }

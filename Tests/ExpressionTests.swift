@@ -8,7 +8,7 @@
 import XCTest
 import libkcc
 
-class ExpressionTests: XCTestCase {
+class ExpressionTests: XCCompilerTestCase {
 	
 	func testExpression() {
 		let expression = "x + (short)5 * 3 * 4"

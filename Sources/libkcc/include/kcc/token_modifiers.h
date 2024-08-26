@@ -14,9 +14,13 @@ enum token_comment_modifier : unsigned char {
 
 enum token_encoding_modifier : unsigned char {
 	ENCODING_NONE,
+	/// `u8`
 	ENCODING_UTF8,
+	/// `u`
 	ENCODING_UTF16,
+	/// `U`
 	ENCODING_UTF32,
+	/// `L`
 	ENCODING_WIDE,
 };
 
@@ -78,6 +82,4 @@ union token_modifiers {
 	};
 };
 
-#if (__STDC_VERSION__ >= 202300L)
 static_assert(sizeof(union token_modifiers) == 1, "");
-#endif

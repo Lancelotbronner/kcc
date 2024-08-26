@@ -20,6 +20,7 @@ enum type_kind : unsigned char {
 	TYP_INT,
 	TYP_LONG,
 	TYP_LONGLONG,
+	TYP_BITINT,
 
 	// Floats
 	TYP_FLOAT,

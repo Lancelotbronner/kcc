@@ -21,7 +21,7 @@ static enum type_kind _parse_single_type() {
 	}
 }
 
-struct type parse_type() {
+static struct type parse_declaration_specifiers() {
 	struct type type;
 
 	type.kind = _parse_single_type();
@@ -76,6 +76,7 @@ struct ast_node *parse_variable_declaration(struct type type) {
 
 #pragma mark - Initializer Parsing
 
+//TODO: Move initializer parsing to parse_init.c
 struct ast_node *parse_initializer() {
 
 }
@@ -195,7 +196,7 @@ static struct ast_node *parse_declaration_declarator(struct type type) {
 
 struct ast_node *parse_declaration() {
 	struct ast_storage declarators = {};
-	struct type type = parse_type();
+	struct type type = parse_declaration_specifiers();
 
 	bool comma = true;
 	while (Token.kind != T_SEMICOLON) {

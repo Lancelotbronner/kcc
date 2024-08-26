@@ -11,7 +11,9 @@
 #include "token_modifiers.h"
 
 struct token_flags {
-
+	bool line_start : 1;
+	//TODO: rename to trivia_leading
+	bool leading_space : 1;
 };
 
 struct token {

@@ -17,9 +17,11 @@ struct symbol *Symbol;
 
 struct ast_node *parse_unit();
 
-#pragma mark - Declaration Parsing
+#pragma mark - Attribute Parsing
 
-struct type parse_type();
+struct ast_node *parse_attribute_sequence();
+
+#pragma mark - Declaration Parsing
 
 struct ast_node *parse_declaration();
 
@@ -70,6 +72,10 @@ struct ast_node *parse_assignment_expression(bool required);
 enum ast_kind assignment_operation(enum token_kind token);
 
 struct ast_node *parse_comma_operation(struct ast_node *operand);
+
+#pragma mark - Literal Parsing
+
+struct ast_node *parse_string_literal();
 
 #pragma mark - Statement Parsing
 

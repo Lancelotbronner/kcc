@@ -43,7 +43,7 @@ enum token_kind scan_fixed_len(int c) {
 	case '/': return T_DIVIDE;
 	case ',': return T_COMMA;
 	case ';': return T_SEMICOLON;
-	case '.': return T_ACCESS;
+	case '.': return T_PERIOD;
 	case '^': return T_CARET;
 
 	case '#':
@@ -54,11 +54,11 @@ enum token_kind scan_fixed_len(int c) {
 		case '+': return T_INCREMENT;
 		default:
 			putback(Character);
-			return T_ADD;
+			return T_PLUS;
 		}
 	case '-':
 		switch (next()) {
-		case '>': return T_INDIRECT_ACCESS;
+		case '>': return T_ARROW;
 		case '-': return T_DECREMENT;
 		default:
 			putback(Character);
@@ -66,7 +66,7 @@ enum token_kind scan_fixed_len(int c) {
 		}
 	case '|':
 		switch (next()) {
-		case '|': return T_OR;
+		case '|': return T_LOGICAL_OR;
 		default:
 			putback(Character);
 			return T_PIPE;
@@ -79,7 +79,7 @@ enum token_kind scan_fixed_len(int c) {
 
 	case '&':
 		if (next() == '&')
-			return T_AND;
+			return T_LOGICAL_AND;
 		putback(Character);
 		return T_AMPERSAND;
 

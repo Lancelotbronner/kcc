@@ -183,6 +183,11 @@ struct ast_cast_expression {
 	struct ast_node *type_tree;
 };
 
+struct ast_string_literal {
+	char *value;
+	enum token_encoding_modifier encoding : 3;
+};
+
 #pragma mark - Generic Node
 
 /// AST node kinds.
