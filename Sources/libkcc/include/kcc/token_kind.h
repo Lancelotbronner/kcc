@@ -18,6 +18,8 @@ enum token_kind : unsigned char {
 
 	// Whitespace
 
+	/// Whitespace produced right after a newline.
+	T_INDENTATION,
 	T_WHITESPACE,
 	T_NEWLINE,
 	T_COMMENT,
@@ -28,7 +30,7 @@ enum token_kind : unsigned char {
 	T_STRING_LITERAL,
 	TL_CHAR,
 	TL_CHARS,
-	TL_FLOAT,
+	T_FLOATING_LITERAL,
 	T_INTEGER_LITERAL,
 
 	// Literal Modifiers
@@ -121,6 +123,8 @@ enum token_kind : unsigned char {
 	T_PERIOD,
 	/// `->`
 	T_ARROW,
+	/// `->*`
+	T_ARROW_STAR,
 	/// `<<`
 	T_LSHIFT,
 	/// `>>`
@@ -132,8 +136,6 @@ enum token_kind : unsigned char {
 	T_ELLIPSIS,
 	/// `#`
 	T_POUND,
-	/// `##`
-	T_STRINGIFY,
 
 	// Assignment Operators
 
@@ -223,6 +225,10 @@ enum token_kind : unsigned char {
 
 	/// `#`
 	T_DIRECTIVE,
+	/// `End Of Directive`
+	T_EOD,
+	/// `##`
+	T_STRINGIFY,
 
 	T_IFDEF,
 	T_IFNDEF,

@@ -1,6 +1,6 @@
 //
 //  ast.h
-//
+//  kcc
 //
 //  Created by Christophe Bronner on 2024-07-04.
 //
@@ -26,7 +26,8 @@ struct ast_integer_literal {
 	/// The base of this integer literal.
 	enum token_base_modifier base : 3;
 	/// The modifier of this integer literal.
-	enum token_integer_modifier modifier : 5;
+	enum token_integer_suffix modifier : 3;
+	bool is_unsigned : 1;
 };
 
 struct ast_unary_expression {
