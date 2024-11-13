@@ -8,7 +8,7 @@
 #include "parser.h"
 #include "globals.h"
 
-#include "scanner.h"
+#include "lexer1.h"
 
 #include <string.h>
 

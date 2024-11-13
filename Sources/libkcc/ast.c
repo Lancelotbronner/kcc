@@ -47,11 +47,10 @@ void ast_unary_expression(struct ast_node *node, enum ast_kind op, struct ast_no
 	node->unary_expression.operand = operand;
 }
 
-void ast_integer_literal(struct ast_node *node, size_t value, enum token_base_modifier base, enum token_integer_modifier suffix) {
+void ast_integer_literal(struct ast_node *node, size_t value, struct token_integer_modifier modifier) {
 	node->op = N_INTEGER_LITERAL;
 	node->integer_literal.value = value;
-	node->integer_literal.base = base;
-	node->integer_literal.modifier = suffix;
+	node->integer_literal.modifier = modifier;
 }
 
 void ast_identifier(struct ast_node *node, struct symbol *symbol) {

@@ -7,15 +7,18 @@
 
 #pragma once
 
-#include <kcc/scanner.h>
+#include <kcc/lexer1.h>
 
 #include "globals.h"
 
 /// The current character.
 int Character;
 
-/// Character put back by scanner.
-int Putback;
+/// Characters put back by scanner.
+char Putback[8];
+
+/// The index of the current Putback character.
+int PutbackIndex;
 
 /// Return the position of character c in string s, or -1 if c not found.
 size_t chrpos(char *s, int c);

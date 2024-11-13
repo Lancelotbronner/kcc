@@ -9,6 +9,11 @@
 
 #include <kcc/diagnostic.h>
 
-typedef void (*diagnostics_consumer_t)(void * __nonnull data, const struct diagnostic * __nonnull const diagnostic);
+typedef void (*diagnostics_consumer_t)(void * _Nonnull data, const struct diagnostic * _Nonnull const diagnostic);
 
-void diagnostics_register(void * __nullable data, diagnostics_consumer_t __nonnull callback);
+/// Registers a callback to be executed whenever a diagnostic is emitted.
+///
+/// - Parameters:
+///   - data: Custom data to use in the callback.
+///   - callback: The callback to execute.
+void diagnostics_register(void * _Nullable data, diagnostics_consumer_t _Nonnull callback);

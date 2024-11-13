@@ -14,82 +14,26 @@
 
 //MARK: - Scanner
 
-static void scanner_anchor() {
-	TokenLength = CurPtr - BufferPtr;
-	Column += TokenLength;
+#define IsCharacter(c1, c2) (scanner_peek(Scanner) == (c1) || scanner_peek(Scanner) == (c2))
 
-	//TODO: Record current location?
-	BufferPtr = CurPtr;
+void lexer_init() {
+	
 }
-
-/// Advances to the next character, taking newline breaks into account.
-///
-/// - See Also: `5.1.1.2 Translation phases`
-static void scanner_advance() {
-	PreviousCharacter = Character;
-
-	// Take Putback in account
-	if (Putback) {
-		Character = PutbackStack[--Putback];
-		return;
-	}
-
-	// Advance to the next character.
-	CurPtr++;
-
-	// Keep our physical line number in sync with the file.
-	if (*CurPtr == '\n') {
-		Line++;
-		Column = 1;
-	}
-
-	// If the previous character is a backslash we could have a line continuation.
-	if (Character != '\\') {
-		Character = *CurPtr;
-		return;
-	}
-
-	if (*CurPtr == '\r')
-		CurPtr++;
-	if (*CurPtr != '\n') {
-		// We were not in a line continuation
-		CurPtr--;
-		Character = *CurPtr;
-		return;
-	}
-
-	// We are in a line continuation, skip the newline
-	CurPtr++;
-	Character = *CurPtr;
-}
-
-static bool scanner_consume(char character) {
-	bool match = Character == character;
-	if (match)
-		scanner_advance();
-	return match;
-}
-
-static void scanner_putback(char c) {
-	PutbackStack[Putback++] = c;
-}
-
-#define IsCharacter(c1, c2) (Character == (c1) || Character == (c2))
 
 //MARK: - Token Utilities
 
 static bool ProduceToken(enum token_kind kind) {
 	Token.kind = kind;
-	scanner_anchor();
+	scanner_anchor(Scanner);
 	return true;
 }
 
 static bool ConsumeToken(enum token_kind kind) {
-	scanner_advance();
+	scanner_advance(Scanner);
 	return ProduceToken(kind);
 }
 
-//MARK: - Character Classes
+//MARK: - scanner_peek(Scanner) Classes
 
 static bool IsHorizontalWhitespace(char c) {
 	switch (c) {
@@ -270,23 +214,23 @@ static bool LexEndOfFile() {
 //MARK: - Numeric Literals
 
 static void TryConsumeInvalidDigitSeparator() {
-	if (Character != '\'')
+	if (scanner_peek(Scanner) != '\'')
 		return;
 	//TODO: Diagnose illegal digit separator
 }
 
 static void LexNumericConstantPrefix() {
-	assert(Character == '0');
-	scanner_advance();
+	assert(scanner_peek(Scanner) == '0');
+	scanner_advance(Scanner);
 
-	switch (Character) {
+	switch (scanner_peek(Scanner)) {
 	case 'x': case 'X':
 		Token.modifiers.base = BASE_HEX;
-		scanner_advance();
+		scanner_advance(Scanner);
 		return;
 	case 'b': case 'B':
 		Token.modifiers.base = BASE_BINARY;
-		scanner_advance();
+		scanner_advance(Scanner);
 		return;
 	case '8': case '9':
 		Token.modifiers.base = BASE_DECIMAL;
@@ -304,28 +248,28 @@ static bool LexIntegerSuffix() {
 	if (IsCharacter('u', 'U'))
 		Token.modifiers.integer.is_unsigned = true;
 
-	switch (Character) {
+	switch (scanner_peek(Scanner)) {
 	case 'l': case 'L':
-		scanner_advance();
+		scanner_advance(Scanner);
 
 		if (!IsCharacter('l', 'L')) {
 			Token.modifiers.integer.suffix = ISUFFIX_LONG;
 			break;
 		}
 
-		scanner_advance();
+		scanner_advance(Scanner);
 		Token.modifiers.integer.suffix = ISUFFIX_LONGLONG;
 		break;
 
 	case 'w': case 'W':
-		scanner_advance();
+		scanner_advance(Scanner);
 
 		if (!IsCharacter('b', 'B')) {
-			scanner_putback(Character);
+			scanner_putback(Scanner, scanner_peek(Scanner));
 			break;
 		}
 
-		scanner_advance();
+		scanner_advance(Scanner);
 		Token.modifiers.integer.suffix = ISUFFIX_BITINT;
 		break;
 	}
@@ -338,9 +282,7 @@ static bool LexIntegerSuffix() {
 
 static bool LexFloatingSuffix() {
 	Token.modifiers.floating.suffix = FSUFFIX_NONE;
-
-//	f l F L df dd dl DF DD DL
-	switch (Character) {
+	switch (scanner_peek(Scanner)) {
 	case 'f': case 'F':
 		Token.modifiers.floating.suffix = FSUFFIX_FLOAT;
 		break;
@@ -348,9 +290,9 @@ static bool LexFloatingSuffix() {
 		Token.modifiers.floating.suffix = FSUFFIX_LONGDOUBLE;
 		break;
 	case 'd': case 'D':
-		scanner_advance();
+		scanner_advance(Scanner);
 
-		switch (Character) {
+		switch (scanner_peek(Scanner)) {
 		case 'f': case 'F':
 			Token.modifiers.floating.suffix = FSUFFIX_DECIMAL32;
 			break;
@@ -361,32 +303,32 @@ static bool LexFloatingSuffix() {
 			Token.modifiers.floating.suffix = FSUFFIX_DECIMAL128;
 			break;
 		default:
-			scanner_putback(Character);
+			scanner_putback(Scanner, scanner_peek(Scanner));
 			break;
 		}
-		scanner_advance();
+		scanner_advance(Scanner);
 		break;
 	}
 }
 
 static void LexExponentPart() {
 	if (IsCharacter('+', '-'))
-		scanner_advance();
+		scanner_advance(Scanner);
 
-	while (IsDecimalDigit(Character))
-		scanner_advance();
+	while (IsDecimalDigit(scanner_peek(Scanner)))
+		scanner_advance(Scanner);
 }
 
 static bool LexDecimalFractionalPart() {
-	assert(IsDecimalDigit(Character));
+	assert(IsDecimalDigit(scanner_peek(Scanner)));
 	TryConsumeInvalidDigitSeparator();
 
-	while (IsHexadecimalDigit(Character))
-		scanner_advance();
+	while (IsHexadecimalDigit(scanner_peek(Scanner)))
+		scanner_advance(Scanner);
 
-	switch (Character) {
+	switch (scanner_peek(Scanner)) {
 	case 'E': case 'e':
-		scanner_advance();
+		scanner_advance(Scanner);
 		LexExponentPart();
 		return LexFloatingSuffix();
 
@@ -399,12 +341,12 @@ static bool LexDecimalFractionalPart() {
 }
 
 static bool LexHexadecimalFractionalPart() {
-	assert(IsHexadecimalDigit(Character));
+	assert(IsHexadecimalDigit(scanner_peek(Scanner)));
 	TryConsumeInvalidDigitSeparator();
 
-	switch (Character) {
+	switch (scanner_peek(Scanner)) {
 	case 'P': case 'p':
-		scanner_advance();
+		scanner_advance(Scanner);
 		LexExponentPart();
 		// C (6.4.4.2 p2):
 		// A floating suffix shall not be used in a hexadecimal floating constant.
@@ -418,28 +360,28 @@ static bool LexHexadecimalFractionalPart() {
 }
 
 static bool LexBinaryConstant() {
-	while (IsBinaryDigit(Character))
-		scanner_advance();
+	while (IsBinaryDigit(scanner_peek(Scanner)))
+		scanner_advance(Scanner);
 	return LexIntegerSuffix();
 }
 
 static bool LexOctalConstant() {
-	while (IsOctalDigit(Character))
-		scanner_advance();
+	while (IsOctalDigit(scanner_peek(Scanner)))
+		scanner_advance(Scanner);
 	return LexIntegerSuffix();
 }
 
 static bool LexDecimalConstant() {
-	while (IsDecimalDigit(Character))
-		scanner_advance();
+	while (IsDecimalDigit(scanner_peek(Scanner)))
+		scanner_advance(Scanner);
 
-	switch (Character) {
+	switch (scanner_peek(Scanner)) {
 	case '.':
-		scanner_advance();
+		scanner_advance(Scanner);
 		return LexDecimalFractionalPart();
 
 	case 'E': case 'e':
-		scanner_advance();
+		scanner_advance(Scanner);
 		LexExponentPart();
 		return LexFloatingSuffix();
 
@@ -452,16 +394,16 @@ static bool LexDecimalConstant() {
 }
 
 static bool LexHexadecimalConstant() {
-	while (IsHexadecimalDigit(Character))
-		scanner_advance();
+	while (IsHexadecimalDigit(scanner_peek(Scanner)))
+		scanner_advance(Scanner);
 
-	switch (Character) {
+	switch (scanner_peek(Scanner)) {
 	case '.':
-		scanner_advance();
+		scanner_advance(Scanner);
 		return LexHexadecimalFractionalPart();
 
 	case 'P': case 'p':
-		scanner_advance();
+		scanner_advance(Scanner);
 		LexExponentPart();
 		// C (6.4.4.2 p2):
 		// A floating suffix shall not be used in a hexadecimal floating constant.
@@ -476,7 +418,7 @@ static bool LexHexadecimalConstant() {
 }
 
 static bool LexNumericConstant() {
-	assert(IsHexadecimalDigit(Character));
+	assert(IsHexadecimalDigit(scanner_peek(Scanner)));
 	TryConsumeInvalidDigitSeparator();
 
 	switch (Token.modifiers.base) {
@@ -495,34 +437,33 @@ static bool LexNumericConstant() {
 /// either " or L" or u8" or u" or U".
 static bool LexStringLiteral() {
 	//TODO: Compare this with Clang source
-	StringLiteral = CurPtr;
-	scanner_advance();
+	scanner_advance(Scanner);
 
-	while (Character != '"') {
+	while (scanner_peek(Scanner) != '"') {
 		// Skip escaped characters.
 		// Escaped newlines will already be processed by scanner_advance.
-		if (Character == '\\')
-			scanner_advance();
+		if (scanner_peek(Scanner) == '\\')
+			scanner_advance(Scanner);
 
 		// Detect and report unterminated string literals.
-		if (IsAtEndOfFile) {
+		if (scanner_eof(Scanner)) {
 			//TODO: Diagnose unterminated string literal
-			scanner_anchor();
+			scanner_anchor(Scanner);
 			return true;
 		}
 
-		switch (Character) {
+		switch (scanner_peek(Scanner)) {
 		case '\n':
 		case '\r':
-			scanner_anchor();
+			scanner_anchor(Scanner);
 			return true;
 		}
 
-		if (Character == '\0') {
+		if (scanner_peek(Scanner) == '\0') {
 			//TODO: Diagnose null character.
 		}
 
-		scanner_advance();
+		scanner_advance(Scanner);
 	}
 
 	return ProduceToken(T_STRING_LITERAL);
@@ -532,149 +473,131 @@ static bool LexStringLiteral() {
 /// lexed either ' or L' or u8' or u' or U'.
 static bool LexCharConstant() {
 	// Does this character contain the \0 character?
-	const char *NulCharacter = nullptr;
-
-	if (!isLexingRawMode()) {
-		if (Kind == tok::utf16_char_constant || Kind == tok::utf32_char_constant)
-			Diag(BufferPtr, LangOpts.CPlusPlus
-				 ? diag::warn_cxx98_compat_unicode_literal
-				 : diag::warn_c99_compat_unicode_literal);
-		else if (Kind == tok::utf8_char_constant)
-			Diag(BufferPtr, diag::warn_cxx14_compat_u8_character_literal);
-	}
-
-	char C = getAndAdvanceChar(CurPtr, Result);
-	if (C == '\'') {
-		if (!isLexingRawMode() && !LangOpts.AsmPreprocessor)
-			Diag(BufferPtr, diag::ext_empty_character);
-		FormTokenWithChars(Result, CurPtr, tok::unknown);
-		return true;
-	}
-
-	while (C != '\'') {
-		// Skip escaped characters.
-		if (C == '\\')
-			C = getAndAdvanceChar(CurPtr, Result);
-
-		if (C == '\n' || C == '\r' ||             // Newline.
-			(C == 0 && CurPtr-1 == BufferEnd)) {  // End of file.
-			if (!isLexingRawMode() && !LangOpts.AsmPreprocessor)
-				Diag(BufferPtr, diag::ext_unterminated_char_or_string) << 0;
-			FormTokenWithChars(Result, CurPtr-1, tok::unknown);
-			return true;
-		}
-
-		if (C == 0) {
-			if (isCodeCompletionPoint(CurPtr-1)) {
-				PP->CodeCompleteNaturalLanguage();
-				FormTokenWithChars(Result, CurPtr-1, tok::unknown);
-				cutOffLexing();
-				return true;
-			}
-
-			NulCharacter = CurPtr-1;
-		}
-		C = getAndAdvanceChar(CurPtr, Result);
-	}
-
-	// If we are in C++11, lex the optional ud-suffix.
-	if (LangOpts.CPlusPlus)
-		CurPtr = LexUDSuffix(Result, CurPtr, false);
-
-	// If a nul character existed in the character, warn about it.
-	if (NulCharacter && !isLexingRawMode())
-		Diag(NulCharacter, diag::null_in_char_or_string) << 0;
-
-	// Update the location of token as well as BufferPtr.
-	const char *TokStart = BufferPtr;
-	FormTokenWithChars(Result, CurPtr, Kind);
-	Result.setLiteralData(TokStart);
-	return true;
+//	const char *NulCharacter = nullptr;
+//
+//	if (!isLexingRawMode()) {
+//		if (Kind == tok::utf16_char_constant || Kind == tok::utf32_char_constant)
+//			Diag(BufferPtr, LangOpts.CPlusPlus
+//				 ? diag::warn_cxx98_compat_unicode_literal
+//				 : diag::warn_c99_compat_unicode_literal);
+//		else if (Kind == tok::utf8_char_constant)
+//			Diag(BufferPtr, diag::warn_cxx14_compat_u8_character_literal);
+//	}
+//
+//	char C = getAndAdvanceChar(CurPtr, Result);
+//	if (C == '\'') {
+//		if (!isLexingRawMode() && !LangOpts.AsmPreprocessor)
+//			Diag(BufferPtr, diag::ext_empty_character);
+//		FormTokenWithChars(Result, CurPtr, tok::unknown);
+//		return true;
+//	}
+//
+//	while (C != '\'') {
+//		// Skip escaped characters.
+//		if (C == '\\')
+//			C = getAndAdvanceChar(CurPtr, Result);
+//
+//		if (C == '\n' || C == '\r' ||             // Newline.
+//			(C == 0 && CurPtr-1 == BufferEnd)) {  // End of file.
+//			if (!isLexingRawMode() && !LangOpts.AsmPreprocessor)
+//				Diag(BufferPtr, diag::ext_unterminated_char_or_string) << 0;
+//			FormTokenWithChars(Result, CurPtr-1, tok::unknown);
+//			return true;
+//		}
+//
+//		if (C == 0) {
+//			if (isCodeCompletionPoint(CurPtr-1)) {
+//				PP->CodeCompleteNaturalLanguage();
+//				FormTokenWithChars(Result, CurPtr-1, tok::unknown);
+//				cutOffLexing();
+//				return true;
+//			}
+//
+//			NulCharacter = CurPtr-1;
+//		}
+//		C = getAndAdvanceChar(CurPtr, Result);
+//	}
+//
+//	// If we are in C++11, lex the optional ud-suffix.
+//	if (LangOpts.CPlusPlus)
+//		CurPtr = LexUDSuffix(Result, CurPtr, false);
+//
+//	// If a nul character existed in the character, warn about it.
+//	if (NulCharacter && !isLexingRawMode())
+//		Diag(NulCharacter, diag::null_in_char_or_string) << 0;
+//
+//	// Update the location of token as well as BufferPtr.
+//	const char *TokStart = BufferPtr;
+//	FormTokenWithChars(Result, CurPtr, Kind);
+//	Result.setLiteralData(TokStart);
+//	return true;
 }
 
 //MARK: - Significant Tokens
 
 static bool LexIdentifier() {
-	assert(isxidstart(Character));
-	scanner_advance();
+	assert(isxidstart(scanner_peek(Scanner)));
+	scanner_advance(Scanner);
 
-	while (isxidcontinue(Character))
-		CurPtr++;
+	while (isxidcontinue(scanner_peek(Scanner)))
+		scanner_advance(Scanner);
 
 	return ProduceToken(T_IDENTIFIER);
 }
 
 static bool LexDot() {
 	// Consume the initial period.
-	scanner_advance();
+	scanner_advance(Scanner);
 
 	// Parse floating constants of the form `.25`.
-	if (Character >= '0' && Character <= '9')
+	if (scanner_peek(Scanner) >= '0' && scanner_peek(Scanner) <= '9')
 		return LexNumericConstant();
 
 	// If we're not parsing an ellipsis then its a period.
-	if (Character != '.')
+	if (scanner_peek(Scanner) != '.')
 		return ProduceToken(T_PERIOD);
 
 	// Consume the second period.
-	scanner_advance();
+	scanner_advance(Scanner);
 
 	// If we have a third period its an elipsis.
-	if (Character == '.')
+	if (scanner_peek(Scanner) == '.')
 		return ConsumeToken(T_ELLIPSIS);
 
 	// It wasn't an ellipsis.
 	Token.kind = T_PERIOD;
-	scanner_putback(Character);
+	scanner_putback(Scanner, scanner_peek(Scanner));
 }
 
 static bool LexDirective() {
 
 }
 
+static bool LexAngledStringLiteral() {
+
+}
+
 //MARK: - Lexer
 
 static bool _lexer_advance_preprocessor() {
-	lex_start:;
-
-	// Cache the current buffer head
-	CurPtr = BufferPtr;
-
-	//TODO: Move this to just the large switch? It'll become a jump table anyway right?
-	// Small amounts of horizontal whitespace is very common between tokens.
-	if (IsHorizontalWhitespace(Character)) {
-		do
-			++CurPtr;
-		while (IsHorizontalWhitespace(Character));
-
-		// If we are keeping whitespace and other tokens, just return what we just skipped.
-		// The next lexer invocation will return the token after the whitespace.
-		if (IsWhitespacePreserved) {
-			scanner_anchor();
-			Token.kind = T_WHITESPACE;
-			return true;
-		}
-
-		BufferPtr = CurPtr;
-		Token.flags.leading_space = true;
-	}
-
-	scanner_advance();
-
-	switch (Character) {
+lex_start:
+	switch (scanner_peek(Scanner)) {
 	case '\0':
+		if (scanner_eof(Scanner))
+			return false;
+		
 		//TODO: Start diagnosing unexpected null in file
 		Token.flags.leading_space = true;
 
 		//TODO: Special case skip if we have a bunch of sequential nulls?
 		// Take into account end-of-buffer
+		scanner_advance(Scanner);
 
 		// Try again, manually eliminate the tail call to avoid recursion.
 		goto lex_next;
 
 	case '\r':
-		if (CurPtr[0] == '\n')
-			scanner_advance();
+		scanner_consume(Scanner, '\n');
 		[[fallthrough]];
 	case '\n':
 		// Signals the end of a preprocessor directive.
@@ -701,28 +624,13 @@ static bool _lexer_advance_preprocessor() {
 	case '\t':
 	case '\f':
 	case '\v':
-	SkipHorizontalWhitespace:
-		Result.setFlag(Token::LeadingSpace);
-		if (SkipWhitespace(Result, CurPtr, TokAtPhysicalStartOfLine))
-			return true; // KeepWhitespaceMode
+		Token.flags.leading_space = true;
+		do scanner_advance(Scanner);
+		while (IsHorizontalWhitespace(scanner_peek(Scanner)));
 
-	SkipIgnoredUnits:
-		CurPtr = BufferPtr;
+		if (IsWhitespacePreserved)
+			return ProduceToken(T_WHITESPACE);
 
-		// If the next token is obviously a // or /* */ comment, skip it efficiently
-		// too (without going through the big switch stmt).
-		if (CurPtr[0] == '/' && CurPtr[1] == '/' && !inKeepCommentMode() &&
-			LineComment && (LangOpts.CPlusPlus || !LangOpts.TraditionalCPP)) {
-			if (SkipLineComment(Result, CurPtr+2, TokAtPhysicalStartOfLine))
-				return true; // There is a token to return.
-			goto SkipIgnoredUnits;
-		} else if (CurPtr[0] == '/' && CurPtr[1] == '*' && !inKeepCommentMode()) {
-			if (SkipBlockComment(Result, CurPtr+2, TokAtPhysicalStartOfLine))
-				return true; // There is a token to return.
-			goto SkipIgnoredUnits;
-		} else if (isHorizontalWhitespace(*CurPtr)) {
-			goto SkipHorizontalWhitespace;
-		}
 		// We only saw whitespace, so just try again with this lexer.
 		// (We manually eliminate the tail call to avoid recursion.)
 		goto lex_next;
@@ -737,10 +645,10 @@ static bool _lexer_advance_preprocessor() {
 		// C23/C++17: UTF-8 literal
 		// C11/C++11: UTF-16 literal
 	case 'u':
-		scanner_advance();
-		Token.modifiers.encoding = scanner_consume('8') ? ENCODING_UTF8 : ENCODING_UTF16;
+		scanner_advance(Scanner);
+		Token.modifiers.encoding = scanner_consume(Scanner, '8') ? ENCODING_UTF8 : ENCODING_UTF16;
 
-		switch (Character) {
+		switch (scanner_peek(Scanner)) {
 		case '"': return LexStringLiteral();
 		case '\'': return LexCharConstant();
 		default: return LexIdentifier();
@@ -749,10 +657,10 @@ static bool _lexer_advance_preprocessor() {
 		// Identifier
 		// C11/C++11: UTF-32 literal
 	case 'U':
-		scanner_advance();
+		scanner_advance(Scanner);
 		Token.modifiers.encoding = ENCODING_UTF32;
 
-		switch (Character) {
+		switch (scanner_peek(Scanner)) {
 		case '"': return LexStringLiteral();
 		case '\'': return LexCharConstant();
 		default: return LexIdentifier();
@@ -761,10 +669,10 @@ static bool _lexer_advance_preprocessor() {
 		// Identifier
 		// Wide literal
 	case 'L':
-		scanner_advance();
+		scanner_advance(Scanner);
 		Token.modifiers.encoding = ENCODING_WIDE;
 
-		switch (Character) {
+		switch (scanner_peek(Scanner)) {
 		case '"': return LexStringLiteral();
 		case '\'': return LexCharConstant();
 		default: return LexIdentifier();
@@ -782,7 +690,7 @@ static bool _lexer_advance_preprocessor() {
 	case '_':
 		return LexIdentifier();
 
-		// C99 6.4.4: Character Constants.
+		// C99 6.4.4: scanner_peek(Scanner) Constants.
 	case '\'':
 		Token.modifiers.encoding = ENCODING_NONE;
 		return LexCharConstant();
@@ -811,21 +719,21 @@ static bool _lexer_advance_preprocessor() {
 		// Floating-point constant
 		// Operators . ...
 	case '.':
-		if (Character >= 0 && Character <= '9')
+		if (scanner_peek(Scanner) >= 0 && scanner_peek(Scanner) <= '9')
 			return LexNumericConstant();
 
-		scanner_advance();
+		scanner_advance(Scanner);
 
 		//TODO: Ellipsis operator
-		switch (Character) {
+		switch (scanner_peek(Scanner)) {
 		default: return ProduceToken(T_PERIOD);
 		}
 
 		// Operators & && &=
 	case '&':
-		scanner_advance();
+		scanner_advance(Scanner);
 
-		switch (Character) {
+		switch (scanner_peek(Scanner)) {
 		case '&': return ConsumeToken(T_LOGICAL_AND);
 		case '=': return ConsumeToken(T_ASSIGN_BITWISE_AND);
 		default: return ProduceToken(T_AMPERSAND);
@@ -833,18 +741,18 @@ static bool _lexer_advance_preprocessor() {
 
 		// Operators * *=
 	case '*':
-		scanner_advance();
+		scanner_advance(Scanner);
 
-		switch (Character) {
+		switch (scanner_peek(Scanner)) {
 		case '=': return ConsumeToken(T_ASSIGN_MULTIPLY);
 		default: return ProduceToken(T_ASTERISK);
 		}
 
 		// Operators + ++ +=
 	case '+':
-		scanner_advance();
+		scanner_advance(Scanner);
 
-		switch (Character) {
+		switch (scanner_peek(Scanner)) {
 		case '+': return ConsumeToken(T_INCREMENT);
 		case '=': return ConsumeToken(T_ASSIGN_ADD);
 		default: return ProduceToken(T_PLUS);
@@ -852,14 +760,14 @@ static bool _lexer_advance_preprocessor() {
 
 		// Operators - -- -> -=
 	case '-':
-		scanner_advance();
+		scanner_advance(Scanner);
 
-		switch (Character) {
+		switch (scanner_peek(Scanner)) {
 		case '-': return ConsumeToken(T_DECREMENT);
 		case '=': return ConsumeToken(T_ASSIGN_SUBTRACT);
 		case '>':
-			scanner_advance();
-			switch (Character) {
+			scanner_advance(Scanner);
+			switch (scanner_peek(Scanner)) {
 			case '*': return ConsumeToken(T_ARROW_STAR);
 			default: return ProduceToken(T_ARROW);
 			}
@@ -872,9 +780,9 @@ static bool _lexer_advance_preprocessor() {
 
 		// Operators ! !=
 	case '!':
-		scanner_advance();
+		scanner_advance(Scanner);
 
-		switch (Character) {
+		switch (scanner_peek(Scanner)) {
 		case '=': return ConsumeToken(T_NEQ);
 		default: return ProduceToken(T_EXCLAIM);
 		}
@@ -882,9 +790,9 @@ static bool _lexer_advance_preprocessor() {
 		// 6.4.9: Comments
 		// Operators / /=
 	case '/':
-		scanner_advance();
+		scanner_advance(Scanner);
 
-		switch (Character) {
+		switch (scanner_peek(Scanner)) {
 		case '/': return LexLineComment();
 		case '*': return LexBlockComment();
 		case '=': return ConsumeToken(T_ASSIGN_DIVIDE);
@@ -894,21 +802,21 @@ static bool _lexer_advance_preprocessor() {
 		// Operators % %=
 		// Digraphs %> %: %:%:
 	case '%':
-		scanner_advance();
+		scanner_advance(Scanner);
 
 		if (IsDigraphsEnabled) {
-			switch (Character) {
+			switch (scanner_peek(Scanner)) {
 			case '>': return ConsumeToken(T_RCURLY);
 			case ':':
-				scanner_advance();
-				switch (Character) {
+				scanner_advance(Scanner);
+				switch (scanner_peek(Scanner)) {
 				case '%':
-					scanner_advance();
-					switch (Character) {
+					scanner_advance(Scanner);
+					switch (scanner_peek(Scanner)) {
 					case ':': return ConsumeToken(T_STRINGIFY);
 					default:
-						scanner_putback('%');
-						scanner_putback(Character);
+						scanner_putback(Scanner, '%');
+						scanner_putback(Scanner, scanner_peek(Scanner));
 						return ProduceToken(T_DIRECTIVE);
 					}
 				default: return ProduceToken(T_DIRECTIVE);
@@ -916,7 +824,7 @@ static bool _lexer_advance_preprocessor() {
 			}
 		}
 
-		switch (Character) {
+		switch (scanner_peek(Scanner)) {
 		case '=': return ConsumeToken(T_ASSIGN_MODULO);
 		default: return ProduceToken(T_PERCENT);
 		}
@@ -931,13 +839,13 @@ static bool _lexer_advance_preprocessor() {
 		if (IsPreprocessorEnabled)
 			return LexAngledStringLiteral();
 
-		scanner_advance();
+		scanner_advance(Scanner);
 
-		switch (Character) {
+		switch (scanner_peek(Scanner)) {
 		case '=': return ConsumeToken(T_LTE);
 		case '<':
-			scanner_advance();
-			switch (Character) {
+			scanner_advance(Scanner);
+			switch (scanner_peek(Scanner)) {
 				//TODO: Detect C++ spaceship operator
 			case '=': return ConsumeToken(T_ASSIGN_LSHIFT);
 			default: return ProduceToken(T_LSHIFT);
@@ -947,12 +855,12 @@ static bool _lexer_advance_preprocessor() {
 
 		// Operators > >= >> >>=
 	case '>':
-		scanner_advance();
+		scanner_advance(Scanner);
 
-		switch (Character) {
+		switch (scanner_peek(Scanner)) {
 		case '>':
-			scanner_advance();
-			switch (Character) {
+			scanner_advance(Scanner);
+			switch (scanner_peek(Scanner)) {
 			case '=': return ConsumeToken(T_ASSIGN_RSHIFT);
 			default: return ProduceToken(T_RSHIFT);
 			}
@@ -962,18 +870,18 @@ static bool _lexer_advance_preprocessor() {
 
 		// Operators ^ ^=
 	case '^':
-		scanner_advance();
+		scanner_advance(Scanner);
 
-		switch (Character) {
+		switch (scanner_peek(Scanner)) {
 		case '=': return ConsumeToken(T_ASSIGN_BITWISE_XOR);
 		default: return ProduceToken(T_CARET);
 		}
 
 		// Operators | || |=
 	case '|':
-		scanner_advance();
+		scanner_advance(Scanner);
 
-		switch (Character) {
+		switch (scanner_peek(Scanner)) {
 		case '=': return ConsumeToken(T_ASSIGN_BITWISE_OR);
 		case '|': return ConsumeToken(T_LOGICAL_OR);
 		default: return ProduceToken(T_PIPE);
@@ -982,11 +890,11 @@ static bool _lexer_advance_preprocessor() {
 		// Operators : ::
 		// Digraphs :>
 	case ':':
-		scanner_advance();
+		scanner_advance(Scanner);
 
 		//TODO: Handle digraphs
 
-		switch (Character) {
+		switch (scanner_peek(Scanner)) {
 		case ':': return ConsumeToken(T_MODULE);
 		case '|': return ConsumeToken(T_LOGICAL_OR);
 		default: return ProduceToken(T_PIPE);
@@ -997,9 +905,9 @@ static bool _lexer_advance_preprocessor() {
 
 		// Operators = ==
 	case '=':
-		scanner_advance();
+		scanner_advance(Scanner);
 
-		switch (Character) {
+		switch (scanner_peek(Scanner)) {
 		case '=': return ConsumeToken(T_EQ);
 		default: return ProduceToken(T_ASSIGN);
 		}
@@ -1010,9 +918,9 @@ static bool _lexer_advance_preprocessor() {
 
 		// Preprocessor # ##
 	case '#':
-		scanner_advance();
+		scanner_advance(Scanner);
 
-		switch (Character) {
+		switch (scanner_peek(Scanner)) {
 		case '#': return ConsumeToken(T_STRINGIFY);
 		default:
 			if (IsAtPhysicalStartOfLine) {
@@ -1027,57 +935,57 @@ static bool _lexer_advance_preprocessor() {
 		// it's actually the start of a preprocessing directive.  Callback to
 		// the preprocessor to handle it.
 		// TODO: -fpreprocessed mode??
-		if (TokAtPhysicalStartOfLine && !LexingRawMode && !Is_PragmaLexer)
-			goto lex_directive;
+//		if (TokAtPhysicalStartOfLine && !LexingRawMode && !Is_PragmaLexer)
+//			goto lex_directive;
 
 		// C99 6.4.3:
 		// C++11 [lex.charset]p2:
 		//   UCNs
 	case '\\':
-		if (uint32_t CodePoint = tryReadUCN(CurPtr, BufferPtr, &Result)) {
-			if (CheckUnicodeWhitespace(Result, CodePoint, CurPtr)) {
-				if (SkipWhitespace(Result, CurPtr, TokAtPhysicalStartOfLine))
-					return true; // KeepWhitespaceMode
-
-				// We only saw whitespace, so just try again with this lexer.
-				// (We manually eliminate the tail call to avoid recursion.)
-				goto lex_next;
-			}
-
-			return LexUnicodeIdentifierStart(Result, CodePoint, CurPtr);
-		}
-
-		Kind = tok::unknown;
+//		if (uint32_t CodePoint = tryReadUCN(CurPtr, BufferPtr, &Result)) {
+//			if (CheckUnicodeWhitespace(Result, CodePoint, CurPtr)) {
+//				if (SkipWhitespace(Result, CurPtr, TokAtPhysicalStartOfLine))
+//					return true; // KeepWhitespaceMode
+//
+//				// We only saw whitespace, so just try again with this lexer.
+//				// (We manually eliminate the tail call to avoid recursion.)
+//				goto lex_next;
+//			}
+//
+//			return LexUnicodeIdentifierStart(Result, CodePoint, CurPtr);
+//		}
+//
+//		Kind = tok::unknown;
 		break;
 
 	default:
-		if (isxidstart(Character))
+		if (isxidstart(scanner_peek(Scanner)))
 			return LexIdentifier();
 
-		if (isLexingRawMode() || ParsingPreprocessorDirective ||
-			PP->isPreprocessedOutput()) {
-			++CurPtr;
-			Kind = tok::unknown;
-			break;
-		}
+//		if (isLexingRawMode() || ParsingPreprocessorDirective ||
+//			PP->isPreprocessedOutput()) {
+//			++CurPtr;
+//			Kind = tok::unknown;
+//			break;
+//		}
 
 		// Non-ASCII characters tend to creep into source code unintentionally.
 		// Instead of letting the parser complain about the unknown token,
 		// just diagnose the invalid UTF-8, then drop the character.
-		Diag(CurPtr, diag::err_invalid_utf8);
+//		Diag(CurPtr, diag::err_invalid_utf8);
 
-		BufferPtr = CurPtr+1;
+		scanner_advance(Scanner);
 		// We're pretending the character didn't exist, so just try again with this lexer.
 		// (We manually eliminate the tail call to avoid recursion.)
 		goto lex_next;
 	}
 
 	// Update the location of token as well as BufferPtr.
-	scanner_anchor();
+	scanner_anchor(Scanner);
 	return true;
 
 lex_next:
-	Result.clearFlag(Token::NeedsCleaning);
+//	Result.clearFlag(Token::NeedsCleaning);
 	goto lex_start;
 }
 

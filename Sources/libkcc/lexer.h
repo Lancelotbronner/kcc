@@ -7,18 +7,11 @@
 
 #include <kcc/lexer.h>
 
+#include <kcc/scanner.h>
+
 //TODO: All lexer configuration and state should be in a struct that can be saved and restored or something
 
-const char *BufferStart;
-const char *BufferPtr;
-const char *CurPtr;
-char Character;
-char PreviousCharacter;
-const char *BufferEnd;
-#define IsAtEndOfFile (CurPtr == BufferEnd)
-
-char PutbackStack[8];
-char Putback = 0;
+scanner_t Scanner;
 
 bool IsPreprocessorEnabled;
 bool IsWhitespacePreserved;

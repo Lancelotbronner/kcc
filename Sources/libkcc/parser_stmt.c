@@ -9,7 +9,7 @@
 
 #include <kcc/ast.h>
 #include <kcc/diagnostics.h>
-#include <kcc/scanner.h>
+#include <kcc/lexer1.h>
 #include <kcc/symtable.h>
 
 struct ast_node *parse_statements() {

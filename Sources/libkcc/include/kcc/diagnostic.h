@@ -18,7 +18,7 @@ struct diagnostic_code {
 
 struct diagnostic_span {
 	/// Describes the span.
-	char *label;
+	char const *label;
 	/// The location of the span, relative to the diagnostic's location.
 	uint16_t location;
 	/// The size of the span, in characters
@@ -33,7 +33,7 @@ enum diagnostic_fix_flags : uint8_t {
 
 struct diagnostic_fix {
 	struct {
-		char *text;
+		char const *text;
 		uint16_t location;
 	} insertion;
 	struct {
@@ -63,7 +63,7 @@ struct diagnostic {
 	struct diagnostic_code code;
 
 	/// Name of the file or virtual buffer where the code is located.
-	char *source;
+	char const *source;
 
 	/// Line where the primary issue arised.
 	uint32_t line;
@@ -74,7 +74,7 @@ struct diagnostic {
 	/// The main description of the problem.
 	///
 	/// It should be general and able to stand on its own, so that it can make sense even in isolation.
-	char *message;
+	char const *message;
 
 	/// The primary span of the diagnostic, has emphasis.
 	///

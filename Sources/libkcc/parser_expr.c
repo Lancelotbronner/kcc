@@ -10,7 +10,7 @@
 
 #include <kcc/ast.h>
 #include <kcc/diagnostics.h>
-#include <kcc/scanner.h>
+#include <kcc/lexer1.h>
 #include <kcc/symtable.h>
 
 #pragma mark - Utilities
@@ -37,7 +37,12 @@ static struct ast_node *produce_binary(enum ast_kind op, struct ast_node *left, 
 
 static struct ast_node *parse_integer_expression() {
 	struct ast_node *node = ast_alloc();
-	ast_integer_literal(node, Integer, BASE_NONE, IMOD_NONE);
+	struct token_integer_modifier modifier = {
+		.base = BASE_NONE,
+		.suffix = ISUFFIX_NONE,
+		.is_unsigned = false,
+	};
+	ast_integer_literal(node, Integer, modifier);
 	scan();
 	return node;
 }

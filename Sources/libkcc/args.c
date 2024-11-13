@@ -8,6 +8,7 @@
 #include <kcc/args.h>
 
 #include "globals.h"
+#include "lexer.h"
 
 void kcc_infile(FILE *file) {
 	Infile = file;
@@ -15,6 +16,7 @@ void kcc_infile(FILE *file) {
 
 void kcc_inmem(const void *buf, size_t size) {
 	Infile = fmemopen((void*)buf, size, "r");
+	scanner_init(Scanner, buf, size);
 }
 
 void kcc_outfile(FILE *file) {

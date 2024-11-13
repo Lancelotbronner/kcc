@@ -8,7 +8,7 @@
 #include "parser.h"
 
 #include <kcc/ast.h>
-#include <kcc/scanner.h>
+#include <kcc/lexer1.h>
 
 #pragma mark - Type Specifier Parsing
 

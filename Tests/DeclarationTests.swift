@@ -5,67 +5,68 @@
 //  Created by Christophe Bronner on 2024-07-27.
 //
 
-import XCTest
+import Testing
 import libkcc
 
-class DeclarationTests: XCCompilerTestCase {
+@Suite(.serialized, .tags(.parser, .declaration))
+struct DeclarationTests {
 
-	func testSingleDeclaration() {
+	@Test("int x;")
+	func testSingleDeclaration() async throws {
 		let expression = "int x;"
-		expression.withCString {
+		try expression.withCString {
 			kcc_inmem($0, expression.count)
-			let node = parser_parse()
-			XCTAssertNotNil(node)
+			let node = try #require(parser_parse())
 			print_ast(node)
 		}
 	}
 
-	func testSingleDeclarationWithInitializer() {
+	@Test("int x = 5;")
+	func testSingleDeclarationWithInitializer() async throws {
 		let expression = "int x = 5;"
-		expression.withCString {
+		try expression.withCString {
 			kcc_inmem($0, expression.count)
-			let node = parser_parse()
-			XCTAssertNotNil(node)
+			let node = try #require(parser_parse())
 			print_ast(node)
 		}
 	}
 
-	func testMultipleDeclaration() {
+	@Test("int x, y, z;")
+	func testMultipleDeclaration() async throws {
 		let expression = "int x, y, z;"
-		expression.withCString {
+		try expression.withCString {
 			kcc_inmem($0, expression.count)
-			let node = parser_parse()
-			XCTAssertNotNil(node)
+			let node = try #require(parser_parse())
 			print_ast(node)
 		}
 	}
 
-	func testMultiplePointerDeclaration() {
+	@Test("int *x, **y, ***z;")
+	func testMultiplePointerDeclaration() async throws {
 		let expression = "int *x, **y, ***z;"
-		expression.withCString {
+		try expression.withCString {
 			kcc_inmem($0, expression.count)
-			let node = parser_parse()
-			XCTAssertNotNil(node)
+			let node = try #require(parser_parse())
 			print_ast(node)
 		}
 	}
 
-	func testMultipleArrayDeclaration() {
+	@Test("int x[2], *y[SIZE], (*z)[SIZE+5];")
+	func testMultipleArrayDeclaration() async throws {
 		let expression = "int x[2], *y[SIZE], (*z)[SIZE+5];"
-		expression.withCString {
+		try expression.withCString {
 			kcc_inmem($0, expression.count)
-			let node = parser_parse()
-			XCTAssertNotNil(node)
+			let node = try #require(parser_parse())
 			print_ast(node)
 		}
 	}
 
-	func testComplexDeclaration() {
+	@Test("int (*x[4])()[3], **y(), ***z[2];")
+	func testComplexDeclaration() async throws {
 		let expression = "int (*x[4])()[3], **y(), ***z[2];"
-		expression.withCString {
+		try expression.withCString {
 			kcc_inmem($0, expression.count)
-			let node = parser_parse()
-			XCTAssertNotNil(node)
+			let node = try #require(parser_parse())
 			print_ast(node)
 		}
 	}

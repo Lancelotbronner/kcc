@@ -5,19 +5,19 @@
 //  Created by Christophe Bronner on 2024-07-20.
 //
 
-import XCTest
+import Testing
 import libkcc
+import Darwin
 
-class ExpressionTests: XCCompilerTestCase {
-	
-	func testExpression() {
+@Suite(.tags(.parser, .expression))
+struct ExpressionTests {
+
+	@Test("x + (short)5 * 3 * 4")
+	func testExpression() async throws {
 		let expression = "x + (short)5 * 3 * 4"
-		expression.withCString {
-			kcc_inmem($0, expression.count)
-			let node = parser_parse()
-			XCTAssertNotNil(node)
-			print_ast(node)
-		}
+		kcc_inmem(strdup(expression), expression.count)
+		let node = try #require(parser_parse())
+		print_ast(node)
 	}
 
 }

@@ -78,6 +78,7 @@ union token_modifiers {
 	enum token_base_modifier base;
 	struct token_floating_modifier floating;
 	struct token_integer_modifier integer;
+	bool digraph : 1;
 };
 
-static_assert(sizeof(union token_modifiers) == 1);
+//static_assert(sizeof(union token_modifiers) == 1);

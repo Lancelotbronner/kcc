@@ -35,9 +35,8 @@ void ast_unary_expression(struct ast_node *node, enum ast_kind op, struct ast_no
 /// - Parameters:
 ///   - node: The node to initialize.
 ///   - value: The value of the integer literal.
-///   - base: The base of the integer literal, or `BASE_NONE`.
-///   - suffix: The suffix of the integer literal, or `IMOD_NONE`.
-void ast_integer_literal(struct ast_node *node, size_t value, enum token_base_modifier base, enum token_integer_modifier suffix);
+///   - modifier: The modifier of the integer literal.
+void ast_integer_literal(struct ast_node *node, size_t value, struct token_integer_modifier modifier);
 
 /// Initializes an identifier AST node.
 /// - Parameters:

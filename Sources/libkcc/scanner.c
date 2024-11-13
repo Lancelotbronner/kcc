@@ -1,244 +1,152 @@
 //
-//  scanner.c
+//  scanner2.c
+//  kcc2
 //
-//
-//  Created by Christophe Bronner on 2024-07-04.
+//  Created by Christophe Bronner on 2024-10-24.
 //
 
-#include "scanner.h"
+#include <kcc/scanner.h>
 
-#include <kcc/diagnostics.h>
+#include <kcc/diagnostic.h>
 
+#include "globals.h" // Line, Column
+
+#include <assert.h>
 #include <ctype.h>
-#include <string.h>
+#include <stdlib.h> // malloc
 
-bool Preprocessor = false;
+//FIXME: Workaround for lexer
+struct scanner __Scanner;
+scanner_t Scanner = &__Scanner;
 
-bool scan() {
-	// skip whitespace
-	skip();
+#define PUTBACK_MAX 2
 
-	// try determining the token based on the input character
-	Token.kind = scan_fixed_len(Character);
+struct scanner {
+	const char *buffer;
+	const char *eof;
 
-	// if its not a single character token, scan multi-character tokens
-	if (Token.kind == T_UNKNOWN && !scan_varlen(Character))
+	/// Points to the start of the current token.
+	const char *anchor;
+	/// Points to the current reading head.
+	const char *head;
+
+	/// Character currently pointed to by the scanner.
+	char character;
+
+	char putback[PUTBACK_MAX];
+	unsigned putback_index;
+};
+
+size_t scanner_size() {
+	return sizeof(struct scanner);
+}
+
+scanner_t scanner_alloc() {
+	return malloc(scanner_size());
+}
+
+void scanner_init(scanner_t scanner, char const *buffer, size_t size) {
+	assert(buffer);
+	assert(size > 0);
+	*scanner = (struct scanner) {
+		.buffer = buffer,
+		.eof = buffer + size - 1,
+
+		.anchor = buffer,
+		.head = buffer + 1,
+
+		.character = *buffer,
+		.putback_index = 0,
+	};
+}
+
+char scanner_peek(scanner_t scanner) {
+	return scanner->character;
+}
+
+bool scanner_eof(scanner_t scanner) {
+	return scanner->head == scanner->eof;
+}
+
+static inline void scanner_handle_line_continuation(scanner_t scanner) {
+	// Whitespace after a backslash is a potential line continuation.
+	if (scanner->character != '\\' || scanner_eof(scanner) || !isspace(scanner_lookahead(scanner, 0)))
+		return;
+
+	// Handle whitespace between the backslash and the newline to help diagnose errors.
+	char const *head = scanner->head;
+	while (*head++ != '\n' && head != scanner->eof && isspace(*head))
+		continue;
+
+	// Diagnose whitespace between the backslash and newline.
+	ptrdiff_t length = head - scanner->head - 1;
+	if (length > 0 && !(length == 1 && head < scanner->eof && *head == '\r')) {
+		diagnostic_code("LEX", 2);
+		diagnostic_level(DIAGNOSTIC_ERROR);
+		diagnostic_location(scanner->head, (uint32_t)Line, (uint32_t)Column);
+		diagnostic_snippet(0, length, "invalid whitespace in line continuation");
+		diagnostic_emit();
+	}
+
+	scanner->head = head;
+	scanner->character = *head;
+	//TODO: Update line & column numbers
+}
+
+/// Advances to the next character, taking newline breaks into account.
+///
+/// - See Also: `5.1.1.2 Translation phases`
+bool scanner_advance(scanner_t scanner) {
+	// Take putback in account.
+	if (scanner->putback_index) {
+		scanner->character = scanner->putback[--scanner->putback_index];
+		return true;
+	}
+
+	/// Check whether we have more to read.
+	if (scanner_eof(scanner)) {
+		scanner->character = 0;
 		return false;
-
-	// we found a token
-	return true;
-}
-
-enum token_kind scan_fixed_len(int c) {
-	switch (c) {
-	case EOF: return T_EOF;
-	case '\0': return T_EOF;
-	case '(': return T_LPAREN;
-	case ')': return T_RPAREN;
-	case '[': return T_LBRACKET;
-	case ']': return T_RBRACKET;
-	case '{': return T_LCURLY;
-	case '}': return T_RCURLY;
-	case '*': return T_ASTERISK;
-	case '/': return T_DIVIDE;
-	case ',': return T_COMMA;
-	case ';': return T_SEMICOLON;
-	case '.': return T_PERIOD;
-	case '^': return T_CARET;
-
-	case '#':
-		Preprocessor = true;
-		return T_DIRECTIVE;
-	case '+':
-		switch (next()) {
-		case '+': return T_INCREMENT;
-		default:
-			putback(Character);
-			return T_PLUS;
-		}
-	case '-':
-		switch (next()) {
-		case '>': return T_ARROW;
-		case '-': return T_DECREMENT;
-		default:
-			putback(Character);
-			return T_SUBTRACT;
-		}
-	case '|':
-		switch (next()) {
-		case '|': return T_LOGICAL_OR;
-		default:
-			putback(Character);
-			return T_PIPE;
-		}
-	case '=':
-		if (next() == '=')
-			return T_EQ;
-		putback(Character);
-		return T_ASSIGN;
-
-	case '&':
-		if (next() == '&')
-			return T_LOGICAL_AND;
-		putback(Character);
-		return T_AMPERSAND;
-
-	case '!':
-		switch (next()) {
-		case '=': return T_NEQ;
-		default:
-			putback(Character);
-			return T_EXCLAIM;
-		}
-	case '<':
-		switch (next()) {
-		case '=': return T_LTE;
-		case '<': return T_LSHIFT;
-		default:
-			putback(Character);
-			return T_LT;
-		}
-	  case '>':
-		switch (next()) {
-		case '=': return T_GTE;
-		case '>': return T_RSHIFT;
-		default:
-			putback(Character);
-			return T_GT;
-		}
-	default:
-		return T_UNKNOWN;
-	}
-}
-
-bool scan_varlen(int c) {
-	if (isdigit(c)) {
-		Integer = scan_int(c);
-		Token.kind = T_INTEGER_LITERAL;
-		return true;
 	}
 
-	if (isalpha(c) || '_' == c) {
-		// read in a keyword or identifier
-		int length = scan_identifier(c, Text, TEXTLEN);
-		if (!length)
-			return false;
+	// Advance to the next character.
+	scanner->character = *scanner->head++;
 
-		// if it's a recognised keyword, return that token
-		Token.kind = keyword(Text);
+	//TODO: Keep track of line and column in scanner
+//	// Keep our physical line number in sync with the file.
+//	if (*CurPtr == '\n') {
+//		Line++;
+//		Column = 1;
+//	}
 
-		// not a recognised keyword, so it must be an identifier
-		if (Token.kind == T_UNKNOWN)
-			Token.kind = T_IDENTIFIER;
-
-		return true;
-	}
-
-	// the character isn't part of any recognised token, error
-	fatalc("unrecognized character", c);
-	return false;
+	// Handle line continuations if required.
+	scanner_handle_line_continuation(scanner);
 }
 
-#pragma mark - Scan Functions
-
-size_t scan_int(int c) {
-	ssize_t k, val = 0;
-
-	// convert each character into an int value
-	while ((k = chrpos("0123456789", c)) >= 0 && k < 10) {
-		val = val * 10 + k;
-		c = next();
-	}
-
-	// we hit a non-integer character, put it back.
-	putback(c);
-	return val;
+ptrdiff_t scanner_anchor(scanner_t scanner) {
+	ptrdiff_t length = scanner->head - scanner->anchor;
+	scanner->anchor = scanner->head;
+	return length;
 }
 
-int scan_identifier(int c, char *buf, int lim) {
-	int i = 0;
-
-	// allow digits, alpha and underscores
-	while (isalpha(c) || isdigit(c) || '_' == c) {
-		// error if we hit the identifier length limit,
-		// else append to buf[] and get next character
-		if (lim - 1 == i) {
-			printf("identifier too long on line %zu\n", Line);
-			return 0;
-		} else if (i < lim - 1) {
-			buf[i++] = c;
-		}
-		c = next();
-	}
-	// we hit a non-valid character, put it back.
-	// NUL-terminate the buf[] and return the length
-	putback(c);
-	buf[i] = '\0';
-	return i;
+void scanner_putback(scanner_t scanner, char c) {
+	if (scanner->putback_index == PUTBACK_MAX)
+		fatal("Putback stack overflow");
+	scanner->putback[scanner->putback_index++] = c;
 }
 
-enum token_kind keyword(char *s) {
-#define _keyword(n, match, kind) (strcmp(s, &match[n]) ? T_UNKNOWN : kind)
-#define _keyword1(match, kind) _keyword(1, match, kind)
-#define _keyword2(match, kind) _keyword(2, match, kind)
-	switch (*s++) {
-	case 'b': return _keyword1("bool", T_BOOL);
-	case 'c': return _keyword1("char", T_CHAR);
-	case 'e': return _keyword1("else", T_ELSE);
-	case 'l': return _keyword1("long", T_LONG);
-	case 'r': return _keyword1("return", T_RETURN);
-	case 'u': return _keyword1("unsigned", T_UNSIGNED);
-	case 'w': return _keyword1("while", T_WHILE);
-
-	case 'i':
-		switch (*s++) {
-		case 'f': return _keyword2("if", T_IF);
-		case 'n': return _keyword2("int", T_INT);
-		default: break;
-		}
-	case 's':
-		switch (*s++) {
-		case 'i': return _keyword2("signed", T_SIGNED);
-		case 'h': return _keyword2("short", T_SHORT);
-		default: break;
-		}
-	}
-	return T_UNKNOWN;
+bool scanner_consume(scanner_t scanner, char character) {
+	bool match = scanner->character == character;
+	if (match)
+		scanner_advance(scanner);
+	return match;
 }
 
-#pragma mark - Utility Functions
-
-size_t chrpos(char *s, int c) {
-	char *p;
-	p = strchr(s, c);
-	return (p ? p - s : -1);
+bool scanner_atleast(scanner_t scanner, int count) {
+	return scanner->head + count - 1 < scanner->eof;
 }
 
-int next() {
-	if (Putback) {
-		Character = Putback;
-		Putback = 0;
-		return Character;
-	}
-
-	Character = fgetc(Infile);
-
-	if (Character == '\n') {
-		Line++;
-		Column = 0;
-		Preprocessor = false;
-	}
-	Column++;
-
-	return Character;
-}
-
-void putback(int c) {
-	Putback = c;
-}
-
-void skip() {
-	next();
-	while (isspace(Character))
-		next();
+char scanner_lookahead(scanner_t scanner, int offset) {
+	assert(scanner->head + offset < scanner->eof);
+	return *(scanner->head + offset);
 }

@@ -9,7 +9,7 @@
 
 #include <kcc/ast.h>
 #include <kcc/diagnostics.h>
-#include <kcc/scanner.h>
+#include <kcc/lexer1.h>
 #include <kcc/symtable.h>
 
 static enum type_kind _parse_single_type() {

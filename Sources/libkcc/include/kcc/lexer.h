@@ -21,6 +21,8 @@ struct token Token;
 /// The length of the current token in bytes.
 size_t TokenLength;
 
+void lexer_init();
+
 /// Advance the lexer to the next token.
 ///
 /// Returns `true` if token valid, `false` if no tokens left.
@@ -32,12 +34,13 @@ bool lexer_advance();
 /// Last integer literal scanned.
 size_t IntegerLiteral;
 
-char *StringLiteral;
+const char *StringLiteral;
 
 //MARK: - Lexer V2
 
 struct lexer_state {
-
+	/// Whether the lexer is currently parsing a directive.
+	bool is_directive : 1;
 };
 
 /// Push a new state onto the stack.

@@ -28,8 +28,8 @@ enum token_kind : unsigned char {
 	// Literals
 
 	T_STRING_LITERAL,
-	TL_CHAR,
-	TL_CHARS,
+	T_CHAR_LITERAL,
+	T_CHARS_LITERAL,
 	T_FLOATING_LITERAL,
 	T_INTEGER_LITERAL,
 

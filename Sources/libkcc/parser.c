@@ -9,7 +9,7 @@
 #include "globals.h"
 
 #include <kcc/diagnostics.h>
-#include <kcc/scanner.h>
+#include <kcc/lexer1.h>
 
 struct ast_node *parser_parse() {
 	scan();

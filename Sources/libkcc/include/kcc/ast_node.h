@@ -23,11 +23,7 @@ struct ast_unit {
 struct ast_integer_literal {
 	/// The value of this integer literal.
 	size_t value;
-	/// The base of this integer literal.
-	enum token_base_modifier base : 3;
-	/// The modifier of this integer literal.
-	enum token_integer_suffix modifier : 3;
-	bool is_unsigned : 1;
+	struct token_integer_modifier modifier;
 };
 
 struct ast_unary_expression {

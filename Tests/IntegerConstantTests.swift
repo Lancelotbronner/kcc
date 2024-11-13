@@ -5,12 +5,13 @@
 //  Created by Christophe Bronner on 2024-08-26.
 //
 
-import XCTest
+import Testing
 import libkcc
 
-class IntegerConstantTests: XCCompilerTestCase {
+@Suite(.tags(.parser, .integerLiteral))
+class IntegerConstantTests {
 
-	func test_6_4_4_1_paragraph_3() {
+	func test_6_4_4_1_paragraph_3() async throws {
 		/*
 		0b11’10’11’01 /* 0b11101101 */
 		’1’2 /* character constant ’1’ followed by integer constant 2,

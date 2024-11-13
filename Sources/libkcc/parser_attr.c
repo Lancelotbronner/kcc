@@ -11,7 +11,7 @@
 #include <kcc/attribute.h>
 #include <kcc/attributes.h>
 #include <kcc/diagnostics.h>
-#include <kcc/scanner.h>
+#include <kcc/lexer1.h>
 
 #include <stdlib.h>
 
