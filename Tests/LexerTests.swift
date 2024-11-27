@@ -9,28 +9,33 @@ import Testing
 @preconcurrency import libkcc
 import Darwin
 
-@Suite(.tags(.lexer))
+@Suite(.serialized, .tags(.lexer))
 struct LexerTests {
 
 	@Test("+\\\\n=")
 	func testEscapedNewline() async throws {
 		let code = "+\\\n="
 		kcc_inmem(strdup(code), code.count + 1)
-		scan()
-		scan()
+		lexer_advance()
 		#expect(Token.kind == T_ASSIGN_ADD)
-		#expect(kcc_line() == 2)
-		#expect(kcc_column() == 1)
+		#expect(lexer_eof())
 	}
 
 	@Test("int x = 25;")
 	func testTokens() async throws {
 		let code = "int x = 25;"
 		kcc_inmem(strdup(code), code.count + 1)
-		lexer_init()
-		while lexer_advance() {
-			print(Token)
-		}
+		lexer_advance()
+		#expect(Token.kind == T_INT)
+		lexer_advance()
+		#expect(Token.kind == T_IDENTIFIER)
+		lexer_advance()
+		#expect(Token.kind == T_ASSIGN)
+		lexer_advance()
+		#expect(Token.kind == T_INTEGER_LITERAL)
+		lexer_advance()
+		#expect(Token.kind == T_SEMICOLON)
+		#expect(lexer_eof())
 	}
 
 }

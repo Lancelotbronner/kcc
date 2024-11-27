@@ -7,48 +7,45 @@
 
 #pragma once
 
-#include "token.h"
+#include <kcc/token.h>
+#include <kcc/types.h>
 
 #include <stdbool.h>
 #include <stddef.h>
 
-//TODO: Have a stack of lexer state
-// So we can switch lexers on the go
+//TODO: Move global lexer state into struct
 
 /// The token that was just parsed.
 struct token Token;
 
-/// The length of the current token in bytes.
-size_t TokenLength;
+/// The size of the current token.
+ptrdiff_t TokenLength;
 
-void lexer_init();
+/// Points to the current token within the source buffer.
+char const *TokenSource;
+
+/// Returns the size of the `lexer` struct.
+size_t lexer_size();
+
+/// Allocates a lexer.
+lexer_t lexer_alloc();
+
+/// Initializes a new lexer reading from the specified scanner.
+void lexer_init(lexer_t lexer, scanner_t scanner);
 
 /// Advance the lexer to the next token.
 ///
 /// Returns `true` if token valid, `false` if no tokens left.
 bool lexer_advance();
 
-/// Length of symbols in input
-#define TEXTLEN 512
+/// Returns whether the lexer is currently at end of file.
+bool lexer_eof();
 
-/// Last integer literal scanned.
+/// Current integer literal, if any.
 size_t IntegerLiteral;
 
+/// Current string literal, if any.
 const char *StringLiteral;
 
-//MARK: - Lexer V2
-
-struct lexer_state {
-	/// Whether the lexer is currently parsing a directive.
-	bool is_directive : 1;
-};
-
-/// Push a new state onto the stack.
-/// - Parameter state: The lexer state to use from now on.
-void lexer_push(struct lexer_state state);
-
-/// Pops a state from the stack.
-void lexer_pop();
-
-/// Produces the current state of the lexer.
-struct lexer_state lexer_state();
+/// Current length of a string or character literal, if any.
+size_t LiteralLength;

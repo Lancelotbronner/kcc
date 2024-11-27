@@ -8,20 +8,20 @@
 #include "parser.h"
 #include "globals.h"
 
-#include "lexer1.h"
+#include "lexer.h"
 
 #include <string.h>
 
 //MARK: - String Literal
 
 static enum token_encoding_modifier parse_encoding_prefix() {
-	if (strcmp(Text, "u8") == 0)
+	if (strcmp(TokenSource, "u8") == 0)
 		return ENCODING_UTF8;
-	if (strcmp(Text, "u") == 0)
+	if (strcmp(TokenSource, "u") == 0)
 		return ENCODING_UTF16;
-	if (strcmp(Text, "U") == 0)
+	if (strcmp(TokenSource, "U") == 0)
 		return ENCODING_UTF32;
-	if (strcmp(Text, "L") == 0)
+	if (strcmp(TokenSource, "L") == 0)
 		return ENCODING_WIDE;
 }
 
@@ -30,7 +30,7 @@ struct ast_node *parse_string_literal() {
 
 	if (Token.kind == T_IDENTIFIER) {
 		encoding = parse_encoding_prefix();
-		scan();
+		lexer_advance();
 	}
 
 	//TODO: Complete string literals

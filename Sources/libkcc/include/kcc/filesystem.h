@@ -7,6 +7,9 @@
 
 #pragma once
 
+// Note: This is an interface abstracting over filesystems.
+// The goal is to create virtual filesystems for testing.
+
 typedef struct filesystem *filesystem_t;
 typedef struct file *file_t;
 

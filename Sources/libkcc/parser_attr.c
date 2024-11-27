@@ -11,7 +11,7 @@
 #include <kcc/attribute.h>
 #include <kcc/attributes.h>
 #include <kcc/diagnostics.h>
-#include <kcc/lexer1.h>
+#include <kcc/lexer.h>
 
 #include <stdlib.h>
 
@@ -21,7 +21,7 @@ static struct ast_node *parse_nodiscard_attribute() {
 	struct ast_node *reason = nullptr;
 
 	if (Token.kind == T_LPAREN) {
-		scan();
+		lexer_advance();
 		reason = parse_string_literal();
 		rparen();
 	}
@@ -39,7 +39,7 @@ static struct ast_node *parse_deprecated_attribute() {
 	struct ast_node *reason = nullptr;
 
 	if (Token.kind == T_LPAREN) {
-		scan();
+		lexer_advance();
 		reason = parse_string_literal();
 		rparen();
 	}
@@ -67,7 +67,7 @@ static struct ast_node *parse_unsequenced_attribute() {
 
 static struct ast_node *parse_reproducible_attribute() {
 	//TODO: Validate using parser context
-	//TODO: unsequenced_attribute node
+	//TODO: reproducible_attribute node
 	return nullptr;
 }
 
@@ -98,10 +98,11 @@ static struct ast_node *parse_unknown_attribute() {
 		balance(T_LPAREN, T_RPAREN, &paren);
 		balance(T_LBRACKET, T_RBRACKET, &bracket);
 		balance(T_LCURLY, T_RCURLY, &curly);
-		scan();
+		lexer_advance();
 	} while (bracket != -2);
 
 	//TODO: construct unknown attribute node with that parsed text
+	//TODO: unknown_attribute node
 	return 0;
 }
 
@@ -128,7 +129,7 @@ static bool parse_attribute_scope(enum attribute_scope *scope) {
 		return true;
 	}
 
-	struct attribute_scope_syntax *scope_match = attribute_scope(Text);
+	struct attribute_scope_syntax *scope_match = attribute_scope(TokenSource);
 	if (!scope_match)
 		return false;
 	*scope = scope_match->scope;
@@ -148,7 +149,7 @@ static struct ast_node *parse_attribute() {
 	if (!parse_attribute_scope(&scope))
 		return parse_unknown_attribute();
 
-	struct attribute_syntax *attribute_match = attribute_lookup(scope, Text);
+	struct attribute_syntax *attribute_match = attribute_lookup(scope, TokenSource);
 	//TODO: If deprecated warn
 
 	parse_attribute_invocation(attribute_match->attribute);
@@ -170,7 +171,7 @@ struct ast_node *parse_attribute_sequence() {
 		ast_insert(&attributes, attribute);
 
 		if (Token.kind == T_COMMA) {
-			scan();
+			lexer_advance();
 			comma = true;
 		}
 	}

@@ -8,6 +8,7 @@
 #pragma once
 
 #include <stdbool.h>
+#include <stdint.h>
 
 enum token_kind : unsigned char {
 
@@ -188,6 +189,7 @@ enum token_kind : unsigned char {
 	kenum,
 	kextern,
 	kfalse,
+	kfortran,
 	T_FLOAT,
 	T_FOR,
 	T_GENERIC,
@@ -198,7 +200,7 @@ enum token_kind : unsigned char {
 	T_INT,
 	T_LONG,
 	knoreturn,
-	knullptr,
+	T_NULLPTR,
 	kpragma,
 	kregister,
 	krestrict,
@@ -248,6 +250,11 @@ enum token_kind : unsigned char {
 
 	TOKEN_MAX,
 };
+
+/// Returns the preprocessor keyword of the provided identifier.
+enum token_kind token_preprocessor(char const *identifier, size_t length);
+/// Returns the C keyword of the provided identifier.
+enum token_kind token_keyword(char const *identifier, size_t length);
 
 struct token_metadata {
 	bool is_keyword : 1;

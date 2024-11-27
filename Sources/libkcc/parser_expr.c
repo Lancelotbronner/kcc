@@ -10,7 +10,7 @@
 
 #include <kcc/ast.h>
 #include <kcc/diagnostics.h>
-#include <kcc/lexer1.h>
+#include <kcc/lexer.h>
 #include <kcc/symtable.h>
 
 #pragma mark - Utilities
@@ -23,7 +23,7 @@ static struct ast_node *produce_unary(enum ast_kind op, struct ast_node *operand
 
 static struct ast_node *produce_binary(enum ast_kind op, struct ast_node *left, expression_callback callback) {
 	// Consume the operator
-	scan();
+	lexer_advance();
 
 	struct ast_node *right = callback(true);
 	if (!right) fatal("missing operand in binary expression");
@@ -42,22 +42,22 @@ static struct ast_node *parse_integer_expression() {
 		.suffix = ISUFFIX_NONE,
 		.is_unsigned = false,
 	};
-	ast_integer_literal(node, Integer, modifier);
-	scan();
+	ast_integer_literal(node, IntegerLiteral, modifier);
+	lexer_advance();
 	return node;
 }
 
 static struct ast_node *parse_identifier_expression() {
 	// Lookup or create the symbol
-	struct symbol *symbol = symtable_find(SymbolTable, Text);
+	struct symbol *symbol = symtable_find(SymbolTable, TokenSource);
 	if (!symbol) {
-		symbol = symtable_insert(SymbolTable, Text);
+		symbol = symtable_insert(SymbolTable, TokenSource);
 		//TODO: Warning with diagnostics
-//		fatals("Unknown variable", Text);
+//		fatals("Unknown variable", TokenSource);
 	}
 
 	// Consume the identifier
-	scan();
+	lexer_advance();
 
 	// Produce an identifier expression
 	struct ast_node *node = ast_alloc();
@@ -67,7 +67,7 @@ static struct ast_node *parse_identifier_expression() {
 
 static struct ast_node *parse_parenthesized_expression() {
 	// Consume the lparen
-	scan();
+	lexer_advance();
 	struct ast_node *expression = parse_expression();
 	rparen();
 
@@ -139,7 +139,7 @@ static struct ast_node *parse_primary_expression(bool required) {
 
 static struct ast_node *parse_call_operation(struct ast_node *operand) {
 	// Consume the lparen
-	scan();
+	lexer_advance();
 
 	struct ast_storage arguments = {};
 	bool comma = true;
@@ -151,7 +151,7 @@ static struct ast_node *parse_call_operation(struct ast_node *operand) {
 
 		// Consume a single comma
 		if (Token.kind == T_COMMA) {
-			scan();
+			lexer_advance();
 			comma = true;
 		}
 	}
@@ -221,7 +221,7 @@ static struct ast_node *parse_prefix_expression(bool required) {
 static struct ast_node *parse_cast_operation() {
 	struct ast_cast_expression params = {};
 	// Consume the lparen
-	scan();
+	lexer_advance();
 
 	//TODO: Actually type-name
 	params.type_tree = parse_identifier_expression();
@@ -384,7 +384,7 @@ struct ast_node *parse_conditional_expression(bool required) {
 	// Only continue parsing if its a ternary operator
 	if (Token.kind != T_QUESTION)
 		return condition;
-	scan();
+	lexer_advance();
 
 	struct ast_node *true_expression = parse_expression();
 	colon();
@@ -430,7 +430,7 @@ enum ast_kind assignment_operation(enum token_kind token) {
 
 struct ast_node *parse_comma_operation(struct ast_node *operand) {
 	// Consume the comma
-	scan();
+	lexer_advance();
 	struct ast_node *value = parse_assignment_expression(true);
 
 	struct ast_node *node = ast_alloc();

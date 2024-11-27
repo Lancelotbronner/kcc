@@ -22,3 +22,5 @@ struct token {
 	union token_modifiers modifiers;
 	struct token_flags flags;
 };
+
+//static_assert(sizeof(struct token) == 3);

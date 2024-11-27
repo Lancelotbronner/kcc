@@ -9,13 +9,14 @@
 
 #include <kcc/ast.h>
 #include <kcc/diagnostics.h>
-#include <kcc/lexer1.h>
+#include <kcc/lexer.h>
 #include <kcc/symtable.h>
 
 static enum type_kind _parse_single_type() {
 	switch (Token.kind) {
 	case T_CHAR: return TYP_CHAR;
 	case T_INT: return TYP_INT;
+	case T_SHORT: return TYP_SHORT;
 	case T_VOID: return TYP_VOID;
 	default: return TYP_UNKNOWN;
 	}
@@ -26,11 +27,11 @@ static struct type parse_declaration_specifiers() {
 
 	type.kind = _parse_single_type();
 	if (type.kind != TYP_UNKNOWN) {
-		scan();
+		lexer_advance();
 		return type;
 	}
 
-	fatald("Illegal type, token", Token.kind);
+	fatalt("Illegal type");
 }
 
 struct ast_node *parse_function_declaration(struct type type) {
@@ -38,7 +39,7 @@ struct ast_node *parse_function_declaration(struct type type) {
 	struct ast_node *definition;
 	struct symbol *symbol;
 
-	symbol = symtable_insert(SymbolTable, Text);
+	symbol = symtable_insert(SymbolTable, TokenSource);
 	lparen();
 	rparen();
 
@@ -60,7 +61,7 @@ struct ast_node *parse_variable_declaration(struct type type) {
 	struct ast_node *definition;
 	struct symbol *symbol;
 
-	symbol = symtable_insert(SymbolTable, Text);
+	symbol = symtable_insert(SymbolTable, TokenSource);
 	lparen();
 	rparen();
 
@@ -78,14 +79,14 @@ struct ast_node *parse_variable_declaration(struct type type) {
 
 //TODO: Move initializer parsing to parse_init.c
 struct ast_node *parse_initializer() {
-
+	return parse_expression();
 }
 
 #pragma mark - Declarator Parsing
 
 static struct ast_node *parse_pointer_declarator(struct type *type) {
 	// Consume the `*` and transform the type
-	scan();
+	lexer_advance();
 	*type = type_pointer(*type);
 
 	//TODO: parse optional attribute sequence
@@ -110,10 +111,10 @@ static struct ast_node *parse_grouped_declarator(struct type *type) {
 
 static struct ast_node *parse_identifier_declarator(struct type *type) {
 	// Declare the associated symbol
-	Symbol = symtable_insert(SymbolTable, Text);
+	Symbol = symtable_insert(SymbolTable, TokenSource);
 
 	// Consume the identifier
-	scan();
+	lexer_advance();
 
 	//TODO: parse optional attribute sequence
 
@@ -133,7 +134,7 @@ static struct ast_node *parse_declarator_prefix(struct type *type) {
 
 static struct ast_node *parse_array_declarator(struct type *type, struct ast_node *declarator) {
 	// Consume the `[`
-	scan();
+	lexer_advance();
 	//TODO: parse type qualifiers
 	//TODO: parse static
 	//TODO: parse variable length *
@@ -149,7 +150,7 @@ static struct ast_node *parse_array_declarator(struct type *type, struct ast_nod
 
 static struct ast_node *parse_function_declarator(struct type *type, struct ast_node *declarator) {
 	// Consume the `(`
-	scan();
+	lexer_advance();
 	//TODO: parse function parameter declarations
 	rparen();
 
@@ -186,8 +187,10 @@ static struct ast_node *parse_declaration_declarator(struct type type) {
 	struct ast_node *declarator = parse_declarator(type);
 
 	struct ast_node *initializer = nullptr;
-	if (Token.kind == T_EQ)
+	if (Token.kind == T_ASSIGN) {
+		lexer_advance();
 		initializer = parse_initializer();
+	}
 
 	struct ast_node *node = ast_alloc();
 	ast_declarator(node, Symbol, type, declarator, initializer);
@@ -208,7 +211,7 @@ struct ast_node *parse_declaration() {
 		ast_insert(&declarators, declarator);
 
 		if (Token.kind == T_COMMA) {
-			scan();
+			lexer_advance();
 			comma = true;
 		}
 	}

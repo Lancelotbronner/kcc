@@ -9,17 +9,17 @@
 #include "globals.h"
 
 #include <kcc/diagnostics.h>
-#include <kcc/lexer1.h>
+#include <kcc/lexer.h>
 
 struct ast_node *parser_parse() {
-	scan();
+	lexer_advance();
 	return parse_unit();
 }
 
 void match(enum token_kind t, char *what) {
 	if (Token.kind != t)
 		fatals("expected", what);
-	scan();
+	lexer_advance();
 }
 
 void semi() {

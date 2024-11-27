@@ -50,7 +50,7 @@ void scanner_init(scanner_t scanner, char const *buffer, size_t size) {
 	assert(size > 0);
 	*scanner = (struct scanner) {
 		.buffer = buffer,
-		.eof = buffer + size - 1,
+		.eof = buffer + size,
 
 		.anchor = buffer,
 		.head = buffer + 1,
@@ -65,7 +65,7 @@ char scanner_peek(scanner_t scanner) {
 }
 
 bool scanner_eof(scanner_t scanner) {
-	return scanner->head == scanner->eof;
+	return scanner->head > scanner->eof;
 }
 
 static inline void scanner_handle_line_continuation(scanner_t scanner) {
@@ -123,12 +123,6 @@ bool scanner_advance(scanner_t scanner) {
 	scanner_handle_line_continuation(scanner);
 }
 
-ptrdiff_t scanner_anchor(scanner_t scanner) {
-	ptrdiff_t length = scanner->head - scanner->anchor;
-	scanner->anchor = scanner->head;
-	return length;
-}
-
 void scanner_putback(scanner_t scanner, char c) {
 	if (scanner->putback_index == PUTBACK_MAX)
 		fatal("Putback stack overflow");
@@ -149,4 +143,16 @@ bool scanner_atleast(scanner_t scanner, int count) {
 char scanner_lookahead(scanner_t scanner, int offset) {
 	assert(scanner->head + offset < scanner->eof);
 	return *(scanner->head + offset);
+}
+
+void scanner_anchor(scanner_t scanner) {
+	scanner->anchor = scanner->head - 1;
+}
+
+ptrdiff_t scanner_length(scanner_t scanner) {
+	return scanner->head - scanner->anchor - 1;
+}
+
+char const *scanner_token(scanner_t scanner) {
+	return scanner->anchor;
 }

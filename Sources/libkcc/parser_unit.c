@@ -8,7 +8,7 @@
 #include "parser.h"
 
 #include <kcc/ast.h>
-#include <kcc/lexer1.h>
+#include <kcc/lexer.h>
 
 struct ast_node *parse_unit() {
 	struct ast_storage declarations = {};

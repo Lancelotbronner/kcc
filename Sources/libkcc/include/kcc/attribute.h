@@ -10,6 +10,7 @@
 #include <stdint.h>
 
 enum attribute_kind : uint8_t {
+	A_UNKNOWN,
 	A_DEPRECATED,
 	A_FALLTHROUGH,
 	A_MAYBE_UNUSED,

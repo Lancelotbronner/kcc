@@ -9,7 +9,7 @@ import Testing
 @preconcurrency import libkcc
 import Darwin
 
-@Suite(.tags(.scanner))
+@Suite(.serialized, .tags(.scanner))
 struct ScannerTests {
 
 	@Test("+\\⏎=")

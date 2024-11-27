@@ -11,19 +11,47 @@
 #include "unicode.h"
 
 #include <assert.h>
+#include <stdlib.h> // malloc
 
-//MARK: - Scanner
+//MARK: - Lexer
+
+struct lexer {
+	scanner_t scanner;
+	bool is_within_directive : 1;
+	bool is_at_start_of_line : 1;
+	bool is_at_physical_start_of_line : 1;
+
+	bool is_preprocessor_enabled : 1;
+	bool is_whitespace_preserved : 1;
+	bool is_digraphs_enabled : 1;
+};
 
 #define IsCharacter(c1, c2) (scanner_peek(Scanner) == (c1) || scanner_peek(Scanner) == (c2))
 
-void lexer_init() {
-	
+size_t lexer_size() {
+	return sizeof(struct lexer);
+}
+
+lexer_t lexer_alloc() {
+	return malloc(sizeof(struct lexer));
+}
+
+void lexer_init(lexer_t lexer, scanner_t scanner) {
+	*(lexer) = (struct lexer) {
+		.scanner = scanner,
+	};
+}
+
+bool lexer_eof() {
+	return scanner_eof(Scanner);
 }
 
 //MARK: - Token Utilities
 
 static bool ProduceToken(enum token_kind kind) {
 	Token.kind = kind;
+	TokenLength = scanner_length(Scanner);
+	TokenSource = scanner_token(Scanner);
 	scanner_anchor(Scanner);
 	return true;
 }
@@ -536,13 +564,16 @@ static bool LexCharConstant() {
 //MARK: - Significant Tokens
 
 static bool LexIdentifier() {
-	assert(isxidstart(scanner_peek(Scanner)));
-	scanner_advance(Scanner);
-
 	while (isxidcontinue(scanner_peek(Scanner)))
 		scanner_advance(Scanner);
 
-	return ProduceToken(T_IDENTIFIER);
+	// Identify the keyword or return an identifier
+	//TODO: While parsing attributes always return T_IDENTIFIER
+	ptrdiff_t length = scanner_length(Scanner);
+	char const *token = scanner_token(Scanner);
+	enum token_kind kind = (IsInPreprocessorDirective ? token_preprocessor : token_keyword)(token, length);
+
+	return ProduceToken(kind);
 }
 
 static bool LexDot() {
@@ -583,9 +614,12 @@ static bool _lexer_advance_preprocessor() {
 lex_start:
 	switch (scanner_peek(Scanner)) {
 	case '\0':
-		if (scanner_eof(Scanner))
+		if (scanner_eof(Scanner)) {
+			if (Token.kind != T_EOF)
+				ProduceToken(T_EOF);
 			return false;
-		
+		}
+
 		//TODO: Start diagnosing unexpected null in file
 		Token.flags.leading_space = true;
 
@@ -642,6 +676,18 @@ lex_start:
 		return LexNumericConstant();
 
 		// Identifier
+		// Wide literal
+	case 'L':
+		scanner_advance(Scanner);
+		Token.modifiers.encoding = ENCODING_WIDE;
+
+		switch (scanner_peek(Scanner)) {
+		case '"': return LexStringLiteral();
+		case '\'': return LexCharConstant();
+		default: return LexIdentifier();
+		}
+
+		// Identifier
 		// C23/C++17: UTF-8 literal
 		// C11/C++11: UTF-16 literal
 	case 'u':
@@ -666,28 +712,17 @@ lex_start:
 		default: return LexIdentifier();
 		}
 
-		// Identifier
-		// Wide literal
-	case 'L':
-		scanner_advance(Scanner);
-		Token.modifiers.encoding = ENCODING_WIDE;
-
-		switch (scanner_peek(Scanner)) {
-		case '"': return LexStringLiteral();
-		case '\'': return LexCharConstant();
-		default: return LexIdentifier();
-		}
-
 		// C99 6.4.2: Identifiers.
 	case 'A': case 'B': case 'C': case 'D': case 'E': case 'F': case 'G':
 	case 'H': case 'I': case 'J': case 'K': /* 'L' */ case 'M': case 'N':
-	case 'O': case 'P': case 'Q': /* 'R' */ case 'S': case 'T': /* 'U' */
+	case 'O': case 'P': case 'Q': case 'R': case 'S': case 'T': /* 'U' */
 	case 'V': case 'W': case 'X': case 'Y': case 'Z':
 	case 'a': case 'b': case 'c': case 'd': case 'e': case 'f': case 'g':
 	case 'h': case 'i': case 'j': case 'k': case 'l': case 'm': case 'n':
 	case 'o': case 'p': case 'q': case 'r': case 's': case 't': /* 'u' */
 	case 'v': case 'w': case 'x': case 'y': case 'z':
 	case '_':
+		scanner_advance(Scanner);
 		return LexIdentifier();
 
 		// C99 6.4.4: scanner_peek(Scanner) Constants.
@@ -986,6 +1021,7 @@ lex_start:
 
 lex_next:
 //	Result.clearFlag(Token::NeedsCleaning);
+	scanner_anchor(Scanner);
 	goto lex_start;
 }
 

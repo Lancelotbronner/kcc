@@ -9,7 +9,7 @@ import Testing
 import libkcc
 import Darwin
 
-@Suite(.tags(.parser, .expression))
+@Suite(.serialized, .tags(.parser, .expression))
 struct ExpressionTests {
 
 	@Test("x + (short)5 * 3 * 4")

@@ -11,7 +11,7 @@
 #include <kcc/print.h>
 #include "diagnostics.h"
 #include "globals.h"
-#include "lexer1.h"
+#include "lexer.h"
 
 #include <assert.h>
 #include <stdio.h>

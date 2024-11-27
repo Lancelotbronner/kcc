@@ -9,9 +9,8 @@
 
 #include <kcc/scanner.h>
 
-//TODO: All lexer configuration and state should be in a struct that can be saved and restored or something
-
 scanner_t Scanner;
+
 
 bool IsPreprocessorEnabled;
 bool IsWhitespacePreserved;

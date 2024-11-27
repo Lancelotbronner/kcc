@@ -8,13 +8,13 @@
 #include "parser.h"
 
 #include <kcc/ast.h>
-#include <kcc/lexer1.h>
+#include <kcc/lexer.h>
 
 #pragma mark - Type Specifier Parsing
 
 static struct ast_node *parse_bitint_specifier() {
 	// Consume the keyword
-	scan();
+	lexer_advance();
 
 	lparen();
 	struct ast_node *size = parse_constant_expression();

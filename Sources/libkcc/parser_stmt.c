@@ -9,7 +9,7 @@
 
 #include <kcc/ast.h>
 #include <kcc/diagnostics.h>
-#include <kcc/lexer1.h>
+#include <kcc/lexer.h>
 #include <kcc/symtable.h>
 
 struct ast_node *parse_statements() {
@@ -56,7 +56,7 @@ struct ast_node *parse_compound_statement() {
 
 	while (true) {
 		if (Token.kind == T_RCURLY) {
-			scan();
+			lexer_advance();
 			return tree;
 		}
 
@@ -80,7 +80,7 @@ struct ast_node *parse_if_statement() {
 	then_tree = parse_statement();
 
 	if (Token.kind == T_ELSE) {
-		scan();
+		lexer_advance();
 		else_tree = parse_statement();
 	}
 
@@ -137,10 +137,10 @@ struct ast_node *parse_var_declaration() {
 //	type = parse_type();
 
 	identifier();
-	symbol = symtable_insert(SymbolTable, Text);
+	symbol = symtable_insert(SymbolTable, TokenSource);
 	symbol->type = type;
 	
-	//  genglobsym(Text);
+	//  genglobsym(TokenSource);
 	semi();
 
 	return nullptr;
@@ -154,8 +154,8 @@ struct ast_node *parse_assignment_statement() {
 	identifier();
 
 	// Check it's been defined then make a leaf node for it
-	if ((symbol = symtable_find(SymbolTable,Text))) {
-		fatals("Undeclared variable", Text);
+	if ((symbol = symtable_find(SymbolTable,TokenSource))) {
+		fatals("Undeclared variable", TokenSource);
 	}
 
 	right = ast_alloc();

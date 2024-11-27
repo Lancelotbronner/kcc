@@ -11,6 +11,7 @@ extension Tag {
 	@Tag static var declaration: Self
 	@Tag static var expression: Self
 
+	@Tag static var token: Self
 	@Tag static var integerLiteral: Self
 
 	@Tag static var scanner: Self

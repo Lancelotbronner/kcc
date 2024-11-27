@@ -7,11 +7,14 @@
 
 #pragma once
 
+#include <kcc/types.h>
+
 #include <stdint.h>
 
-typedef struct scanner *scanner_t;
-
+/// Returns the size of the `scanner` struct.
 size_t scanner_size();
+
+/// Allocates a scanner.
 scanner_t scanner_alloc();
 
 /// Initializes a new scanner reading from the specified buffer.
@@ -41,22 +44,24 @@ bool scanner_advance(scanner_t scanner);
 /// - Returns: Whether the characters matched.
 bool scanner_consume(scanner_t scanner, char character);
 
-/// Moves the anchor to the current buffer location, returns the number of bytes jumped.
-/// - Returns: The length of the range formed by the previous and new anchor location.
-ptrdiff_t scanner_anchor(scanner_t scanner);
-
 /// Puts a character back into the scanner's stream.
-/// - Parameters:
-///   - scanner: The scanner to put into.
-///   - character: The character to put back.
+/// - Parameter character: The character to put back.
 void scanner_putback(scanner_t scanner, char character);
 
 /// Returns whether the scanner has at least `count` additional characters.
-/// - Parameter scanner: The scanner to query.
+/// - Parameter count: The minimum remaining characters required to return `true`.
 bool scanner_atleast(scanner_t scanner, int count);
 
 /// Returns a character ahead in the stream, doesn't check bounds.
-/// - Parameters:
-///   - scanner: The scanner to query.
-///   - offset: How far ahead to look, 0 means the next character.
+/// - Parameter offset: How far ahead to look, 0 means the next character.
 char scanner_lookahead(scanner_t scanner, int offset);
+
+/// Moves the anchor to the current buffer location, returns the number of bytes jumped.
+/// - Returns: The length of the formed token.
+void scanner_anchor(scanner_t scanner);
+
+/// Returns the length of the scanner's current token.
+ptrdiff_t scanner_length(scanner_t scanner);
+
+/// Returns a pointer to the start of the current token within the source buffer.
+char const *scanner_token(scanner_t scanner);
