@@ -30,7 +30,7 @@ struct ast_node *parse_string_literal() {
 
 	if (Token.kind == T_IDENTIFIER) {
 		encoding = parse_encoding_prefix();
-		lexer_advance();
+		lexer_advance(Lexer);
 	}
 
 	//TODO: Complete string literals

@@ -82,8 +82,8 @@ void diagnostic_attach();
 /// Emits the current diagnostic to all consumers.
 void diagnostic_emit();
 
-[[noreturn]] void fatal(char *s);
-[[noreturn]] void fatals(char *s1, char *s2);
-[[noreturn]] void fatald(char *s, int d);
-[[noreturn]] void fatalc(char *s, int c);
-[[noreturn]] void fatalt(char *s);
+[[noreturn]] void fatal(char const *s);
+[[noreturn]] void fatals(char const *s1, char const *s2);
+[[noreturn]] void fatald(char const *s, int d);
+[[noreturn]] void fatalc(char const *s, int c);
+[[noreturn]] void fatalt(char const *s);

@@ -14,9 +14,8 @@ struct ScannerTests {
 
 	@Test("+\\⏎=")
 	func testEscapedNewline() async throws {
-		let code = "+\\\n="
 		let scanner = scanner_alloc()
-		scanner_init(scanner, strdup(code), code.count + 1)
+		scanner_init(scanner, "+\\\n=")
 		#expect(scanner_peek(scanner) == Int8(bitPattern: UInt8(ascii: "+")))
 		scanner_advance(scanner)
 		#expect(scanner_peek(scanner) == Int8(bitPattern: UInt8(ascii: "=")))
@@ -26,9 +25,8 @@ struct ScannerTests {
 
 	@Test("+\\ ⏎=")
 	func testEscapedNewlineWithSeparatingWhitespace() async throws {
-		let code = "+\\ \n="
 		let scanner = scanner_alloc()
-		scanner_init(scanner, strdup(code), code.count + 1)
+		scanner_init(scanner, "+\\ \n=")
 		#expect(scanner_peek(scanner) == Int8(bitPattern: UInt8(ascii: "+")))
 		scanner_advance(scanner)
 		#expect(scanner_peek(scanner) == Int8(bitPattern: UInt8(ascii: "=")))

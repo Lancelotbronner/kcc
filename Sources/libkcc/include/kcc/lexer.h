@@ -15,6 +15,15 @@
 
 //TODO: Move global lexer state into struct
 
+scanner_t Scanner;
+lexer_t Lexer;
+
+enum lexer_mode : unsigned char {
+	LEXER_SOURCE,
+	LEXER_DIRECTIVE,
+	LEXER_ATTRIBUTES,
+};
+
 /// The token that was just parsed.
 struct token Token;
 
@@ -33,13 +42,26 @@ lexer_t lexer_alloc();
 /// Initializes a new lexer reading from the specified scanner.
 void lexer_init(lexer_t lexer, scanner_t scanner);
 
+/// Returns the lexer's current mode.
+/// - SeeAlso: ``lexer_enter``
+enum lexer_mode lexer_mode(lexer_t lexer);
+
+/// Makes the lexer enter the specified mode.
+/// - Parameter mode: The mode to enter.
+/// - SeeAlso: ``lexer_mode``
+void lexer_enter(lexer_t lexer, enum lexer_mode mode);
+
+/// Returns whether the lexer is currently at end of file.
+bool lexer_eof(lexer_t lexer);
+
 /// Advance the lexer to the next token.
 ///
 /// Returns `true` if token valid, `false` if no tokens left.
-bool lexer_advance();
+bool lexer_advance(lexer_t lexer);
 
-/// Returns whether the lexer is currently at end of file.
-bool lexer_eof();
+/// Consumes the token if it matches, returns whether it matched.
+/// - Parameter token: The token to match.
+bool lexer_match(lexer_t lexer, enum token_kind token);
 
 /// Current integer literal, if any.
 size_t IntegerLiteral;

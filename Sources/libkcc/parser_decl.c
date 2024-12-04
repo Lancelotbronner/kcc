@@ -27,7 +27,7 @@ static struct type parse_declaration_specifiers() {
 
 	type.kind = _parse_single_type();
 	if (type.kind != TYP_UNKNOWN) {
-		lexer_advance();
+		lexer_advance(Lexer);
 		return type;
 	}
 
@@ -86,7 +86,7 @@ struct ast_node *parse_initializer() {
 
 static struct ast_node *parse_pointer_declarator(struct type *type) {
 	// Consume the `*` and transform the type
-	lexer_advance();
+	lexer_advance(Lexer);
 	*type = type_pointer(*type);
 
 	//TODO: parse optional attribute sequence
@@ -114,7 +114,7 @@ static struct ast_node *parse_identifier_declarator(struct type *type) {
 	Symbol = symtable_insert(SymbolTable, TokenSource);
 
 	// Consume the identifier
-	lexer_advance();
+	lexer_advance(Lexer);
 
 	//TODO: parse optional attribute sequence
 
@@ -134,7 +134,7 @@ static struct ast_node *parse_declarator_prefix(struct type *type) {
 
 static struct ast_node *parse_array_declarator(struct type *type, struct ast_node *declarator) {
 	// Consume the `[`
-	lexer_advance();
+	lexer_advance(Lexer);
 	//TODO: parse type qualifiers
 	//TODO: parse static
 	//TODO: parse variable length *
@@ -150,7 +150,7 @@ static struct ast_node *parse_array_declarator(struct type *type, struct ast_nod
 
 static struct ast_node *parse_function_declarator(struct type *type, struct ast_node *declarator) {
 	// Consume the `(`
-	lexer_advance();
+	lexer_advance(Lexer);
 	//TODO: parse function parameter declarations
 	rparen();
 
@@ -188,7 +188,7 @@ static struct ast_node *parse_declaration_declarator(struct type type) {
 
 	struct ast_node *initializer = nullptr;
 	if (Token.kind == T_ASSIGN) {
-		lexer_advance();
+		lexer_advance(Lexer);
 		initializer = parse_initializer();
 	}
 
@@ -211,7 +211,7 @@ struct ast_node *parse_declaration() {
 		ast_insert(&declarators, declarator);
 
 		if (Token.kind == T_COMMA) {
-			lexer_advance();
+			lexer_advance(Lexer);
 			comma = true;
 		}
 	}

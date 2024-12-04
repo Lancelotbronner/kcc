@@ -21,7 +21,7 @@ static struct ast_node *parse_nodiscard_attribute() {
 	struct ast_node *reason = nullptr;
 
 	if (Token.kind == T_LPAREN) {
-		lexer_advance();
+		lexer_advance(Lexer);
 		reason = parse_string_literal();
 		rparen();
 	}
@@ -39,7 +39,7 @@ static struct ast_node *parse_deprecated_attribute() {
 	struct ast_node *reason = nullptr;
 
 	if (Token.kind == T_LPAREN) {
-		lexer_advance();
+		lexer_advance(Lexer);
 		reason = parse_string_literal();
 		rparen();
 	}
@@ -98,7 +98,7 @@ static struct ast_node *parse_unknown_attribute() {
 		balance(T_LPAREN, T_RPAREN, &paren);
 		balance(T_LBRACKET, T_RBRACKET, &bracket);
 		balance(T_LCURLY, T_RCURLY, &curly);
-		lexer_advance();
+		lexer_advance(Lexer);
 	} while (bracket != -2);
 
 	//TODO: construct unknown attribute node with that parsed text
@@ -171,7 +171,7 @@ struct ast_node *parse_attribute_sequence() {
 		ast_insert(&attributes, attribute);
 
 		if (Token.kind == T_COMMA) {
-			lexer_advance();
+			lexer_advance(Lexer);
 			comma = true;
 		}
 	}

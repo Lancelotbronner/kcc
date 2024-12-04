@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <kcc/types.h>
+
 #include <stdio.h>
 
 /// Current line number.

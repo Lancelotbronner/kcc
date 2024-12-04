@@ -9,16 +9,14 @@
 
 #include <kcc/scanner.h>
 
-scanner_t Scanner;
 
-
-bool IsPreprocessorEnabled;
-bool IsWhitespacePreserved;
-bool IsCommentPreserved;
-bool IsDocumentationPreserved;
-bool IsDigraphsEnabled;
-
-bool HasLeadingWhitespace;
-bool IsAtStartOfLine;
-bool IsAtPhysicalStartOfLine;
-bool IsInPreprocessorDirective;
+//bool IsPreprocessorEnabled;
+//bool IsWhitespacePreserved;
+//bool IsCommentPreserved;
+//bool IsDocumentationPreserved;
+//bool IsDigraphsEnabled;
+//
+//bool HasLeadingWhitespace;
+//bool IsAtStartOfLine;
+//bool IsAtPhysicalStartOfLine;
+//bool IsInPreprocessorDirective;

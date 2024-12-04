@@ -16,7 +16,9 @@ void kcc_infile(FILE *file) {
 
 void kcc_inmem(const void *buf, size_t size) {
 	Infile = fmemopen((void*)buf, size, "r");
+	
 	scanner_init(Scanner, buf, size);
+	lexer_init(Lexer, Scanner);
 }
 
 void kcc_outfile(FILE *file) {

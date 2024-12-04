@@ -23,7 +23,7 @@ static struct ast_node *produce_unary(enum ast_kind op, struct ast_node *operand
 
 static struct ast_node *produce_binary(enum ast_kind op, struct ast_node *left, expression_callback callback) {
 	// Consume the operator
-	lexer_advance();
+	lexer_advance(Lexer);
 
 	struct ast_node *right = callback(true);
 	if (!right) fatal("missing operand in binary expression");
@@ -43,7 +43,7 @@ static struct ast_node *parse_integer_expression() {
 		.is_unsigned = false,
 	};
 	ast_integer_literal(node, IntegerLiteral, modifier);
-	lexer_advance();
+	lexer_advance(Lexer);
 	return node;
 }
 
@@ -57,7 +57,7 @@ static struct ast_node *parse_identifier_expression() {
 	}
 
 	// Consume the identifier
-	lexer_advance();
+	lexer_advance(Lexer);
 
 	// Produce an identifier expression
 	struct ast_node *node = ast_alloc();
@@ -67,7 +67,7 @@ static struct ast_node *parse_identifier_expression() {
 
 static struct ast_node *parse_parenthesized_expression() {
 	// Consume the lparen
-	lexer_advance();
+	lexer_advance(Lexer);
 	struct ast_node *expression = parse_expression();
 	rparen();
 
@@ -139,7 +139,7 @@ static struct ast_node *parse_primary_expression(bool required) {
 
 static struct ast_node *parse_call_operation(struct ast_node *operand) {
 	// Consume the lparen
-	lexer_advance();
+	lexer_advance(Lexer);
 
 	struct ast_storage arguments = {};
 	bool comma = true;
@@ -151,7 +151,7 @@ static struct ast_node *parse_call_operation(struct ast_node *operand) {
 
 		// Consume a single comma
 		if (Token.kind == T_COMMA) {
-			lexer_advance();
+			lexer_advance(Lexer);
 			comma = true;
 		}
 	}
@@ -221,7 +221,7 @@ static struct ast_node *parse_prefix_expression(bool required) {
 static struct ast_node *parse_cast_operation() {
 	struct ast_cast_expression params = {};
 	// Consume the lparen
-	lexer_advance();
+	lexer_advance(Lexer);
 
 	//TODO: Actually type-name
 	params.type_tree = parse_identifier_expression();
@@ -384,7 +384,7 @@ struct ast_node *parse_conditional_expression(bool required) {
 	// Only continue parsing if its a ternary operator
 	if (Token.kind != T_QUESTION)
 		return condition;
-	lexer_advance();
+	lexer_advance(Lexer);
 
 	struct ast_node *true_expression = parse_expression();
 	colon();
@@ -430,7 +430,7 @@ enum ast_kind assignment_operation(enum token_kind token) {
 
 struct ast_node *parse_comma_operation(struct ast_node *operand) {
 	// Consume the comma
-	lexer_advance();
+	lexer_advance(Lexer);
 	struct ast_node *value = parse_assignment_expression(true);
 
 	struct ast_node *node = ast_alloc();

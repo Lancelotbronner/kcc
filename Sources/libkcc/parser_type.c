@@ -14,7 +14,7 @@
 
 static struct ast_node *parse_bitint_specifier() {
 	// Consume the keyword
-	lexer_advance();
+	lexer_advance(Lexer);
 
 	lparen();
 	struct ast_node *size = parse_constant_expression();

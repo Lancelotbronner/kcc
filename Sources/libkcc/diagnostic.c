@@ -119,30 +119,30 @@ void diagnostic_emit() {
 #endif
 }
 
-void fatal(char *message) {
+void fatal(char const *message) {
 	fprintf(stderr, "[:%zu:%zu] %s\n", Line, Column, message);
 	assert(false);
 	exit(EXIT_FAILURE);
 }
 
-void fatals(char *message, char *value) {
+void fatals(char const *message, char const *value) {
 	fprintf(stderr, "[:%zu:%zu] %s: %s\n", Line, Column, message, value);
 	assert(false);
 	exit(EXIT_FAILURE);
 }
 
-void fatald(char *message, int value) {
+void fatald(char const *message, int value) {
 	fprintf(stderr, "[:%zu:%zu] %s: %d\n", Line, Column, message, value);
 	assert(false);
 	exit(EXIT_FAILURE);
 }
 
-void fatalc(char *message, int value) {
+void fatalc(char const *message, int value) {
 	fprintf(stderr, "[:%zu:%zu] %s: %c\n", Line, Column, message, value);
 	assert(false);
 	exit(EXIT_FAILURE);
 }
 
-void fatalt(char *s) {
+void fatalt(char const *s) {
 	fatals(s, token_nameof(Token.kind));
 }

@@ -13,20 +13,28 @@
 #include <assert.h>
 #include <stdlib.h> // malloc
 
+//FIXME: Workaround for parser
+struct lexer __Lexer;
+lexer_t Lexer = &__Lexer;
+
 //MARK: - Lexer
 
 struct lexer {
+	//TODO: Copy scanner?
 	scanner_t scanner;
-	bool is_within_directive : 1;
-	bool is_at_start_of_line : 1;
-	bool is_at_physical_start_of_line : 1;
 
-	bool is_preprocessor_enabled : 1;
+	enum lexer_mode mode : 2;
+
+	// Configuration flags
 	bool is_whitespace_preserved : 1;
 	bool is_digraphs_enabled : 1;
+
+	// State flags
+	bool is_at_start_of_line : 1;
+	bool is_at_physical_start_of_line : 1;
 };
 
-#define IsCharacter(c1, c2) (scanner_peek(Scanner) == (c1) || scanner_peek(Scanner) == (c2))
+#define IsCharacter(c1, c2) (scanner_peek(lexer->scanner) == (c1) || scanner_peek(lexer->scanner) == (c2))
 
 size_t lexer_size() {
 	return sizeof(struct lexer);
@@ -42,26 +50,41 @@ void lexer_init(lexer_t lexer, scanner_t scanner) {
 	};
 }
 
-bool lexer_eof() {
-	return scanner_eof(Scanner);
+enum lexer_mode lexer_mode(lexer_t lexer) {
+	return lexer->mode;
+}
+
+void lexer_enter(lexer_t lexer, enum lexer_mode mode) {
+	lexer->mode = mode;
+}
+
+bool lexer_eof(lexer_t lexer) {
+	return scanner_eof(lexer->scanner);
+}
+
+bool lexer_match(lexer_t lexer, enum token_kind token) {
+	if (Token.kind != token)
+		return false;
+	lexer_advance(lexer);
 }
 
 //MARK: - Token Utilities
 
-static bool ProduceToken(enum token_kind kind) {
+static bool ProduceToken(lexer_t lexer, enum token_kind kind) {
+	//TODO: Move Token, TokenLength and TokenSource into the lexer
 	Token.kind = kind;
-	TokenLength = scanner_length(Scanner);
-	TokenSource = scanner_token(Scanner);
-	scanner_anchor(Scanner);
+	TokenLength = scanner_length(lexer->scanner);
+	TokenSource = scanner_token(lexer->scanner);
+	scanner_anchor(lexer->scanner);
 	return true;
 }
 
-static bool ConsumeToken(enum token_kind kind) {
-	scanner_advance(Scanner);
-	return ProduceToken(kind);
+static bool ConsumeToken(lexer_t lexer, enum token_kind kind) {
+	scanner_advance(lexer->scanner);
+	return ProduceToken(lexer, kind);
 }
 
-//MARK: - scanner_peek(Scanner) Classes
+//MARK: - scanner_peek(lexer->scanner) Classes
 
 static bool IsHorizontalWhitespace(char c) {
 	switch (c) {
@@ -178,20 +201,20 @@ static bool LexBlockComment() {
 /// condition, reporting diagnostics and handling other edge cases as required.
 /// This returns true if Result contains a token, false if PP.Lex should be
 /// called again.
-static bool LexEndOfFile() {
+static bool LexEndOfFile(lexer_t lexer) {
 	// If we were in a preprocessor directive we should end it first.
-	if (IsInPreprocessorDirective) {
-		IsInPreprocessorDirective = false;
+	if (lexer->mode == LEXER_DIRECTIVE) {
+		lexer->mode = LEXER_SOURCE;
 
 		//TODO: Warn about missing newline in preprocessor directive in pedantic mode
 
-		return ProduceToken(T_EOD);
+		return ProduceToken(lexer, T_EOD);
 	}
 
 	//TODO: Handle End of Buffer vs End of File
 
 	// Produce the End Of File token
-	return ProduceToken(T_EOF);
+	return ProduceToken(lexer, T_EOF);
 
 //	if (PP->isRecordingPreamble() && PP->isInPrimaryFile()) {
 //		PP->setRecordedPreambleConditionalStack(ConditionalStack);
@@ -241,24 +264,24 @@ static bool LexEndOfFile() {
 
 //MARK: - Numeric Literals
 
-static void TryConsumeInvalidDigitSeparator() {
-	if (scanner_peek(Scanner) != '\'')
+static void TryConsumeInvalidDigitSeparator(lexer_t lexer) {
+	if (scanner_peek(lexer->scanner) != '\'')
 		return;
 	//TODO: Diagnose illegal digit separator
 }
 
-static void LexNumericConstantPrefix() {
-	assert(scanner_peek(Scanner) == '0');
-	scanner_advance(Scanner);
+static void LexNumericConstantPrefix(lexer_t lexer) {
+	assert(scanner_peek(lexer->scanner) == '0');
+	scanner_advance(lexer->scanner);
 
-	switch (scanner_peek(Scanner)) {
+	switch (scanner_peek(lexer->scanner)) {
 	case 'x': case 'X':
 		Token.modifiers.base = BASE_HEX;
-		scanner_advance(Scanner);
+		scanner_advance(lexer->scanner);
 		return;
 	case 'b': case 'B':
 		Token.modifiers.base = BASE_BINARY;
-		scanner_advance(Scanner);
+		scanner_advance(lexer->scanner);
 		return;
 	case '8': case '9':
 		Token.modifiers.base = BASE_DECIMAL;
@@ -269,35 +292,35 @@ static void LexNumericConstantPrefix() {
 	}
 }
 
-static bool LexIntegerSuffix() {
+static bool LexIntegerSuffix(lexer_t lexer) {
 	Token.modifiers.integer.suffix = ISUFFIX_NONE;
 	Token.modifiers.integer.is_unsigned = false;
 
 	if (IsCharacter('u', 'U'))
 		Token.modifiers.integer.is_unsigned = true;
 
-	switch (scanner_peek(Scanner)) {
+	switch (scanner_peek(lexer->scanner)) {
 	case 'l': case 'L':
-		scanner_advance(Scanner);
+		scanner_advance(lexer->scanner);
 
 		if (!IsCharacter('l', 'L')) {
 			Token.modifiers.integer.suffix = ISUFFIX_LONG;
 			break;
 		}
 
-		scanner_advance(Scanner);
+		scanner_advance(lexer->scanner);
 		Token.modifiers.integer.suffix = ISUFFIX_LONGLONG;
 		break;
 
 	case 'w': case 'W':
-		scanner_advance(Scanner);
+		scanner_advance(lexer->scanner);
 
 		if (!IsCharacter('b', 'B')) {
-			scanner_putback(Scanner, scanner_peek(Scanner));
+			scanner_putback(lexer->scanner, scanner_peek(lexer->scanner));
 			break;
 		}
 
-		scanner_advance(Scanner);
+		scanner_advance(lexer->scanner);
 		Token.modifiers.integer.suffix = ISUFFIX_BITINT;
 		break;
 	}
@@ -305,12 +328,12 @@ static bool LexIntegerSuffix() {
 	if (!Token.modifiers.integer.is_unsigned && IsCharacter('u', 'U'))
 		Token.modifiers.integer.is_unsigned = true;
 
-	return ProduceToken(T_INTEGER_LITERAL);
+	return ProduceToken(lexer, T_INTEGER_LITERAL);
 }
 
-static bool LexFloatingSuffix() {
+static bool LexFloatingSuffix(lexer_t lexer) {
 	Token.modifiers.floating.suffix = FSUFFIX_NONE;
-	switch (scanner_peek(Scanner)) {
+	switch (scanner_peek(lexer->scanner)) {
 	case 'f': case 'F':
 		Token.modifiers.floating.suffix = FSUFFIX_FLOAT;
 		break;
@@ -318,9 +341,9 @@ static bool LexFloatingSuffix() {
 		Token.modifiers.floating.suffix = FSUFFIX_LONGDOUBLE;
 		break;
 	case 'd': case 'D':
-		scanner_advance(Scanner);
+		scanner_advance(lexer->scanner);
 
-		switch (scanner_peek(Scanner)) {
+		switch (scanner_peek(lexer->scanner)) {
 		case 'f': case 'F':
 			Token.modifiers.floating.suffix = FSUFFIX_DECIMAL32;
 			break;
@@ -331,51 +354,51 @@ static bool LexFloatingSuffix() {
 			Token.modifiers.floating.suffix = FSUFFIX_DECIMAL128;
 			break;
 		default:
-			scanner_putback(Scanner, scanner_peek(Scanner));
+			scanner_putback(lexer->scanner, scanner_peek(lexer->scanner));
 			break;
 		}
-		scanner_advance(Scanner);
+		scanner_advance(lexer->scanner);
 		break;
 	}
 }
 
-static void LexExponentPart() {
+static void LexExponentPart(lexer_t lexer) {
 	if (IsCharacter('+', '-'))
-		scanner_advance(Scanner);
+		scanner_advance(lexer->scanner);
 
-	while (IsDecimalDigit(scanner_peek(Scanner)))
-		scanner_advance(Scanner);
+	while (IsDecimalDigit(scanner_peek(lexer->scanner)))
+		scanner_advance(lexer->scanner);
 }
 
-static bool LexDecimalFractionalPart() {
-	assert(IsDecimalDigit(scanner_peek(Scanner)));
-	TryConsumeInvalidDigitSeparator();
+static bool LexDecimalFractionalPart(lexer_t lexer) {
+	assert(IsDecimalDigit(scanner_peek(lexer->scanner)));
+	TryConsumeInvalidDigitSeparator(lexer);
 
-	while (IsHexadecimalDigit(scanner_peek(Scanner)))
-		scanner_advance(Scanner);
+	while (IsHexadecimalDigit(scanner_peek(lexer->scanner)))
+		scanner_advance(lexer->scanner);
 
-	switch (scanner_peek(Scanner)) {
+	switch (scanner_peek(lexer->scanner)) {
 	case 'E': case 'e':
-		scanner_advance(Scanner);
-		LexExponentPart();
-		return LexFloatingSuffix();
+		scanner_advance(lexer->scanner);
+		LexExponentPart(lexer);
+		return LexFloatingSuffix(lexer);
 
 	case 'P': case 'p':
 		//TODO: Potentially diagnose invalid exponent marker?
 		[[fallthrough]];
 	default:
-		return LexIntegerSuffix();
+		return LexIntegerSuffix(lexer);
 	}
 }
 
-static bool LexHexadecimalFractionalPart() {
-	assert(IsHexadecimalDigit(scanner_peek(Scanner)));
-	TryConsumeInvalidDigitSeparator();
+static bool LexHexadecimalFractionalPart(lexer_t lexer) {
+	assert(IsHexadecimalDigit(scanner_peek(lexer->scanner)));
+	TryConsumeInvalidDigitSeparator(lexer);
 
-	switch (scanner_peek(Scanner)) {
+	switch (scanner_peek(lexer->scanner)) {
 	case 'P': case 'p':
-		scanner_advance(Scanner);
-		LexExponentPart();
+		scanner_advance(lexer->scanner);
+		LexExponentPart(lexer);
 		// C (6.4.4.2 p2):
 		// A floating suffix shall not be used in a hexadecimal floating constant.
 		break;
@@ -384,77 +407,77 @@ static bool LexHexadecimalFractionalPart() {
 		//TODO: Potentially diagnose invalid exponent marker?
 	}
 
-	return ProduceToken(T_FLOATING_LITERAL);
+	return ProduceToken(lexer, T_FLOATING_LITERAL);
 }
 
-static bool LexBinaryConstant() {
-	while (IsBinaryDigit(scanner_peek(Scanner)))
-		scanner_advance(Scanner);
-	return LexIntegerSuffix();
+static bool LexBinaryConstant(lexer_t lexer) {
+	while (IsBinaryDigit(scanner_peek(lexer->scanner)))
+		scanner_advance(lexer->scanner);
+	return LexIntegerSuffix(lexer);
 }
 
-static bool LexOctalConstant() {
-	while (IsOctalDigit(scanner_peek(Scanner)))
-		scanner_advance(Scanner);
-	return LexIntegerSuffix();
+static bool LexOctalConstant(lexer_t lexer) {
+	while (IsOctalDigit(scanner_peek(lexer->scanner)))
+		scanner_advance(lexer->scanner);
+	return LexIntegerSuffix(lexer);
 }
 
-static bool LexDecimalConstant() {
-	while (IsDecimalDigit(scanner_peek(Scanner)))
-		scanner_advance(Scanner);
+static bool LexDecimalConstant(lexer_t lexer) {
+	while (IsDecimalDigit(scanner_peek(lexer->scanner)))
+		scanner_advance(lexer->scanner);
 
-	switch (scanner_peek(Scanner)) {
+	switch (scanner_peek(lexer->scanner)) {
 	case '.':
-		scanner_advance(Scanner);
-		return LexDecimalFractionalPart();
+		scanner_advance(lexer->scanner);
+		return LexDecimalFractionalPart(lexer);
 
 	case 'E': case 'e':
-		scanner_advance(Scanner);
-		LexExponentPart();
-		return LexFloatingSuffix();
+		scanner_advance(lexer->scanner);
+		LexExponentPart(lexer);
+		return LexFloatingSuffix(lexer);
 
 	case 'P': case 'p':
 		//TODO: Potentially diagnose invalid exponent marker?
 		[[fallthrough]];
 	default:
-		return LexIntegerSuffix();
+		return LexIntegerSuffix(lexer);
 	}
 }
 
-static bool LexHexadecimalConstant() {
-	while (IsHexadecimalDigit(scanner_peek(Scanner)))
-		scanner_advance(Scanner);
+static bool LexHexadecimalConstant(lexer_t lexer) {
+	while (IsHexadecimalDigit(scanner_peek(lexer->scanner)))
+		scanner_advance(lexer->scanner);
 
-	switch (scanner_peek(Scanner)) {
+	switch (scanner_peek(lexer->scanner)) {
 	case '.':
-		scanner_advance(Scanner);
-		return LexHexadecimalFractionalPart();
+		scanner_advance(lexer->scanner);
+		return LexHexadecimalFractionalPart(lexer);
 
 	case 'P': case 'p':
-		scanner_advance(Scanner);
-		LexExponentPart();
+		scanner_advance(lexer->scanner);
+		LexExponentPart(lexer);
 		// C (6.4.4.2 p2):
 		// A floating suffix shall not be used in a hexadecimal floating constant.
-		return ProduceToken(T_FLOATING_LITERAL);
+		return ProduceToken(lexer, T_FLOATING_LITERAL);
 
 	case 'E': case 'e':
 		//TODO: Potentially diagnose invalid exponent marker?
 		[[fallthrough]];
 	default:
-		return LexIntegerSuffix();
+		return LexIntegerSuffix(lexer);
 	}
 }
 
-static bool LexNumericConstant() {
-	assert(IsHexadecimalDigit(scanner_peek(Scanner)));
-	TryConsumeInvalidDigitSeparator();
+static bool LexNumericConstant(lexer_t lexer) {
+	assert(IsHexadecimalDigit(scanner_peek(lexer->scanner)));
+	TryConsumeInvalidDigitSeparator(lexer);
 
 	switch (Token.modifiers.base) {
-	case BASE_BINARY: return LexBinaryConstant();
-	case BASE_OCTAL: return LexOctalConstant();
-	case BASE_DECIMAL: return LexDecimalConstant();
-	case BASE_HEX: return LexHexadecimalConstant();
-	case BASE_NONE: return LexDecimalConstant();
+	case BASE_BINARY: return LexBinaryConstant(lexer);
+	case BASE_OCTAL: return LexOctalConstant(lexer);
+	case BASE_DECIMAL: return LexDecimalConstant(lexer);
+	case BASE_HEX: return LexHexadecimalConstant(lexer);
+	case BASE_NONE: return LexDecimalConstant(lexer);
 	default: assert(false);
 	}
 }
@@ -463,38 +486,38 @@ static bool LexNumericConstant() {
 
 /// LexStringLiteral - Lex the remainder of a string literal, after having lexed
 /// either " or L" or u8" or u" or U".
-static bool LexStringLiteral() {
+static bool LexStringLiteral(lexer_t lexer) {
 	//TODO: Compare this with Clang source
-	scanner_advance(Scanner);
+	scanner_advance(lexer->scanner);
 
-	while (scanner_peek(Scanner) != '"') {
+	while (scanner_peek(lexer->scanner) != '"') {
 		// Skip escaped characters.
 		// Escaped newlines will already be processed by scanner_advance.
-		if (scanner_peek(Scanner) == '\\')
-			scanner_advance(Scanner);
+		if (scanner_peek(lexer->scanner) == '\\')
+			scanner_advance(lexer->scanner);
 
 		// Detect and report unterminated string literals.
-		if (scanner_eof(Scanner)) {
+		if (scanner_eof(lexer->scanner)) {
 			//TODO: Diagnose unterminated string literal
-			scanner_anchor(Scanner);
+			scanner_anchor(lexer->scanner);
 			return true;
 		}
 
-		switch (scanner_peek(Scanner)) {
+		switch (scanner_peek(lexer->scanner)) {
 		case '\n':
 		case '\r':
-			scanner_anchor(Scanner);
+			scanner_anchor(lexer->scanner);
 			return true;
 		}
 
-		if (scanner_peek(Scanner) == '\0') {
+		if (scanner_peek(lexer->scanner) == '\0') {
 			//TODO: Diagnose null character.
 		}
 
-		scanner_advance(Scanner);
+		scanner_advance(lexer->scanner);
 	}
 
-	return ProduceToken(T_STRING_LITERAL);
+	return ProduceToken(lexer, T_STRING_LITERAL);
 }
 
 /// LexCharConstant - Lex the remainder of a character constant, after having
@@ -563,41 +586,41 @@ static bool LexCharConstant() {
 
 //MARK: - Significant Tokens
 
-static bool LexIdentifier() {
-	while (isxidcontinue(scanner_peek(Scanner)))
-		scanner_advance(Scanner);
+static bool LexIdentifier(lexer_t lexer) {
+	while (isxidcontinue(scanner_peek(lexer->scanner)))
+		scanner_advance(lexer->scanner);
 
 	// Identify the keyword or return an identifier
 	//TODO: While parsing attributes always return T_IDENTIFIER
-	ptrdiff_t length = scanner_length(Scanner);
-	char const *token = scanner_token(Scanner);
-	enum token_kind kind = (IsInPreprocessorDirective ? token_preprocessor : token_keyword)(token, length);
+	ptrdiff_t length = scanner_length(lexer->scanner);
+	char const *token = scanner_token(lexer->scanner);
+	enum token_kind kind = (lexer->mode == LEXER_DIRECTIVE ? token_preprocessor : token_keyword)(token, length);
 
-	return ProduceToken(kind);
+	return ProduceToken(lexer, kind);
 }
 
-static bool LexDot() {
+static bool LexDot(lexer_t lexer) {
 	// Consume the initial period.
-	scanner_advance(Scanner);
+	scanner_advance(lexer->scanner);
 
 	// Parse floating constants of the form `.25`.
-	if (scanner_peek(Scanner) >= '0' && scanner_peek(Scanner) <= '9')
-		return LexNumericConstant();
+	if (scanner_peek(lexer->scanner) >= '0' && scanner_peek(lexer->scanner) <= '9')
+		return LexNumericConstant(lexer);
 
 	// If we're not parsing an ellipsis then its a period.
-	if (scanner_peek(Scanner) != '.')
-		return ProduceToken(T_PERIOD);
+	if (scanner_peek(lexer->scanner) != '.')
+		return ProduceToken(lexer, T_PERIOD);
 
 	// Consume the second period.
-	scanner_advance(Scanner);
+	scanner_advance(lexer->scanner);
 
 	// If we have a third period its an elipsis.
-	if (scanner_peek(Scanner) == '.')
-		return ConsumeToken(T_ELLIPSIS);
+	if (scanner_peek(lexer->scanner) == '.')
+		return ConsumeToken(lexer, T_ELLIPSIS);
 
 	// It wasn't an ellipsis.
 	Token.kind = T_PERIOD;
-	scanner_putback(Scanner, scanner_peek(Scanner));
+	scanner_putback(lexer->scanner, scanner_peek(lexer->scanner));
 }
 
 static bool LexDirective() {
@@ -610,13 +633,13 @@ static bool LexAngledStringLiteral() {
 
 //MARK: - Lexer
 
-static bool _lexer_advance_preprocessor() {
+static bool _lexer_advance_preprocessor(lexer_t lexer) {
 lex_start:
-	switch (scanner_peek(Scanner)) {
+	switch (scanner_peek(lexer->scanner)) {
 	case '\0':
-		if (scanner_eof(Scanner)) {
+		if (scanner_eof(lexer->scanner)) {
 			if (Token.kind != T_EOF)
-				ProduceToken(T_EOF);
+				ProduceToken(lexer, T_EOF);
 			return false;
 		}
 
@@ -625,30 +648,30 @@ lex_start:
 
 		//TODO: Special case skip if we have a bunch of sequential nulls?
 		// Take into account end-of-buffer
-		scanner_advance(Scanner);
+		scanner_advance(lexer->scanner);
 
 		// Try again, manually eliminate the tail call to avoid recursion.
 		goto lex_next;
 
 	case '\r':
-		scanner_consume(Scanner, '\n');
+		scanner_consume(lexer->scanner, '\n');
 		[[fallthrough]];
 	case '\n':
 		// Signals the end of a preprocessor directive.
-		if (IsPreprocessorEnabled) {
-			IsPreprocessorEnabled = false;
+		if (lexer->mode == LEXER_DIRECTIVE) {
+			lexer->mode = LEXER_SOURCE;
 
 			// Since we consumed a newline, we are back at the start of a line.
-			IsAtStartOfLine = true;
-			IsAtPhysicalStartOfLine = true;
+			lexer->is_at_start_of_line = true;
+			lexer->is_at_physical_start_of_line = true;
 
-			return ProduceToken(T_EOD);
+			return ProduceToken(lexer, T_EOD);
 		}
 
 		// No leading whitespace seen so far.
 		Token.flags.leading_space = false;
 
-		if (IsWhitespacePreserved)
+		if (lexer->is_whitespace_preserved)
 			return LexWhitespace();
 
 		// We only saw whitespace, so just try again with this lexer.
@@ -659,11 +682,11 @@ lex_start:
 	case '\f':
 	case '\v':
 		Token.flags.leading_space = true;
-		do scanner_advance(Scanner);
-		while (IsHorizontalWhitespace(scanner_peek(Scanner)));
+		do scanner_advance(lexer->scanner);
+		while (IsHorizontalWhitespace(scanner_peek(lexer->scanner)));
 
-		if (IsWhitespacePreserved)
-			return ProduceToken(T_WHITESPACE);
+		if (lexer->is_whitespace_preserved)
+			return ProduceToken(lexer, T_WHITESPACE);
 
 		// We only saw whitespace, so just try again with this lexer.
 		// (We manually eliminate the tail call to avoid recursion.)
@@ -673,43 +696,43 @@ lex_start:
 		// C99 6.4.4.2: Floating Constants.
 	case '0': case '1': case '2': case '3': case '4':
 	case '5': case '6': case '7': case '8': case '9':
-		return LexNumericConstant();
+		return LexNumericConstant(lexer);
 
 		// Identifier
 		// Wide literal
 	case 'L':
-		scanner_advance(Scanner);
+		scanner_advance(lexer->scanner);
 		Token.modifiers.encoding = ENCODING_WIDE;
 
-		switch (scanner_peek(Scanner)) {
-		case '"': return LexStringLiteral();
+		switch (scanner_peek(lexer->scanner)) {
+		case '"': return LexStringLiteral(lexer);
 		case '\'': return LexCharConstant();
-		default: return LexIdentifier();
+		default: return LexIdentifier(lexer);
 		}
 
 		// Identifier
 		// C23/C++17: UTF-8 literal
 		// C11/C++11: UTF-16 literal
 	case 'u':
-		scanner_advance(Scanner);
-		Token.modifiers.encoding = scanner_consume(Scanner, '8') ? ENCODING_UTF8 : ENCODING_UTF16;
+		scanner_advance(lexer->scanner);
+		Token.modifiers.encoding = scanner_consume(lexer->scanner, '8') ? ENCODING_UTF8 : ENCODING_UTF16;
 
-		switch (scanner_peek(Scanner)) {
-		case '"': return LexStringLiteral();
+		switch (scanner_peek(lexer->scanner)) {
+		case '"': return LexStringLiteral(lexer);
 		case '\'': return LexCharConstant();
-		default: return LexIdentifier();
+		default: return LexIdentifier(lexer);
 		}
 
 		// Identifier
 		// C11/C++11: UTF-32 literal
 	case 'U':
-		scanner_advance(Scanner);
+		scanner_advance(lexer->scanner);
 		Token.modifiers.encoding = ENCODING_UTF32;
 
-		switch (scanner_peek(Scanner)) {
-		case '"': return LexStringLiteral();
+		switch (scanner_peek(lexer->scanner)) {
+		case '"': return LexStringLiteral(lexer);
 		case '\'': return LexCharConstant();
-		default: return LexIdentifier();
+		default: return LexIdentifier(lexer);
 		}
 
 		// C99 6.4.2: Identifiers.
@@ -722,10 +745,10 @@ lex_start:
 	case 'o': case 'p': case 'q': case 'r': case 's': case 't': /* 'u' */
 	case 'v': case 'w': case 'x': case 'y': case 'z':
 	case '_':
-		scanner_advance(Scanner);
-		return LexIdentifier();
+		scanner_advance(lexer->scanner);
+		return LexIdentifier(lexer);
 
-		// C99 6.4.4: scanner_peek(Scanner) Constants.
+		// C99 6.4.4: scanner_peek(lexer->scanner) Constants.
 	case '\'':
 		Token.modifiers.encoding = ENCODING_NONE;
 		return LexCharConstant();
@@ -733,236 +756,236 @@ lex_start:
 		// C99 6.4.5: String Literals.
 	case '"':
 		Token.modifiers.encoding = ENCODING_NONE;
-		return LexStringLiteral();
+		return LexStringLiteral(lexer);
 
 		// C99 6.4.6: Punctuators.
 	case '?':
-		return ConsumeToken(T_QUESTION);
+		return ConsumeToken(lexer, T_QUESTION);
 	case '[':
-		return ConsumeToken(T_LBRACKET);
+		return ConsumeToken(lexer, T_LBRACKET);
 	case ']':
-		return ConsumeToken(T_RBRACKET);
+		return ConsumeToken(lexer, T_RBRACKET);
 	case '(':
-		return ConsumeToken(T_LPAREN);
+		return ConsumeToken(lexer, T_LPAREN);
 	case ')':
-		return ConsumeToken(T_RPAREN);
+		return ConsumeToken(lexer, T_RPAREN);
 	case '{':
-		return ConsumeToken(T_LCURLY);
+		return ConsumeToken(lexer, T_LCURLY);
 	case '}':
-		return ConsumeToken(T_RCURLY);
+		return ConsumeToken(lexer, T_RCURLY);
 
 		// Floating-point constant
 		// Operators . ...
 	case '.':
-		if (scanner_peek(Scanner) >= 0 && scanner_peek(Scanner) <= '9')
-			return LexNumericConstant();
+		if (scanner_peek(lexer->scanner) >= 0 && scanner_peek(lexer->scanner) <= '9')
+			return LexNumericConstant(lexer);
 
-		scanner_advance(Scanner);
+		scanner_advance(lexer->scanner);
 
 		//TODO: Ellipsis operator
-		switch (scanner_peek(Scanner)) {
-		default: return ProduceToken(T_PERIOD);
+		switch (scanner_peek(lexer->scanner)) {
+		default: return ProduceToken(lexer, T_PERIOD);
 		}
 
 		// Operators & && &=
 	case '&':
-		scanner_advance(Scanner);
+		scanner_advance(lexer->scanner);
 
-		switch (scanner_peek(Scanner)) {
-		case '&': return ConsumeToken(T_LOGICAL_AND);
-		case '=': return ConsumeToken(T_ASSIGN_BITWISE_AND);
-		default: return ProduceToken(T_AMPERSAND);
+		switch (scanner_peek(lexer->scanner)) {
+		case '&': return ConsumeToken(lexer, T_LOGICAL_AND);
+		case '=': return ConsumeToken(lexer, T_ASSIGN_BITWISE_AND);
+		default: return ProduceToken(lexer, T_AMPERSAND);
 		}
 
 		// Operators * *=
 	case '*':
-		scanner_advance(Scanner);
+		scanner_advance(lexer->scanner);
 
-		switch (scanner_peek(Scanner)) {
-		case '=': return ConsumeToken(T_ASSIGN_MULTIPLY);
-		default: return ProduceToken(T_ASTERISK);
+		switch (scanner_peek(lexer->scanner)) {
+		case '=': return ConsumeToken(lexer, T_ASSIGN_MULTIPLY);
+		default: return ProduceToken(lexer, T_ASTERISK);
 		}
 
 		// Operators + ++ +=
 	case '+':
-		scanner_advance(Scanner);
+		scanner_advance(lexer->scanner);
 
-		switch (scanner_peek(Scanner)) {
-		case '+': return ConsumeToken(T_INCREMENT);
-		case '=': return ConsumeToken(T_ASSIGN_ADD);
-		default: return ProduceToken(T_PLUS);
+		switch (scanner_peek(lexer->scanner)) {
+		case '+': return ConsumeToken(lexer, T_INCREMENT);
+		case '=': return ConsumeToken(lexer, T_ASSIGN_ADD);
+		default: return ProduceToken(lexer, T_PLUS);
 		}
 
 		// Operators - -- -> -=
 	case '-':
-		scanner_advance(Scanner);
+		scanner_advance(lexer->scanner);
 
-		switch (scanner_peek(Scanner)) {
-		case '-': return ConsumeToken(T_DECREMENT);
-		case '=': return ConsumeToken(T_ASSIGN_SUBTRACT);
+		switch (scanner_peek(lexer->scanner)) {
+		case '-': return ConsumeToken(lexer, T_DECREMENT);
+		case '=': return ConsumeToken(lexer, T_ASSIGN_SUBTRACT);
 		case '>':
-			scanner_advance(Scanner);
-			switch (scanner_peek(Scanner)) {
-			case '*': return ConsumeToken(T_ARROW_STAR);
-			default: return ProduceToken(T_ARROW);
+			scanner_advance(lexer->scanner);
+			switch (scanner_peek(lexer->scanner)) {
+			case '*': return ConsumeToken(lexer, T_ARROW_STAR);
+			default: return ProduceToken(lexer, T_ARROW);
 			}
-		default: return ProduceToken(T_SUBTRACT);
+		default: return ProduceToken(lexer, T_SUBTRACT);
 		}
 
 		// Operators ~
 	case '~':
-		return ConsumeToken(T_TILDE);
+		return ConsumeToken(lexer, T_TILDE);
 
 		// Operators ! !=
 	case '!':
-		scanner_advance(Scanner);
+		scanner_advance(lexer->scanner);
 
-		switch (scanner_peek(Scanner)) {
-		case '=': return ConsumeToken(T_NEQ);
-		default: return ProduceToken(T_EXCLAIM);
+		switch (scanner_peek(lexer->scanner)) {
+		case '=': return ConsumeToken(lexer, T_NEQ);
+		default: return ProduceToken(lexer, T_EXCLAIM);
 		}
 
 		// 6.4.9: Comments
 		// Operators / /=
 	case '/':
-		scanner_advance(Scanner);
+		scanner_advance(lexer->scanner);
 
-		switch (scanner_peek(Scanner)) {
+		switch (scanner_peek(lexer->scanner)) {
 		case '/': return LexLineComment();
 		case '*': return LexBlockComment();
-		case '=': return ConsumeToken(T_ASSIGN_DIVIDE);
-		default: return ProduceToken(T_DIVIDE);
+		case '=': return ConsumeToken(lexer, T_ASSIGN_DIVIDE);
+		default: return ProduceToken(lexer, T_DIVIDE);
 		}
 
 		// Operators % %=
 		// Digraphs %> %: %:%:
 	case '%':
-		scanner_advance(Scanner);
+		scanner_advance(lexer->scanner);
 
-		if (IsDigraphsEnabled) {
-			switch (scanner_peek(Scanner)) {
-			case '>': return ConsumeToken(T_RCURLY);
+		if (lexer->is_digraphs_enabled) {
+			switch (scanner_peek(lexer->scanner)) {
+			case '>': return ConsumeToken(lexer, T_RCURLY);
 			case ':':
-				scanner_advance(Scanner);
-				switch (scanner_peek(Scanner)) {
+				scanner_advance(lexer->scanner);
+				switch (scanner_peek(lexer->scanner)) {
 				case '%':
-					scanner_advance(Scanner);
-					switch (scanner_peek(Scanner)) {
-					case ':': return ConsumeToken(T_STRINGIFY);
+					scanner_advance(lexer->scanner);
+					switch (scanner_peek(lexer->scanner)) {
+					case ':': return ConsumeToken(lexer, T_STRINGIFY);
 					default:
-						scanner_putback(Scanner, '%');
-						scanner_putback(Scanner, scanner_peek(Scanner));
-						return ProduceToken(T_DIRECTIVE);
+						scanner_putback(lexer->scanner, '%');
+						scanner_putback(lexer->scanner, scanner_peek(lexer->scanner));
+						return ProduceToken(lexer, T_DIRECTIVE);
 					}
-				default: return ProduceToken(T_DIRECTIVE);
+				default: return ProduceToken(lexer, T_DIRECTIVE);
 				}
 			}
 		}
 
-		switch (scanner_peek(Scanner)) {
-		case '=': return ConsumeToken(T_ASSIGN_MODULO);
-		default: return ProduceToken(T_PERCENT);
+		switch (scanner_peek(lexer->scanner)) {
+		case '=': return ConsumeToken(lexer, T_ASSIGN_MODULO);
+		default: return ProduceToken(lexer, T_PERCENT);
 		}
 
 		// Angled string literal
 		// Operators < <= << <<=
 		// Digraphs <: <%
 	case '<':
-		if (IsDigraphsEnabled) {
+		if (lexer->is_digraphs_enabled) {
 			//TODO: Parse digraphs
 		}
-		if (IsPreprocessorEnabled)
+		if (lexer->mode == LEXER_DIRECTIVE)
 			return LexAngledStringLiteral();
 
-		scanner_advance(Scanner);
+		scanner_advance(lexer->scanner);
 
-		switch (scanner_peek(Scanner)) {
-		case '=': return ConsumeToken(T_LTE);
+		switch (scanner_peek(lexer->scanner)) {
+		case '=': return ConsumeToken(lexer, T_LTE);
 		case '<':
-			scanner_advance(Scanner);
-			switch (scanner_peek(Scanner)) {
+			scanner_advance(lexer->scanner);
+			switch (scanner_peek(lexer->scanner)) {
 				//TODO: Detect C++ spaceship operator
-			case '=': return ConsumeToken(T_ASSIGN_LSHIFT);
-			default: return ProduceToken(T_LSHIFT);
+			case '=': return ConsumeToken(lexer, T_ASSIGN_LSHIFT);
+			default: return ProduceToken(lexer, T_LSHIFT);
 			}
-		default: return ProduceToken(T_LT);
+		default: return ProduceToken(lexer, T_LT);
 		}
 
 		// Operators > >= >> >>=
 	case '>':
-		scanner_advance(Scanner);
+		scanner_advance(lexer->scanner);
 
-		switch (scanner_peek(Scanner)) {
+		switch (scanner_peek(lexer->scanner)) {
 		case '>':
-			scanner_advance(Scanner);
-			switch (scanner_peek(Scanner)) {
-			case '=': return ConsumeToken(T_ASSIGN_RSHIFT);
-			default: return ProduceToken(T_RSHIFT);
+			scanner_advance(lexer->scanner);
+			switch (scanner_peek(lexer->scanner)) {
+			case '=': return ConsumeToken(lexer, T_ASSIGN_RSHIFT);
+			default: return ProduceToken(lexer, T_RSHIFT);
 			}
-		case '=': return ConsumeToken(T_GTE);
-		default: return ProduceToken(T_GT);
+		case '=': return ConsumeToken(lexer, T_GTE);
+		default: return ProduceToken(lexer, T_GT);
 		}
 
 		// Operators ^ ^=
 	case '^':
-		scanner_advance(Scanner);
+		scanner_advance(lexer->scanner);
 
-		switch (scanner_peek(Scanner)) {
-		case '=': return ConsumeToken(T_ASSIGN_BITWISE_XOR);
-		default: return ProduceToken(T_CARET);
+		switch (scanner_peek(lexer->scanner)) {
+		case '=': return ConsumeToken(lexer, T_ASSIGN_BITWISE_XOR);
+		default: return ProduceToken(lexer, T_CARET);
 		}
 
 		// Operators | || |=
 	case '|':
-		scanner_advance(Scanner);
+		scanner_advance(lexer->scanner);
 
-		switch (scanner_peek(Scanner)) {
-		case '=': return ConsumeToken(T_ASSIGN_BITWISE_OR);
-		case '|': return ConsumeToken(T_LOGICAL_OR);
-		default: return ProduceToken(T_PIPE);
+		switch (scanner_peek(lexer->scanner)) {
+		case '=': return ConsumeToken(lexer, T_ASSIGN_BITWISE_OR);
+		case '|': return ConsumeToken(lexer, T_LOGICAL_OR);
+		default: return ProduceToken(lexer, T_PIPE);
 		}
 
 		// Operators : ::
 		// Digraphs :>
 	case ':':
-		scanner_advance(Scanner);
+		scanner_advance(lexer->scanner);
 
 		//TODO: Handle digraphs
 
-		switch (scanner_peek(Scanner)) {
-		case ':': return ConsumeToken(T_MODULE);
-		case '|': return ConsumeToken(T_LOGICAL_OR);
-		default: return ProduceToken(T_PIPE);
+		switch (scanner_peek(lexer->scanner)) {
+		case ':': return ConsumeToken(lexer, T_MODULE);
+		case '|': return ConsumeToken(lexer, T_LOGICAL_OR);
+		default: return ProduceToken(lexer, T_PIPE);
 		}
 
 	case ';':
-		return ConsumeToken(T_SEMICOLON);
+		return ConsumeToken(lexer, T_SEMICOLON);
 
 		// Operators = ==
 	case '=':
-		scanner_advance(Scanner);
+		scanner_advance(lexer->scanner);
 
-		switch (scanner_peek(Scanner)) {
-		case '=': return ConsumeToken(T_EQ);
-		default: return ProduceToken(T_ASSIGN);
+		switch (scanner_peek(lexer->scanner)) {
+		case '=': return ConsumeToken(lexer, T_EQ);
+		default: return ProduceToken(lexer, T_ASSIGN);
 		}
 
 		// Operators ,
 	case ',':
-		return ConsumeToken(T_COMMA);
+		return ConsumeToken(lexer, T_COMMA);
 
 		// Preprocessor # ##
 	case '#':
-		scanner_advance(Scanner);
+		scanner_advance(lexer->scanner);
 
-		switch (scanner_peek(Scanner)) {
-		case '#': return ConsumeToken(T_STRINGIFY);
+		switch (scanner_peek(lexer->scanner)) {
+		case '#': return ConsumeToken(lexer, T_STRINGIFY);
 		default:
-			if (IsAtPhysicalStartOfLine) {
-				IsInPreprocessorDirective = true;
-				return ProduceToken(T_DIRECTIVE);
+			if (lexer->is_at_physical_start_of_line) {
+				lexer->mode = LEXER_DIRECTIVE;
+				return ProduceToken(lexer, T_DIRECTIVE);
 			}
-			return ProduceToken(T_POUND);
+			return ProduceToken(lexer, T_POUND);
 		}
 
 		//TODO: Detect preprocessor directives
@@ -994,8 +1017,8 @@ lex_start:
 		break;
 
 	default:
-		if (isxidstart(scanner_peek(Scanner)))
-			return LexIdentifier();
+		if (isxidstart(scanner_peek(lexer->scanner)))
+			return LexIdentifier(lexer);
 
 //		if (isLexingRawMode() || ParsingPreprocessorDirective ||
 //			PP->isPreprocessedOutput()) {
@@ -1009,23 +1032,23 @@ lex_start:
 		// just diagnose the invalid UTF-8, then drop the character.
 //		Diag(CurPtr, diag::err_invalid_utf8);
 
-		scanner_advance(Scanner);
+		scanner_advance(lexer->scanner);
 		// We're pretending the character didn't exist, so just try again with this lexer.
 		// (We manually eliminate the tail call to avoid recursion.)
 		goto lex_next;
 	}
 
 	// Update the location of token as well as BufferPtr.
-	scanner_anchor(Scanner);
+	scanner_anchor(lexer->scanner);
 	return true;
 
 lex_next:
 //	Result.clearFlag(Token::NeedsCleaning);
-	scanner_anchor(Scanner);
+	scanner_anchor(lexer->scanner);
 	goto lex_start;
 }
 
-bool lexer_advance() {
+bool lexer_advance(lexer_t lexer) {
 	//TODO: Flag first token of line?
 	//TODO: Flag whether token has leading whitespace?
 	//TODO: Flag whether token is after empty macro?
@@ -1033,5 +1056,5 @@ bool lexer_advance() {
 
 	//TODO: Detect physical start of line?
 
-	return _lexer_advance_preprocessor();
+	return _lexer_advance_preprocessor(lexer);
 }

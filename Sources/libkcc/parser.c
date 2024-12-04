@@ -12,14 +12,14 @@
 #include <kcc/lexer.h>
 
 struct ast_node *parser_parse() {
-	lexer_advance();
+	lexer_advance(Lexer);
 	return parse_unit();
 }
 
 void match(enum token_kind t, char *what) {
 	if (Token.kind != t)
 		fatals("expected", what);
-	lexer_advance();
+	lexer_advance(Lexer);
 }
 
 void semi() {

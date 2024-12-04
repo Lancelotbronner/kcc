@@ -56,7 +56,7 @@ struct ast_node *parse_compound_statement() {
 
 	while (true) {
 		if (Token.kind == T_RCURLY) {
-			lexer_advance();
+			lexer_advance(Lexer);
 			return tree;
 		}
 
@@ -80,7 +80,7 @@ struct ast_node *parse_if_statement() {
 	then_tree = parse_statement();
 
 	if (Token.kind == T_ELSE) {
-		lexer_advance();
+		lexer_advance(Lexer);
 		else_tree = parse_statement();
 	}
 

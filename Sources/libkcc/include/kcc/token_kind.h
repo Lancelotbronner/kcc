@@ -130,13 +130,13 @@ enum token_kind : unsigned char {
 	T_LSHIFT,
 	/// `>>`
 	T_RSHIFT,
+	/// `#`
+	T_POUND,
+	/// `...`
+	T_ELLIPSIS,
 
 	/// `::`
 	T_MODULE,
-	/// `...`
-	T_ELLIPSIS,
-	/// `#`
-	T_POUND,
 
 	// Assignment Operators
 
