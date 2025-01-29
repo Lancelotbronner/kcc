@@ -330,7 +330,7 @@
 
 
 /* Copy the first part of user declarations.  */
-#line 24 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 24 "kcc/Sources/kcc/lex.y"
 
 #include <stdio.h>
 #include <stdarg.h>
@@ -398,7 +398,7 @@ bool uselessDecl = TRUE;
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 72 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 72 "kcc/Sources/kcc/lex.y"
 {
     symbol     *sym;        /* symbol table pointer                   */
     structdef  *sdef;       /* structure definition                   */
@@ -412,7 +412,7 @@ typedef union YYSTYPE
     ast        *asts;       /* expression tree                        */
 }
 /* Line 193 of yacc.c.  */
-#line 416 "/Users/lancelot/Library/Developer/Xcode/DerivedData/kcc-dmlhifhjjrlcwvfntnjcojbkgeei/Build/Intermediates.noindex/kcc.build/Debug/kcc_kcc.build/DerivedSources/y.tab.c"
+#line 416 "DerivedSources/y.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -425,7 +425,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 429 "/Users/lancelot/Library/Developer/Xcode/DerivedData/kcc-dmlhifhjjrlcwvfntnjcojbkgeei/Build/Intermediates.noindex/kcc.build/Debug/kcc_kcc.build/DerivedSources/y.tab.c"
+#line 429 "DerivedSources/y.tab.c"
 
 #ifdef short
 # undef short
@@ -2422,21 +2422,21 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 144 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 144 "kcc/Sources/kcc/lex.y"
     {
           werror(W_EMPTY_SOURCE_FILE);
         }
     break;
 
   case 6:
-#line 157 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 157 "kcc/Sources/kcc/lex.y"
     {
           // blockNo = 0;
         }
     break;
 
   case 7:
-#line 161 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 161 "kcc/Sources/kcc/lex.y"
     {
           ignoreTypedefType = 0;
           if ((yyvsp[(1) - (1)].sym) && (yyvsp[(1) - (1)].sym)->type && IS_FUNC((yyvsp[(1) - (1)].sym)->type))
@@ -2460,7 +2460,7 @@ yyreduce:
     break;
 
   case 9:
-#line 186 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 186 "kcc/Sources/kcc/lex.y"
     {   /* function type not specified */
              /* assume it to be 'int'       */
              addDecl((yyvsp[(1) - (1)].sym),0,newIntLink());
@@ -2469,14 +2469,14 @@ yyreduce:
     break;
 
   case 10:
-#line 191 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 191 "kcc/Sources/kcc/lex.y"
     {
                                    (yyval.asts) = createFunction((yyvsp[(1) - (3)].sym),(yyvsp[(3) - (3)].asts));
                                }
     break;
 
   case 11:
-#line 195 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 195 "kcc/Sources/kcc/lex.y"
     {
               pointerTypes((yyvsp[(2) - (2)].sym)->type,copyLinkChain((yyvsp[(1) - (2)].lnk)));
               addDecl((yyvsp[(2) - (2)].sym),0,(yyvsp[(1) - (2)].lnk));
@@ -2485,19 +2485,19 @@ yyreduce:
     break;
 
   case 12:
-#line 201 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 201 "kcc/Sources/kcc/lex.y"
     {
                                     (yyval.asts) = createFunction((yyvsp[(2) - (4)].sym),(yyvsp[(4) - (4)].asts));
                                 }
     break;
 
   case 14:
-#line 208 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 208 "kcc/Sources/kcc/lex.y"
     { (yyval.lnk) = mergeSpec((yyvsp[(1) - (2)].lnk),(yyvsp[(2) - (2)].lnk),"function_attribute"); }
     break;
 
   case 15:
-#line 212 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 212 "kcc/Sources/kcc/lex.y"
     {
                         (yyval.lnk) = newLink(SPECIFIER);
                         FUNC_REGBANK((yyval.lnk)) = (int) ulFromVal(constExprValue((yyvsp[(2) - (2)].asts),TRUE));
@@ -2505,42 +2505,42 @@ yyreduce:
     break;
 
   case 16:
-#line 216 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 216 "kcc/Sources/kcc/lex.y"
     {  (yyval.lnk) = newLink (SPECIFIER);
                         FUNC_ISREENT((yyval.lnk))=1;
                      }
     break;
 
   case 17:
-#line 219 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 219 "kcc/Sources/kcc/lex.y"
     {  (yyval.lnk) = newLink (SPECIFIER);
                         FUNC_ISCRITICAL((yyval.lnk)) = 1;
                      }
     break;
 
   case 18:
-#line 222 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 222 "kcc/Sources/kcc/lex.y"
     {  (yyval.lnk) = newLink (SPECIFIER);
                         FUNC_ISNAKED((yyval.lnk))=1;
                      }
     break;
 
   case 19:
-#line 225 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 225 "kcc/Sources/kcc/lex.y"
     {  (yyval.lnk) = newLink (SPECIFIER);
                         FUNC_ISJAVANATIVE((yyval.lnk))=1;
                      }
     break;
 
   case 20:
-#line 228 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 228 "kcc/Sources/kcc/lex.y"
     {  (yyval.lnk) = newLink (SPECIFIER);
                         FUNC_ISOVERLAY((yyval.lnk))=1;
                      }
     break;
 
   case 21:
-#line 231 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 231 "kcc/Sources/kcc/lex.y"
     {(yyval.lnk) = newLink (SPECIFIER);
                         FUNC_NONBANKED((yyval.lnk)) = 1;
                         if (FUNC_BANKED((yyval.lnk))) {
@@ -2550,21 +2550,21 @@ yyreduce:
     break;
 
   case 22:
-#line 237 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 237 "kcc/Sources/kcc/lex.y"
     {(yyval.lnk) = newLink (SPECIFIER);
                         FUNC_ISSHADOWREGS((yyval.lnk)) = 1;
                      }
     break;
 
   case 23:
-#line 240 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 240 "kcc/Sources/kcc/lex.y"
     {(yyval.lnk) = newLink (SPECIFIER);
                         FUNC_ISWPARAM((yyval.lnk)) = 1;
                      }
     break;
 
   case 24:
-#line 243 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 243 "kcc/Sources/kcc/lex.y"
     {(yyval.lnk) = newLink (SPECIFIER);
                         FUNC_BANKED((yyval.lnk)) = 1;
                         if (FUNC_NONBANKED((yyval.lnk))) {
@@ -2574,7 +2574,7 @@ yyreduce:
     break;
 
   case 25:
-#line 250 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 250 "kcc/Sources/kcc/lex.y"
     {
                         (yyval.lnk) = newLink (SPECIFIER);
                         FUNC_INTNO((yyval.lnk)) = (yyvsp[(1) - (1)].yyint);
@@ -2583,14 +2583,14 @@ yyreduce:
     break;
 
   case 26:
-#line 255 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 255 "kcc/Sources/kcc/lex.y"
     {  (yyval.lnk) = newLink (SPECIFIER);
                         FUNC_ISSMALLC((yyval.lnk))=1;
                      }
     break;
 
   case 28:
-#line 263 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 263 "kcc/Sources/kcc/lex.y"
     {
                        werror (E_OLD_STYLE, ((yyvsp[(1) - (2)].sym) ? (yyvsp[(1) - (2)].sym)->name: ""));
                        exit (1);
@@ -2598,17 +2598,17 @@ yyreduce:
     break;
 
   case 29:
-#line 270 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 270 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = newAst_VALUE (symbolVal ((yyvsp[(1) - (1)].sym))); }
     break;
 
   case 30:
-#line 271 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 271 "kcc/Sources/kcc/lex.y"
     { ignoreTypedefType = 1; }
     break;
 
   case 31:
-#line 272 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 272 "kcc/Sources/kcc/lex.y"
     {
                        ignoreTypedefType = 0;
                        (yyvsp[(4) - (4)].sym) = newSymbol ((yyvsp[(4) - (4)].sym)->name, NestLevel);
@@ -2618,57 +2618,57 @@ yyreduce:
     break;
 
   case 32:
-#line 279 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 279 "kcc/Sources/kcc/lex.y"
     {
                        (yyval.asts) = newNode ('[', (yyvsp[(1) - (4)].asts), (yyvsp[(3) - (4)].asts));
                      }
     break;
 
   case 33:
-#line 285 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 285 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = newAst_VALUE (symbolVal ((yyvsp[(1) - (1)].sym))); }
     break;
 
   case 34:
-#line 286 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 286 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = newAst_VALUE ((yyvsp[(1) - (1)].val)); }
     break;
 
   case 36:
-#line 288 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 288 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = (yyvsp[(2) - (3)].asts); }
     break;
 
   case 37:
-#line 292 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 292 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = newAst_VALUE (strVal ((yyvsp[(1) - (1)].yystr))); }
     break;
 
   case 39:
-#line 297 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 297 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = newNode  ('[', (yyvsp[(1) - (4)].asts), (yyvsp[(3) - (4)].asts)); }
     break;
 
   case 40:
-#line 298 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 298 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = newNode  (CALL,(yyvsp[(1) - (3)].asts),NULL);
                                           (yyval.asts)->left->funcName = 1;}
     break;
 
   case 41:
-#line 301 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 301 "kcc/Sources/kcc/lex.y"
     {
             (yyval.asts) = newNode  (CALL,(yyvsp[(1) - (4)].asts),(yyvsp[(3) - (4)].asts)); (yyval.asts)->left->funcName = 1;
           }
     break;
 
   case 42:
-#line 304 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 304 "kcc/Sources/kcc/lex.y"
     { ignoreTypedefType = 1; }
     break;
 
   case 43:
-#line 305 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 305 "kcc/Sources/kcc/lex.y"
     {
                         ignoreTypedefType = 0;
                         (yyvsp[(4) - (4)].sym) = newSymbol((yyvsp[(4) - (4)].sym)->name,NestLevel);
@@ -2678,12 +2678,12 @@ yyreduce:
     break;
 
   case 44:
-#line 311 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 311 "kcc/Sources/kcc/lex.y"
     { ignoreTypedefType = 1; }
     break;
 
   case 45:
-#line 312 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 312 "kcc/Sources/kcc/lex.y"
     {
                         ignoreTypedefType = 0;
                         (yyvsp[(4) - (4)].sym) = newSymbol((yyvsp[(4) - (4)].sym)->name,NestLevel);
@@ -2693,202 +2693,202 @@ yyreduce:
     break;
 
   case 46:
-#line 319 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 319 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = newNode(INC_OP,(yyvsp[(1) - (2)].asts),NULL);}
     break;
 
   case 47:
-#line 321 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 321 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = newNode(DEC_OP,(yyvsp[(1) - (2)].asts),NULL); }
     break;
 
   case 49:
-#line 326 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 326 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = newNode(PARAM,(yyvsp[(1) - (3)].asts),(yyvsp[(3) - (3)].asts)); }
     break;
 
   case 51:
-#line 331 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 331 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = newNode (INC_OP, NULL, (yyvsp[(2) - (2)].asts)); }
     break;
 
   case 52:
-#line 332 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 332 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = newNode (DEC_OP, NULL, (yyvsp[(2) - (2)].asts)); }
     break;
 
   case 53:
-#line 333 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 333 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = newNode ((yyvsp[(1) - (2)].yyint), (yyvsp[(2) - (2)].asts), NULL); }
     break;
 
   case 54:
-#line 334 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 334 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = newNode (SIZEOF, NULL, (yyvsp[(2) - (2)].asts)); }
     break;
 
   case 55:
-#line 335 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 335 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = newAst_VALUE (sizeofOp ((yyvsp[(3) - (4)].lnk))); }
     break;
 
   case 56:
-#line 336 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 336 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = newAst_VALUE (alignofOp ((yyvsp[(3) - (4)].lnk))); }
     break;
 
   case 57:
-#line 337 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 337 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = newNode (TYPEOF, NULL, (yyvsp[(2) - (2)].asts)); }
     break;
 
   case 58:
-#line 338 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 338 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = offsetofOp((yyvsp[(3) - (6)].lnk), (yyvsp[(5) - (6)].asts)); }
     break;
 
   case 59:
-#line 342 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 342 "kcc/Sources/kcc/lex.y"
     { (yyval.yyint) = '&';}
     break;
 
   case 60:
-#line 343 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 343 "kcc/Sources/kcc/lex.y"
     { (yyval.yyint) = '*';}
     break;
 
   case 61:
-#line 344 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 344 "kcc/Sources/kcc/lex.y"
     { (yyval.yyint) = '+';}
     break;
 
   case 62:
-#line 345 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 345 "kcc/Sources/kcc/lex.y"
     { (yyval.yyint) = '-';}
     break;
 
   case 63:
-#line 346 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 346 "kcc/Sources/kcc/lex.y"
     { (yyval.yyint) = '~';}
     break;
 
   case 64:
-#line 347 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 347 "kcc/Sources/kcc/lex.y"
     { (yyval.yyint) = '!';}
     break;
 
   case 66:
-#line 352 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 352 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = newNode(CAST,newAst_LINK((yyvsp[(2) - (4)].lnk)),(yyvsp[(4) - (4)].asts)); }
     break;
 
   case 68:
-#line 357 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 357 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = newNode('*',(yyvsp[(1) - (3)].asts),(yyvsp[(3) - (3)].asts));}
     break;
 
   case 69:
-#line 358 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 358 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = newNode('/',(yyvsp[(1) - (3)].asts),(yyvsp[(3) - (3)].asts));}
     break;
 
   case 70:
-#line 359 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 359 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = newNode('%',(yyvsp[(1) - (3)].asts),(yyvsp[(3) - (3)].asts));}
     break;
 
   case 72:
-#line 364 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 364 "kcc/Sources/kcc/lex.y"
     { (yyval.asts)=newNode('+',(yyvsp[(1) - (3)].asts),(yyvsp[(3) - (3)].asts));}
     break;
 
   case 73:
-#line 365 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 365 "kcc/Sources/kcc/lex.y"
     { (yyval.asts)=newNode('-',(yyvsp[(1) - (3)].asts),(yyvsp[(3) - (3)].asts));}
     break;
 
   case 75:
-#line 370 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 370 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = newNode(LEFT_OP,(yyvsp[(1) - (3)].asts),(yyvsp[(3) - (3)].asts)); }
     break;
 
   case 76:
-#line 371 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 371 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = newNode(RIGHT_OP,(yyvsp[(1) - (3)].asts),(yyvsp[(3) - (3)].asts)); }
     break;
 
   case 78:
-#line 376 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 376 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = newNode('<',  (yyvsp[(1) - (3)].asts),(yyvsp[(3) - (3)].asts));}
     break;
 
   case 79:
-#line 377 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 377 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = newNode('>',  (yyvsp[(1) - (3)].asts),(yyvsp[(3) - (3)].asts));}
     break;
 
   case 80:
-#line 378 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 378 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = newNode(LE_OP,(yyvsp[(1) - (3)].asts),(yyvsp[(3) - (3)].asts));}
     break;
 
   case 81:
-#line 379 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 379 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = newNode(GE_OP,(yyvsp[(1) - (3)].asts),(yyvsp[(3) - (3)].asts));}
     break;
 
   case 83:
-#line 384 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 384 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = newNode(EQ_OP,(yyvsp[(1) - (3)].asts),(yyvsp[(3) - (3)].asts));}
     break;
 
   case 84:
-#line 385 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 385 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = newNode(NE_OP,(yyvsp[(1) - (3)].asts),(yyvsp[(3) - (3)].asts));}
     break;
 
   case 86:
-#line 390 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 390 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = newNode('&',(yyvsp[(1) - (3)].asts),(yyvsp[(3) - (3)].asts));}
     break;
 
   case 88:
-#line 395 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 395 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = newNode('^',(yyvsp[(1) - (3)].asts),(yyvsp[(3) - (3)].asts));}
     break;
 
   case 90:
-#line 400 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 400 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = newNode('|',(yyvsp[(1) - (3)].asts),(yyvsp[(3) - (3)].asts));}
     break;
 
   case 92:
-#line 405 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 405 "kcc/Sources/kcc/lex.y"
     { seqPointNo++;}
     break;
 
   case 93:
-#line 406 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 406 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = newNode(AND_OP,(yyvsp[(1) - (4)].asts),(yyvsp[(4) - (4)].asts));}
     break;
 
   case 95:
-#line 411 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 411 "kcc/Sources/kcc/lex.y"
     { seqPointNo++;}
     break;
 
   case 96:
-#line 412 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 412 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = newNode(OR_OP,(yyvsp[(1) - (4)].asts),(yyvsp[(4) - (4)].asts)); }
     break;
 
   case 98:
-#line 417 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 417 "kcc/Sources/kcc/lex.y"
     { seqPointNo++;}
     break;
 
   case 99:
-#line 418 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 418 "kcc/Sources/kcc/lex.y"
     {
                         (yyval.asts) = newNode(':',(yyvsp[(4) - (6)].asts),(yyvsp[(6) - (6)].asts));
                         (yyval.asts) = newNode('?',(yyvsp[(1) - (6)].asts),(yyval.asts));
@@ -2896,7 +2896,7 @@ yyreduce:
     break;
 
   case 101:
-#line 427 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 427 "kcc/Sources/kcc/lex.y"
     {
 
                              switch ((yyvsp[(2) - (3)].yyint)) {
@@ -2941,22 +2941,22 @@ yyreduce:
     break;
 
   case 102:
-#line 471 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 471 "kcc/Sources/kcc/lex.y"
     { (yyval.yyint) = '=';}
     break;
 
   case 114:
-#line 486 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 486 "kcc/Sources/kcc/lex.y"
     { seqPointNo++;}
     break;
 
   case 115:
-#line 486 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 486 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = newNode(',',(yyvsp[(1) - (4)].asts),(yyvsp[(4) - (4)].asts));}
     break;
 
   case 117:
-#line 495 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 495 "kcc/Sources/kcc/lex.y"
     {
          /* Special case: if incomplete struct/union declared without name, */
          /* make sure an incomplete type for it exists in the current scope */
@@ -2983,7 +2983,7 @@ yyreduce:
     break;
 
   case 118:
-#line 519 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 519 "kcc/Sources/kcc/lex.y"
     {
          /* add the specifier list to the id */
          symbol *sym , *sym1;
@@ -3001,24 +3001,24 @@ yyreduce:
     break;
 
   case 119:
-#line 534 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 534 "kcc/Sources/kcc/lex.y"
     {
          (yyval.sym) = NULL;
       }
     break;
 
   case 120:
-#line 539 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 539 "kcc/Sources/kcc/lex.y"
     { (yyval.lnk) = finalizeSpec((yyvsp[(1) - (1)].lnk)); }
     break;
 
   case 121:
-#line 542 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 542 "kcc/Sources/kcc/lex.y"
     { (yyval.lnk) = (yyvsp[(1) - (1)].lnk); }
     break;
 
   case 122:
-#line 543 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 543 "kcc/Sources/kcc/lex.y"
     {
      /* if the decl $2 is not a specifier */
      /* find the spec and replace it      */
@@ -3027,12 +3027,12 @@ yyreduce:
     break;
 
   case 123:
-#line 548 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 548 "kcc/Sources/kcc/lex.y"
     { (yyval.lnk) = (yyvsp[(1) - (1)].lnk); }
     break;
 
   case 124:
-#line 549 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 549 "kcc/Sources/kcc/lex.y"
     {
      /* if the decl $2 is not a specifier */
      /* find the spec and replace it      */
@@ -3041,12 +3041,12 @@ yyreduce:
     break;
 
   case 125:
-#line 554 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 554 "kcc/Sources/kcc/lex.y"
     { (yyval.lnk) = (yyvsp[(1) - (1)].lnk); }
     break;
 
   case 126:
-#line 555 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 555 "kcc/Sources/kcc/lex.y"
     {
      /* if the decl $2 is not a specifier */
      /* find the spec and replace it      */
@@ -3055,12 +3055,12 @@ yyreduce:
     break;
 
   case 127:
-#line 560 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 560 "kcc/Sources/kcc/lex.y"
     { (yyval.lnk) = (yyvsp[(1) - (1)].lnk); }
     break;
 
   case 128:
-#line 561 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 561 "kcc/Sources/kcc/lex.y"
     {
      /* if the decl $2 is not a specifier */
      /* find the spec and replace it      */
@@ -3069,37 +3069,37 @@ yyreduce:
     break;
 
   case 130:
-#line 570 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 570 "kcc/Sources/kcc/lex.y"
     { (yyvsp[(3) - (3)].sym)->next = (yyvsp[(1) - (3)].sym); (yyval.sym) = (yyvsp[(3) - (3)].sym);}
     break;
 
   case 131:
-#line 574 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 574 "kcc/Sources/kcc/lex.y"
     { (yyvsp[(1) - (1)].sym)->ival = NULL; }
     break;
 
   case 132:
-#line 575 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 575 "kcc/Sources/kcc/lex.y"
     { (yyvsp[(1) - (3)].sym)->ival = (yyvsp[(3) - (3)].ilist); seqPointNo++; }
     break;
 
   case 133:
-#line 579 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 579 "kcc/Sources/kcc/lex.y"
     { (yyval.dsgn) = NULL; }
     break;
 
   case 135:
-#line 584 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 584 "kcc/Sources/kcc/lex.y"
     { (yyval.dsgn) = revDesignation((yyvsp[(1) - (2)].dsgn)); }
     break;
 
   case 137:
-#line 589 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 589 "kcc/Sources/kcc/lex.y"
     { (yyvsp[(2) - (2)].dsgn)->next = (yyvsp[(1) - (2)].dsgn); (yyval.dsgn) = (yyvsp[(2) - (2)].dsgn); }
     break;
 
   case 138:
-#line 594 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 594 "kcc/Sources/kcc/lex.y"
     {
             value *tval;
             int elemno;
@@ -3124,12 +3124,12 @@ yyreduce:
     break;
 
   case 139:
-#line 615 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 615 "kcc/Sources/kcc/lex.y"
     { (yyval.dsgn) = newDesignation(DESIGNATOR_STRUCT,(yyvsp[(2) - (2)].sym)); }
     break;
 
   case 140:
-#line 619 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 619 "kcc/Sources/kcc/lex.y"
     {
                   (yyval.lnk) = newLink (SPECIFIER);
                   SPEC_TYPEDEF((yyval.lnk)) = 1;
@@ -3137,7 +3137,7 @@ yyreduce:
     break;
 
   case 141:
-#line 623 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 623 "kcc/Sources/kcc/lex.y"
     {
                   (yyval.lnk) = newLink(SPECIFIER);
                   SPEC_EXTR((yyval.lnk)) = 1;
@@ -3145,7 +3145,7 @@ yyreduce:
     break;
 
   case 142:
-#line 627 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 627 "kcc/Sources/kcc/lex.y"
     {
                   (yyval.lnk) = newLink (SPECIFIER);
                   SPEC_STAT((yyval.lnk)) = 1;
@@ -3153,7 +3153,7 @@ yyreduce:
     break;
 
   case 143:
-#line 631 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 631 "kcc/Sources/kcc/lex.y"
     {
                   (yyval.lnk) = newLink (SPECIFIER);
                   SPEC_SCLS((yyval.lnk)) = S_AUTO;
@@ -3161,7 +3161,7 @@ yyreduce:
     break;
 
   case 144:
-#line 635 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 635 "kcc/Sources/kcc/lex.y"
     {
                   (yyval.lnk) = newLink (SPECIFIER);
                   SPEC_SCLS((yyval.lnk)) = S_REGISTER;
@@ -3169,7 +3169,7 @@ yyreduce:
     break;
 
   case 145:
-#line 642 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 642 "kcc/Sources/kcc/lex.y"
     {
                   (yyval.lnk) = newLink (SPECIFIER);
                   SPEC_INLINE((yyval.lnk)) = 1;
@@ -3177,7 +3177,7 @@ yyreduce:
     break;
 
   case 146:
-#line 646 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 646 "kcc/Sources/kcc/lex.y"
     {
                   (yyval.lnk) = newLink (SPECIFIER);
                   SPEC_NORETURN((yyval.lnk)) = 1;
@@ -3185,7 +3185,7 @@ yyreduce:
     break;
 
   case 147:
-#line 654 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 654 "kcc/Sources/kcc/lex.y"
     {
                  checkTypeSanity ((yyvsp[(3) - (4)].lnk), "(_Alignas)");
                  (yyval.lnk) = newLink (SPECIFIER);
@@ -3194,7 +3194,7 @@ yyreduce:
     break;
 
   case 148:
-#line 660 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 660 "kcc/Sources/kcc/lex.y"
     {
                  value *val = constExprValue ((yyvsp[(3) - (4)].asts), TRUE);
                  (yyval.lnk) = newLink (SPECIFIER);
@@ -3209,12 +3209,12 @@ yyreduce:
     break;
 
   case 149:
-#line 674 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 674 "kcc/Sources/kcc/lex.y"
     { (yyval.yyint) = INTNO_UNSPEC; }
     break;
 
   case 150:
-#line 676 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 676 "kcc/Sources/kcc/lex.y"
     { int intno = (int) ulFromVal(constExprValue((yyvsp[(2) - (2)].asts),TRUE));
           if ((intno >= 0) && (intno <= INTNO_MAX))
             (yyval.yyint) = intno;
@@ -3227,7 +3227,7 @@ yyreduce:
     break;
 
   case 151:
-#line 688 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 688 "kcc/Sources/kcc/lex.y"
     {
                   (yyval.lnk)=newLink(SPECIFIER);
                   SPEC_NOUN((yyval.lnk)) = V_BOOL;
@@ -3236,7 +3236,7 @@ yyreduce:
     break;
 
   case 152:
-#line 693 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 693 "kcc/Sources/kcc/lex.y"
     {
                   (yyval.lnk)=newLink(SPECIFIER);
                   SPEC_NOUN((yyval.lnk)) = V_CHAR;
@@ -3245,7 +3245,7 @@ yyreduce:
     break;
 
   case 153:
-#line 698 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 698 "kcc/Sources/kcc/lex.y"
     {
                   (yyval.lnk)=newLink(SPECIFIER);
                   SPEC_SHORT((yyval.lnk)) = 1;
@@ -3254,7 +3254,7 @@ yyreduce:
     break;
 
   case 154:
-#line 703 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 703 "kcc/Sources/kcc/lex.y"
     {
                   (yyval.lnk)=newLink(SPECIFIER);
                   SPEC_NOUN((yyval.lnk)) = V_INT;
@@ -3263,7 +3263,7 @@ yyreduce:
     break;
 
   case 155:
-#line 708 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 708 "kcc/Sources/kcc/lex.y"
     {
                   (yyval.lnk)=newLink(SPECIFIER);
                   SPEC_LONG((yyval.lnk)) = 1;
@@ -3272,7 +3272,7 @@ yyreduce:
     break;
 
   case 156:
-#line 713 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 713 "kcc/Sources/kcc/lex.y"
     {
                   (yyval.lnk)=newLink(SPECIFIER);
                   (yyval.lnk)->select.s.b_signed = 1;
@@ -3281,7 +3281,7 @@ yyreduce:
     break;
 
   case 157:
-#line 718 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 718 "kcc/Sources/kcc/lex.y"
     {
                   (yyval.lnk)=newLink(SPECIFIER);
                   SPEC_USIGN((yyval.lnk)) = 1;
@@ -3290,7 +3290,7 @@ yyreduce:
     break;
 
   case 158:
-#line 723 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 723 "kcc/Sources/kcc/lex.y"
     {
                   (yyval.lnk)=newLink(SPECIFIER);
                   SPEC_NOUN((yyval.lnk)) = V_VOID;
@@ -3299,7 +3299,7 @@ yyreduce:
     break;
 
   case 159:
-#line 728 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 728 "kcc/Sources/kcc/lex.y"
     {
                   (yyval.lnk)=newLink(SPECIFIER);
                   SPEC_CONST((yyval.lnk)) = 1;
@@ -3307,7 +3307,7 @@ yyreduce:
     break;
 
   case 160:
-#line 732 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 732 "kcc/Sources/kcc/lex.y"
     {
                   (yyval.lnk)=newLink(SPECIFIER);
                   SPEC_VOLATILE((yyval.lnk)) = 1;
@@ -3315,7 +3315,7 @@ yyreduce:
     break;
 
   case 161:
-#line 736 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 736 "kcc/Sources/kcc/lex.y"
     {
                   (yyval.lnk)=newLink(SPECIFIER);
                   SPEC_RESTRICT((yyval.lnk)) = 1;
@@ -3323,7 +3323,7 @@ yyreduce:
     break;
 
   case 162:
-#line 740 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 740 "kcc/Sources/kcc/lex.y"
     {
                   (yyval.lnk)=newLink(SPECIFIER);
                   SPEC_ADDRSPACE((yyval.lnk)) = findSym (AddrspaceTab, 0, (yyvsp[(1) - (1)].yychar));
@@ -3331,7 +3331,7 @@ yyreduce:
     break;
 
   case 163:
-#line 744 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 744 "kcc/Sources/kcc/lex.y"
     {
                   (yyval.lnk)=newLink(SPECIFIER);
                   SPEC_NOUN((yyval.lnk)) = V_FLOAT;
@@ -3340,7 +3340,7 @@ yyreduce:
     break;
 
   case 164:
-#line 749 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 749 "kcc/Sources/kcc/lex.y"
     {
                   (yyval.lnk)=newLink(SPECIFIER);
                   SPEC_NOUN((yyval.lnk)) = V_FIXED16X16;
@@ -3349,7 +3349,7 @@ yyreduce:
     break;
 
   case 165:
-#line 754 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 754 "kcc/Sources/kcc/lex.y"
     {
                   (yyval.lnk) = newLink (SPECIFIER);
                   SPEC_SCLS((yyval.lnk)) = S_XDATA;
@@ -3357,7 +3357,7 @@ yyreduce:
     break;
 
   case 166:
-#line 758 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 758 "kcc/Sources/kcc/lex.y"
     {
                   (yyval.lnk) = newLink (SPECIFIER);
                   SPEC_SCLS((yyval.lnk)) = S_CODE;
@@ -3365,7 +3365,7 @@ yyreduce:
     break;
 
   case 167:
-#line 762 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 762 "kcc/Sources/kcc/lex.y"
     {
                   (yyval.lnk) = newLink (SPECIFIER);
                   SPEC_SCLS((yyval.lnk)) = S_EEPROM;
@@ -3373,7 +3373,7 @@ yyreduce:
     break;
 
   case 168:
-#line 766 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 766 "kcc/Sources/kcc/lex.y"
     {
                   (yyval.lnk) = newLink (SPECIFIER);
                   SPEC_SCLS((yyval.lnk)) = S_DATA;
@@ -3381,7 +3381,7 @@ yyreduce:
     break;
 
   case 169:
-#line 770 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 770 "kcc/Sources/kcc/lex.y"
     {
                   (yyval.lnk) = newLink (SPECIFIER);
                   SPEC_SCLS((yyval.lnk)) = S_IDATA;
@@ -3389,7 +3389,7 @@ yyreduce:
     break;
 
   case 170:
-#line 774 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 774 "kcc/Sources/kcc/lex.y"
     {
                   (yyval.lnk) = newLink (SPECIFIER);
                   SPEC_SCLS((yyval.lnk)) = S_PDATA;
@@ -3397,7 +3397,7 @@ yyreduce:
     break;
 
   case 171:
-#line 778 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 778 "kcc/Sources/kcc/lex.y"
     {
                   (yyval.lnk)=newLink(SPECIFIER);
                   SPEC_NOUN((yyval.lnk)) = V_BIT;
@@ -3409,7 +3409,7 @@ yyreduce:
     break;
 
   case 172:
-#line 786 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 786 "kcc/Sources/kcc/lex.y"
     {
                   (yyval.lnk)=newLink(SPECIFIER);
                   /* add this to the storage class specifier  */
@@ -3420,7 +3420,7 @@ yyreduce:
     break;
 
   case 173:
-#line 793 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 793 "kcc/Sources/kcc/lex.y"
     {
                                    uselessDecl = FALSE;
                                    (yyval.lnk) = (yyvsp[(1) - (1)].lnk);
@@ -3429,7 +3429,7 @@ yyreduce:
     break;
 
   case 174:
-#line 798 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 798 "kcc/Sources/kcc/lex.y"
     {
                            cenum = NULL;
                            uselessDecl = FALSE;
@@ -3439,7 +3439,7 @@ yyreduce:
     break;
 
   case 175:
-#line 805 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 805 "kcc/Sources/kcc/lex.y"
     {
             symbol *sym;
             sym_link *p;
@@ -3451,7 +3451,7 @@ yyreduce:
     break;
 
   case 177:
-#line 817 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 817 "kcc/Sources/kcc/lex.y"
     {
                (yyval.lnk) = newLink(SPECIFIER);
                SPEC_NOUN((yyval.lnk)) = V_SBIT;
@@ -3463,7 +3463,7 @@ yyreduce:
     break;
 
   case 179:
-#line 829 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 829 "kcc/Sources/kcc/lex.y"
     {
                (yyval.lnk) = newLink(SPECIFIER);
                FUNC_REGBANK((yyval.lnk)) = 0;
@@ -3475,7 +3475,7 @@ yyreduce:
     break;
 
   case 180:
-#line 837 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 837 "kcc/Sources/kcc/lex.y"
     {
                (yyval.lnk) = newLink(SPECIFIER);
                FUNC_REGBANK((yyval.lnk)) = 1;
@@ -3487,7 +3487,7 @@ yyreduce:
     break;
 
   case 181:
-#line 848 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 848 "kcc/Sources/kcc/lex.y"
     {
                (yyval.lnk) = newLink(SPECIFIER);
                FUNC_REGBANK((yyval.lnk)) = 0;
@@ -3499,7 +3499,7 @@ yyreduce:
     break;
 
   case 182:
-#line 859 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 859 "kcc/Sources/kcc/lex.y"
     {
                (yyval.lnk) = newLink(SPECIFIER);
                FUNC_REGBANK((yyval.lnk)) = 0;
@@ -3512,7 +3512,7 @@ yyreduce:
     break;
 
   case 183:
-#line 872 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 872 "kcc/Sources/kcc/lex.y"
     {
           structdef *sdef;
 
@@ -3567,7 +3567,7 @@ yyreduce:
     break;
 
   case 184:
-#line 924 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 924 "kcc/Sources/kcc/lex.y"
     {
           structdef *sdef;
           symbol *sym, *dsym;
@@ -3611,7 +3611,7 @@ yyreduce:
     break;
 
   case 185:
-#line 965 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 965 "kcc/Sources/kcc/lex.y"
     {
           structdef *sdef;
 
@@ -3640,17 +3640,17 @@ yyreduce:
     break;
 
   case 186:
-#line 993 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 993 "kcc/Sources/kcc/lex.y"
     { (yyval.yyint) = STRUCT; ignoreTypedefType = 1; }
     break;
 
   case 187:
-#line 994 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 994 "kcc/Sources/kcc/lex.y"
     { (yyval.yyint) = UNION; ignoreTypedefType = 1; }
     break;
 
   case 189:
-#line 999 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 999 "kcc/Sources/kcc/lex.y"
     {  /* synthesize a name add to structtable */
           ignoreTypedefType = 0;
           (yyval.sdef) = newStruct(genSymName(NestLevel));
@@ -3662,7 +3662,7 @@ yyreduce:
     break;
 
   case 190:
-#line 1011 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1011 "kcc/Sources/kcc/lex.y"
     {  /* add name to structure table */
           ignoreTypedefType = 0;
           (yyval.sdef) = newStruct((yyvsp[(1) - (1)].sym)->name);
@@ -3681,7 +3681,7 @@ yyreduce:
     break;
 
   case 192:
-#line 1031 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1031 "kcc/Sources/kcc/lex.y"
     {
           symbol *sym = (yyvsp[(2) - (2)].sym);
 
@@ -3694,7 +3694,7 @@ yyreduce:
     break;
 
   case 193:
-#line 1044 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1044 "kcc/Sources/kcc/lex.y"
     {
           /* add this type to all the symbols */
           symbol *sym;
@@ -3719,7 +3719,7 @@ yyreduce:
     break;
 
   case 195:
-#line 1070 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1070 "kcc/Sources/kcc/lex.y"
     {
           (yyvsp[(3) - (3)].sym)->next  = (yyvsp[(1) - (3)].sym);
           (yyval.sym) = (yyvsp[(3) - (3)].sym);
@@ -3727,7 +3727,7 @@ yyreduce:
     break;
 
   case 197:
-#line 1079 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1079 "kcc/Sources/kcc/lex.y"
     {
           unsigned int bitsize;
           (yyval.sym) = newSymbol (genSymName(NestLevel), NestLevel);
@@ -3745,7 +3745,7 @@ yyreduce:
     break;
 
   case 198:
-#line 1094 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1094 "kcc/Sources/kcc/lex.y"
     {
           unsigned int bitsize;
           bitsize = (unsigned int) ulFromVal(constExprValue((yyvsp[(3) - (3)].asts), TRUE));
@@ -3766,12 +3766,12 @@ yyreduce:
     break;
 
   case 199:
-#line 1111 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1111 "kcc/Sources/kcc/lex.y"
     { (yyval.sym) = newSymbol ("", NestLevel); }
     break;
 
   case 200:
-#line 1116 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1116 "kcc/Sources/kcc/lex.y"
     {
           (yyval.lnk) = newEnumType ((yyvsp[(3) - (4)].sym));
           SPEC_SCLS(getSpec((yyval.lnk))) = 0;
@@ -3779,7 +3779,7 @@ yyreduce:
     break;
 
   case 201:
-#line 1121 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1121 "kcc/Sources/kcc/lex.y"
     {
           symbol *csym;
           sym_link *enumtype;
@@ -3803,7 +3803,7 @@ yyreduce:
     break;
 
   case 202:
-#line 1142 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1142 "kcc/Sources/kcc/lex.y"
     {
           symbol *csym;
 
@@ -3819,7 +3819,7 @@ yyreduce:
     break;
 
   case 205:
-#line 1160 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1160 "kcc/Sources/kcc/lex.y"
     {
           (yyvsp[(3) - (3)].sym)->next = (yyvsp[(1) - (3)].sym);
           (yyval.sym) = (yyvsp[(3) - (3)].sym);
@@ -3827,7 +3827,7 @@ yyreduce:
     break;
 
   case 206:
-#line 1168 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1168 "kcc/Sources/kcc/lex.y"
     {
           symbol *sym;
 
@@ -3847,7 +3847,7 @@ yyreduce:
     break;
 
   case 207:
-#line 1188 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1188 "kcc/Sources/kcc/lex.y"
     {
           value *val;
 
@@ -3863,7 +3863,7 @@ yyreduce:
     break;
 
   case 208:
-#line 1200 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1200 "kcc/Sources/kcc/lex.y"
     {
           if (cenum)
             {
@@ -3878,12 +3878,12 @@ yyreduce:
     break;
 
   case 209:
-#line 1214 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1214 "kcc/Sources/kcc/lex.y"
     { (yyval.sym) = (yyvsp[(1) - (1)].sym); }
     break;
 
   case 210:
-#line 1216 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1216 "kcc/Sources/kcc/lex.y"
     {
              addDecl ((yyvsp[(2) - (2)].sym),0,reverseLink((yyvsp[(1) - (2)].lnk)));
              (yyval.sym) = (yyvsp[(2) - (2)].sym);
@@ -3891,22 +3891,22 @@ yyreduce:
     break;
 
   case 211:
-#line 1223 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1223 "kcc/Sources/kcc/lex.y"
     { (yyval.sym) = (yyvsp[(1) - (1)].sym); }
     break;
 
   case 212:
-#line 1224 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1224 "kcc/Sources/kcc/lex.y"
     { (yyval.sym) = (yyvsp[(1) - (1)].sym); }
     break;
 
   case 213:
-#line 1228 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1228 "kcc/Sources/kcc/lex.y"
     { (yyval.sym) = (yyvsp[(1) - (1)].sym); }
     break;
 
   case 214:
-#line 1230 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1230 "kcc/Sources/kcc/lex.y"
     {
              addDecl ((yyvsp[(2) - (2)].sym),0,reverseLink((yyvsp[(1) - (2)].lnk)));
              (yyval.sym) = (yyvsp[(2) - (2)].sym);
@@ -3914,12 +3914,12 @@ yyreduce:
     break;
 
   case 215:
-#line 1237 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1237 "kcc/Sources/kcc/lex.y"
     { (yyval.sym) = (yyvsp[(1) - (1)].sym); }
     break;
 
   case 216:
-#line 1238 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1238 "kcc/Sources/kcc/lex.y"
     {
            // copy the functionAttributes (not the args and hasVargs !!)
            struct value *args;
@@ -3952,12 +3952,12 @@ yyreduce:
     break;
 
   case 218:
-#line 1271 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1271 "kcc/Sources/kcc/lex.y"
     { (yyval.sym) = (yyvsp[(2) - (3)].sym); }
     break;
 
   case 219:
-#line 1273 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1273 "kcc/Sources/kcc/lex.y"
     {
             sym_link   *p;
 
@@ -3969,7 +3969,7 @@ yyreduce:
     break;
 
   case 220:
-#line 1282 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1282 "kcc/Sources/kcc/lex.y"
     {
             sym_link *p;
             value *tval;
@@ -4001,14 +4001,14 @@ yyreduce:
     break;
 
   case 221:
-#line 1314 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1314 "kcc/Sources/kcc/lex.y"
     {
           addDecl ((yyvsp[(1) - (3)].sym), FUNCTION, NULL);
         }
     break;
 
   case 222:
-#line 1318 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1318 "kcc/Sources/kcc/lex.y"
     {
           NestLevel++;
           STACK_PUSH(blockNum, currBlockno);
@@ -4019,7 +4019,7 @@ yyreduce:
     break;
 
   case 223:
-#line 1326 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1326 "kcc/Sources/kcc/lex.y"
     {
           sym_link *funcType;
 
@@ -4048,7 +4048,7 @@ yyreduce:
     break;
 
   case 224:
-#line 1352 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1352 "kcc/Sources/kcc/lex.y"
     {
           werror(E_OLD_STYLE,(yyvsp[(1) - (4)].sym)->name);
           /* assume it returns an int */
@@ -4058,12 +4058,12 @@ yyreduce:
     break;
 
   case 225:
-#line 1361 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1361 "kcc/Sources/kcc/lex.y"
     { (yyval.lnk) = (yyvsp[(1) - (1)].lnk);}
     break;
 
   case 226:
-#line 1363 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1363 "kcc/Sources/kcc/lex.y"
     {
              (yyval.lnk) = (yyvsp[(1) - (2)].lnk);
              if (IS_SPEC((yyvsp[(2) - (2)].lnk))) {
@@ -4079,7 +4079,7 @@ yyreduce:
     break;
 
   case 227:
-#line 1376 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1376 "kcc/Sources/kcc/lex.y"
     {
              (yyval.lnk) = (yyvsp[(1) - (2)].lnk);
              (yyval.lnk)->next = (yyvsp[(2) - (2)].lnk);
@@ -4088,7 +4088,7 @@ yyreduce:
     break;
 
   case 228:
-#line 1382 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1382 "kcc/Sources/kcc/lex.y"
     {
              (yyval.lnk) = (yyvsp[(1) - (3)].lnk);
              if (IS_SPEC((yyvsp[(2) - (3)].lnk)) && DCL_TYPE((yyvsp[(3) - (3)].lnk)) == UPOINTER) {
@@ -4128,7 +4128,7 @@ yyreduce:
     break;
 
   case 229:
-#line 1422 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1422 "kcc/Sources/kcc/lex.y"
     {
         (yyval.lnk) = newLink(DECLARATOR);
         DCL_TYPE((yyval.lnk))=UPOINTER;
@@ -4136,12 +4136,12 @@ yyreduce:
     break;
 
   case 230:
-#line 1428 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1428 "kcc/Sources/kcc/lex.y"
     { (yyval.lnk) = finalizeSpec((yyvsp[(1) - (1)].lnk)); }
     break;
 
   case 232:
-#line 1433 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1433 "kcc/Sources/kcc/lex.y"
     {
      /* if the decl $2 is not a specifier */
      /* find the spec and replace it      */
@@ -4150,7 +4150,7 @@ yyreduce:
     break;
 
   case 234:
-#line 1443 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1443 "kcc/Sources/kcc/lex.y"
     {
            (yyvsp[(3) - (3)].sym)->next = (yyvsp[(1) - (3)].sym);
            (yyval.sym) = (yyvsp[(3) - (3)].sym);
@@ -4158,12 +4158,12 @@ yyreduce:
     break;
 
   case 236:
-#line 1451 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1451 "kcc/Sources/kcc/lex.y"
     { (yyvsp[(1) - (3)].val)->vArgs = 1;}
     break;
 
   case 238:
-#line 1457 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1457 "kcc/Sources/kcc/lex.y"
     {
             (yyvsp[(3) - (3)].val)->next = (yyvsp[(1) - (3)].val);
             (yyval.val) = (yyvsp[(3) - (3)].val);
@@ -4171,7 +4171,7 @@ yyreduce:
     break;
 
   case 239:
-#line 1465 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1465 "kcc/Sources/kcc/lex.y"
     {
           symbol *loop;
 
@@ -4189,7 +4189,7 @@ yyreduce:
     break;
 
   case 240:
-#line 1480 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1480 "kcc/Sources/kcc/lex.y"
     {
           (yyval.val) = newValue ();
           (yyval.val)->type = (yyvsp[(1) - (1)].lnk);
@@ -4199,7 +4199,7 @@ yyreduce:
     break;
 
   case 241:
-#line 1490 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1490 "kcc/Sources/kcc/lex.y"
     {
           if (IS_SPEC ((yyvsp[(1) - (1)].lnk)) && !IS_VALID_PARAMETER_STORAGE_CLASS_SPEC ((yyvsp[(1) - (1)].lnk)))
             {
@@ -4210,7 +4210,7 @@ yyreduce:
     break;
 
   case 242:
-#line 1498 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1498 "kcc/Sources/kcc/lex.y"
     {
           /* go to the end of the list */
           sym_link *p;
@@ -4236,12 +4236,12 @@ yyreduce:
     break;
 
   case 243:
-#line 1523 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1523 "kcc/Sources/kcc/lex.y"
     { (yyval.lnk) = reverseLink((yyvsp[(1) - (1)].lnk)); }
     break;
 
   case 245:
-#line 1525 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1525 "kcc/Sources/kcc/lex.y"
     { (yyvsp[(1) - (2)].lnk) = reverseLink((yyvsp[(1) - (2)].lnk)); (yyvsp[(1) - (2)].lnk)->next = (yyvsp[(2) - (2)].lnk); (yyval.lnk) = (yyvsp[(1) - (2)].lnk);
           if (IS_PTR((yyvsp[(1) - (2)].lnk)) && IS_FUNC((yyvsp[(2) - (2)].lnk)))
             DCL_TYPE((yyvsp[(1) - (2)].lnk)) = CPOINTER;
@@ -4249,12 +4249,12 @@ yyreduce:
     break;
 
   case 246:
-#line 1532 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1532 "kcc/Sources/kcc/lex.y"
     { (yyval.lnk) = (yyvsp[(2) - (3)].lnk); }
     break;
 
   case 247:
-#line 1533 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1533 "kcc/Sources/kcc/lex.y"
     {
                                        (yyval.lnk) = newLink (DECLARATOR);
                                        DCL_TYPE((yyval.lnk)) = ARRAY;
@@ -4263,7 +4263,7 @@ yyreduce:
     break;
 
   case 248:
-#line 1538 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1538 "kcc/Sources/kcc/lex.y"
     {
                                        value *val;
                                        (yyval.lnk) = newLink (DECLARATOR);
@@ -4273,7 +4273,7 @@ yyreduce:
     break;
 
   case 249:
-#line 1544 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1544 "kcc/Sources/kcc/lex.y"
     {
                                        (yyval.lnk) = newLink (DECLARATOR);
                                        DCL_TYPE((yyval.lnk)) = ARRAY;
@@ -4283,7 +4283,7 @@ yyreduce:
     break;
 
   case 250:
-#line 1551 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1551 "kcc/Sources/kcc/lex.y"
     {
                                        value *val;
                                        (yyval.lnk) = newLink (DECLARATOR);
@@ -4294,17 +4294,17 @@ yyreduce:
     break;
 
   case 251:
-#line 1558 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1558 "kcc/Sources/kcc/lex.y"
     { (yyval.lnk) = NULL;}
     break;
 
   case 252:
-#line 1559 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1559 "kcc/Sources/kcc/lex.y"
     { (yyval.lnk) = NULL;}
     break;
 
   case 253:
-#line 1560 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1560 "kcc/Sources/kcc/lex.y"
     {
      // $1 must be a pointer to a function
      sym_link *p=newLink(DECLARATOR);
@@ -4320,7 +4320,7 @@ yyreduce:
     break;
 
   case 254:
-#line 1573 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1573 "kcc/Sources/kcc/lex.y"
     {
           NestLevel++;
           STACK_PUSH(blockNum, currBlockno);
@@ -4330,7 +4330,7 @@ yyreduce:
     break;
 
   case 255:
-#line 1580 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1580 "kcc/Sources/kcc/lex.y"
     {
           sym_link *p = newLink(DECLARATOR);
           DCL_TYPE(p) = FUNCTION;
@@ -4353,27 +4353,27 @@ yyreduce:
     break;
 
   case 256:
-#line 1602 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1602 "kcc/Sources/kcc/lex.y"
     { (yyval.ilist) = newiList(INIT_NODE,(yyvsp[(1) - (1)].asts)); }
     break;
 
   case 257:
-#line 1603 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1603 "kcc/Sources/kcc/lex.y"
     { (yyval.ilist) = newiList(INIT_DEEP,revinit((yyvsp[(2) - (3)].ilist))); }
     break;
 
   case 258:
-#line 1604 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1604 "kcc/Sources/kcc/lex.y"
     { (yyval.ilist) = newiList(INIT_DEEP,revinit((yyvsp[(2) - (4)].ilist))); }
     break;
 
   case 259:
-#line 1608 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1608 "kcc/Sources/kcc/lex.y"
     { (yyvsp[(2) - (2)].ilist)->designation = (yyvsp[(1) - (2)].dsgn); (yyval.ilist) = (yyvsp[(2) - (2)].ilist); }
     break;
 
   case 260:
-#line 1610 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1610 "kcc/Sources/kcc/lex.y"
     {
                                        (yyvsp[(4) - (4)].ilist)->designation = (yyvsp[(3) - (4)].dsgn);
                                        (yyvsp[(4) - (4)].ilist)->next = (yyvsp[(1) - (4)].ilist);
@@ -4382,7 +4382,7 @@ yyreduce:
     break;
 
   case 261:
-#line 1619 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1619 "kcc/Sources/kcc/lex.y"
     {
                                        value *val = constExprValue ((yyvsp[(3) - (6)].asts), TRUE);
                                        if (!val)
@@ -4393,7 +4393,7 @@ yyreduce:
     break;
 
   case 270:
-#line 1640 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1640 "kcc/Sources/kcc/lex.y"
     {
                    inCritical++;
                    STACK_PUSH(continueStack,NULL);
@@ -4403,7 +4403,7 @@ yyreduce:
     break;
 
   case 271:
-#line 1649 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1649 "kcc/Sources/kcc/lex.y"
     {
                    STACK_POP(breakStack);
                    STACK_POP(continueStack);
@@ -4413,12 +4413,12 @@ yyreduce:
     break;
 
   case 272:
-#line 1658 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1658 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = (yyvsp[(1) - (2)].asts); (yyvsp[(1) - (2)].asts)->right = (yyvsp[(2) - (2)].asts); }
     break;
 
   case 273:
-#line 1660 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1660 "kcc/Sources/kcc/lex.y"
     { /* Support a label without a statement at the end of a */
        /* compound statement as a SDCC extension. Include the */
        /* closing brace as part of the rule to avoid an */
@@ -4430,13 +4430,13 @@ yyreduce:
     break;
 
   case 274:
-#line 1671 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1671 "kcc/Sources/kcc/lex.y"
     {  (yyval.asts) = createLabel((yyvsp[(1) - (2)].sym),NULL);
                                           (yyvsp[(1) - (2)].sym)->isitmp = 0;  }
     break;
 
   case 275:
-#line 1674 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1674 "kcc/Sources/kcc/lex.y"
     {
        if (STACK_EMPTY(swStk))
          (yyval.asts) = createCase(NULL,(yyvsp[(2) - (3)].asts),NULL);
@@ -4446,12 +4446,12 @@ yyreduce:
     break;
 
   case 276:
-#line 1680 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1680 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = newNode(DEFAULT,NULL,NULL); }
     break;
 
   case 277:
-#line 1681 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1681 "kcc/Sources/kcc/lex.y"
     {
        if (STACK_EMPTY(swStk))
          (yyval.asts) = createDefault(NULL,(yyvsp[(2) - (3)].asts),NULL);
@@ -4461,7 +4461,7 @@ yyreduce:
     break;
 
   case 278:
-#line 1691 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1691 "kcc/Sources/kcc/lex.y"
     {
           NestLevel++;
           STACK_PUSH(blockNum, currBlockno);
@@ -4472,7 +4472,7 @@ yyreduce:
     break;
 
   case 279:
-#line 1702 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1702 "kcc/Sources/kcc/lex.y"
     {
           NestLevel--;
           currBlockno = STACK_POP(blockNum);
@@ -4480,17 +4480,17 @@ yyreduce:
     break;
 
   case 280:
-#line 1709 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1709 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = createBlock(NULL, NULL); }
     break;
 
   case 281:
-#line 1710 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1710 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = createBlock(NULL, (yyvsp[(2) - (3)].asts)); }
     break;
 
   case 282:
-#line 1712 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1712 "kcc/Sources/kcc/lex.y"
     {
        (yyval.asts) = createBlock((yyvsp[(2) - (3)].sym), NULL); 
        cleanUpLevel(StructTab, NestLevel + 1);
@@ -4498,7 +4498,7 @@ yyreduce:
     break;
 
   case 283:
-#line 1719 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1719 "kcc/Sources/kcc/lex.y"
     {
        (yyval.asts) = createBlock((yyvsp[(2) - (4)].sym), (yyvsp[(3) - (4)].asts)); 
        cleanUpLevel(StructTab, NestLevel + 1);
@@ -4506,12 +4506,12 @@ yyreduce:
     break;
 
   case 284:
-#line 1723 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1723 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = NULL; }
     break;
 
   case 285:
-#line 1728 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1728 "kcc/Sources/kcc/lex.y"
     {
        /* if this is typedef declare it immediately */
        if ( (yyvsp[(1) - (1)].sym) && IS_TYPEDEF((yyvsp[(1) - (1)].sym)->etype)) {
@@ -4526,7 +4526,7 @@ yyreduce:
     break;
 
   case 286:
-#line 1741 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1741 "kcc/Sources/kcc/lex.y"
     {
        symbol   *sym;
 
@@ -4552,37 +4552,37 @@ yyreduce:
     break;
 
   case 288:
-#line 1767 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1767 "kcc/Sources/kcc/lex.y"
     {  (yyval.asts) = newNode(NULLOP,(yyvsp[(1) - (2)].asts),(yyvsp[(2) - (2)].asts));}
     break;
 
   case 289:
-#line 1771 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1771 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = NULL;}
     break;
 
   case 290:
-#line 1772 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1772 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = (yyvsp[(1) - (2)].asts); seqPointNo++;}
     break;
 
   case 291:
-#line 1776 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1776 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = (yyvsp[(2) - (2)].asts); }
     break;
 
   case 292:
-#line 1777 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1777 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = NULL; }
     break;
 
   case 293:
-#line 1782 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1782 "kcc/Sources/kcc/lex.y"
     { seqPointNo++;}
     break;
 
   case 294:
-#line 1783 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1783 "kcc/Sources/kcc/lex.y"
     {
                               noLineno++;
                               (yyval.asts) = createIf ((yyvsp[(3) - (7)].asts), (yyvsp[(6) - (7)].asts), (yyvsp[(7) - (7)].asts) );
@@ -4593,7 +4593,7 @@ yyreduce:
     break;
 
   case 295:
-#line 1790 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1790 "kcc/Sources/kcc/lex.y"
     {
                               ast *ex;
                               static   int swLabel = 0;
@@ -4614,7 +4614,7 @@ yyreduce:
     break;
 
   case 296:
-#line 1807 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1807 "kcc/Sources/kcc/lex.y"
     {
                               /* get back the switch form the stack  */
                               (yyval.asts) = STACK_POP(swStk);
@@ -4624,7 +4624,7 @@ yyreduce:
     break;
 
   case 297:
-#line 1815 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1815 "kcc/Sources/kcc/lex.y"
     {  /* create and push the continue , break & body labels */
                   static int Lblnum = 0;
                   /* continue */
@@ -4640,7 +4640,7 @@ yyreduce:
     break;
 
   case 298:
-#line 1829 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1829 "kcc/Sources/kcc/lex.y"
     {  /* create and push the continue , break & body Labels */
            static int Lblnum = 0;
 
@@ -4657,7 +4657,7 @@ yyreduce:
     break;
 
   case 299:
-#line 1844 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1844 "kcc/Sources/kcc/lex.y"
     { /* create & push continue, break & body labels */
             static int Lblnum = 0;
 
@@ -4677,12 +4677,12 @@ yyreduce:
     break;
 
   case 300:
-#line 1863 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1863 "kcc/Sources/kcc/lex.y"
     { seqPointNo++;}
     break;
 
   case 301:
-#line 1864 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1864 "kcc/Sources/kcc/lex.y"
     {
                            noLineno++;
                            (yyval.asts) = createWhile ( (yyvsp[(1) - (6)].sym), STACK_POP(continueStack),
@@ -4694,7 +4694,7 @@ yyreduce:
     break;
 
   case 302:
-#line 1873 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1873 "kcc/Sources/kcc/lex.y"
     {
                           seqPointNo++;
                           noLineno++;
@@ -4707,7 +4707,7 @@ yyreduce:
     break;
 
   case 303:
-#line 1883 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1883 "kcc/Sources/kcc/lex.y"
     {
                           noLineno++;
 
@@ -4732,17 +4732,17 @@ yyreduce:
     break;
 
   case 304:
-#line 1907 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1907 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = NULL; seqPointNo++; }
     break;
 
   case 305:
-#line 1908 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1908 "kcc/Sources/kcc/lex.y"
     { (yyval.asts) = (yyvsp[(1) - (1)].asts); seqPointNo++; }
     break;
 
   case 306:
-#line 1912 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1912 "kcc/Sources/kcc/lex.y"
     {
                               (yyvsp[(2) - (3)].sym)->islbl = 1;
                               (yyval.asts) = newAst_VALUE(symbolVal((yyvsp[(2) - (3)].sym)));
@@ -4751,7 +4751,7 @@ yyreduce:
     break;
 
   case 307:
-#line 1917 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1917 "kcc/Sources/kcc/lex.y"
     {
        /* make sure continue is in context */
        if (STACK_EMPTY(continueStack) || STACK_PEEK(continueStack) == NULL) {
@@ -4768,7 +4768,7 @@ yyreduce:
     break;
 
   case 308:
-#line 1930 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1930 "kcc/Sources/kcc/lex.y"
     {
        if (STACK_EMPTY(breakStack) || STACK_PEEK(breakStack) == NULL) {
            werror(E_BREAK_CONTEXT);
@@ -4782,7 +4782,7 @@ yyreduce:
     break;
 
   case 309:
-#line 1940 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1940 "kcc/Sources/kcc/lex.y"
     {
        seqPointNo++;
        if (inCritical) {
@@ -4795,7 +4795,7 @@ yyreduce:
     break;
 
   case 310:
-#line 1949 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1949 "kcc/Sources/kcc/lex.y"
     {
        seqPointNo++;
        if (inCritical) {
@@ -4808,7 +4808,7 @@ yyreduce:
     break;
 
   case 312:
-#line 1966 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1966 "kcc/Sources/kcc/lex.y"
     {
         ast *ex;
 
@@ -4821,7 +4821,7 @@ yyreduce:
     break;
 
   case 313:
-#line 1976 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1976 "kcc/Sources/kcc/lex.y"
     {
         ast *ex;
 
@@ -4834,7 +4834,7 @@ yyreduce:
     break;
 
   case 314:
-#line 1988 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1988 "kcc/Sources/kcc/lex.y"
     {
      symbol *sym;
      if ((sym = findSymWithLevel (AddrspaceTab, (yyvsp[(3) - (4)].sym))) && sym->level == (yyvsp[(3) - (4)].sym)->level)
@@ -4849,7 +4849,7 @@ yyreduce:
     break;
 
   case 315:
-#line 1999 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 1999 "kcc/Sources/kcc/lex.y"
     {
      symbol *sym;
      sym_link *type;
@@ -4868,13 +4868,13 @@ yyreduce:
     break;
 
   case 316:
-#line 2017 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 2017 "kcc/Sources/kcc/lex.y"
     { (yyval.sym) = newSymbol ((yyvsp[(1) - (1)].yychar), NestLevel); }
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 4878 "/Users/lancelot/Library/Developer/Xcode/DerivedData/kcc-dmlhifhjjrlcwvfntnjcojbkgeei/Build/Intermediates.noindex/kcc.build/Debug/kcc_kcc.build/DerivedSources/y.tab.c"
+#line 4878 "DerivedSources/y.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -5088,6 +5088,6 @@ yyreturn:
 }
 
 
-#line 2019 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 2019 "kcc/Sources/kcc/lex.y"
 
 

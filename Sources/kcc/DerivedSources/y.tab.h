@@ -304,7 +304,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 72 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.y"
+#line 72 "kcc/Sources/kcc/lex.y"
 {
     symbol     *sym;        /* symbol table pointer                   */
     structdef  *sdef;       /* structure definition                   */
@@ -318,7 +318,7 @@ typedef union YYSTYPE
     ast        *asts;       /* expression tree                        */
 }
 /* Line 1529 of yacc.c.  */
-#line 322 "/Users/lancelot/Library/Developer/Xcode/DerivedData/kcc-dmlhifhjjrlcwvfntnjcojbkgeei/Build/Intermediates.noindex/kcc.build/Debug/kcc_kcc.build/DerivedSources/y.tab.h"
+#line 322 "DerivedSources/y.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

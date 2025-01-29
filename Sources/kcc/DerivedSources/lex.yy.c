@@ -1,6 +1,6 @@
-#line 1 "/Users/lancelot/Library/Developer/Xcode/DerivedData/kcc-dmlhifhjjrlcwvfntnjcojbkgeei/Build/Intermediates.noindex/kcc.build/Debug/kcc_kcc.build/DerivedSources/lex.yy.c"
+#line 1 "DerivedSources/lex.yy.c"
 
-#line 3 "/Users/lancelot/Library/Developer/Xcode/DerivedData/kcc-dmlhifhjjrlcwvfntnjcojbkgeei/Build/Intermediates.noindex/kcc.build/Debug/kcc_kcc.build/DerivedSources/lex.yy.c"
+#line 3 "DerivedSources/lex.yy.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -1376,7 +1376,7 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 1 "kcc/Sources/kcc/lex.l"
 /*-----------------------------------------------------------------------
   SDCC.lex - lexical analyser for use with sdcc (free open source
   compiler for 8/16 bit microcontrollers)
@@ -1400,7 +1400,7 @@ char *yytext;
   You are forbidden to forbid anyone else to use, share and improve
   what you give them.   Help stamp out software-hoarding!
 -------------------------------------------------------------------------*/
-#line 50 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 50 "kcc/Sources/kcc/lex.l"
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -1448,9 +1448,9 @@ static int process_pragma (const char *);
 static int check_type (void);
 static int isTargetKeyword (const char *s);
 static void checkCurrFile (const char *s);
-#line 1451 "/Users/lancelot/Library/Developer/Xcode/DerivedData/kcc-dmlhifhjjrlcwvfntnjcojbkgeei/Build/Intermediates.noindex/kcc.build/Debug/kcc_kcc.build/DerivedSources/lex.yy.c"
+#line 1451 "DerivedSources/lex.yy.c"
 
-#line 1453 "/Users/lancelot/Library/Developer/Xcode/DerivedData/kcc-dmlhifhjjrlcwvfntnjcojbkgeei/Build/Intermediates.noindex/kcc.build/Debug/kcc_kcc.build/DerivedSources/lex.yy.c"
+#line 1453 "DerivedSources/lex.yy.c"
 
 #define INITIAL 0
 #define asm 1
@@ -1671,9 +1671,9 @@ YY_DECL
 		}
 
 	{
-#line 100 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 100 "kcc/Sources/kcc/lex.l"
 
-#line 1676 "/Users/lancelot/Library/Developer/Xcode/DerivedData/kcc-dmlhifhjjrlcwvfntnjcojbkgeei/Build/Intermediates.noindex/kcc.build/Debug/kcc_kcc.build/DerivedSources/lex.yy.c"
+#line 1676 "DerivedSources/lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1733,7 +1733,7 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 101 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 101 "kcc/Sources/kcc/lex.l"
 {
   count ();
   if (asmbuff.buf == NULL)
@@ -1746,7 +1746,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 110 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 110 "kcc/Sources/kcc/lex.l"
 {
   count ();
   yylval.yystr = dbuf_c_str (&asmbuff);
@@ -1757,7 +1757,7 @@ YY_RULE_SETUP
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 116 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 116 "kcc/Sources/kcc/lex.l"
 {
   count ();
   dbuf_append_char(&asmbuff, *yytext);
@@ -1765,379 +1765,379 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 120 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 120 "kcc/Sources/kcc/lex.l"
 {
   dbuf_append_char(&asmbuff, *yytext);
 }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 123 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 123 "kcc/Sources/kcc/lex.l"
 { count (); return ASM; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 124 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 124 "kcc/Sources/kcc/lex.l"
 { count (); TKEYWORD (AT); }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 125 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 125 "kcc/Sources/kcc/lex.l"
 { count (); return AUTO; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 126 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 126 "kcc/Sources/kcc/lex.l"
 { count (); TKEYWORD (BIT); }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 127 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 127 "kcc/Sources/kcc/lex.l"
 { count (); TKEYWORD99 (SD_BOOL); }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 128 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 128 "kcc/Sources/kcc/lex.l"
 { count (); return BREAK; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 129 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 129 "kcc/Sources/kcc/lex.l"
 { count (); return CASE; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 130 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 130 "kcc/Sources/kcc/lex.l"
 { count (); return SD_CHAR; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 131 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 131 "kcc/Sources/kcc/lex.l"
 { count (); TKEYWORD (CODE); }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 132 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 132 "kcc/Sources/kcc/lex.l"
 { count (); return SD_CONST; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 133 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 133 "kcc/Sources/kcc/lex.l"
 { count (); return CONTINUE; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 134 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 134 "kcc/Sources/kcc/lex.l"
 { count (); TKEYWORD (CRITICAL); }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 135 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 135 "kcc/Sources/kcc/lex.l"
 { count (); TKEYWORD (DATA); }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 136 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 136 "kcc/Sources/kcc/lex.l"
 { count (); return DEFAULT; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 137 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 137 "kcc/Sources/kcc/lex.l"
 { count (); return DO; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 138 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 138 "kcc/Sources/kcc/lex.l"
 { count (); return SD_FLOAT; } /* NOTE: Doubles are unsupported (just floats) */
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 139 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 139 "kcc/Sources/kcc/lex.l"
 { count (); return ELSE; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 140 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 140 "kcc/Sources/kcc/lex.l"
 { count (); return ENUM; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 141 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 141 "kcc/Sources/kcc/lex.l"
 { count (); return EXTERN; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 142 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 142 "kcc/Sources/kcc/lex.l"
 { count (); TKEYWORD (XDATA); }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 143 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 143 "kcc/Sources/kcc/lex.l"
 { count (); TKEYWORD (EEPROM); }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 144 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 144 "kcc/Sources/kcc/lex.l"
 { count (); return SD_FLOAT; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 145 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 145 "kcc/Sources/kcc/lex.l"
 { count (); TKEYWORD (FIXED16X16); }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 146 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 146 "kcc/Sources/kcc/lex.l"
 { count (); TKEYWORD (CODE); }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 147 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 147 "kcc/Sources/kcc/lex.l"
 { count (); return FOR; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 148 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 148 "kcc/Sources/kcc/lex.l"
 { count (); return GOTO; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 149 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 149 "kcc/Sources/kcc/lex.l"
 { count (); TKEYWORD (IDATA); }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 150 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 150 "kcc/Sources/kcc/lex.l"
 { count (); return IF; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 151 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 151 "kcc/Sources/kcc/lex.l"
 { count (); return SD_INT; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 152 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 152 "kcc/Sources/kcc/lex.l"
 { count (); TKEYWORD (INTERRUPT); }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 153 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 153 "kcc/Sources/kcc/lex.l"
 { count (); TKEYWORD (NONBANKED); }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 154 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 154 "kcc/Sources/kcc/lex.l"
 { count (); TKEYWORD (BANKED); }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 155 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 155 "kcc/Sources/kcc/lex.l"
 { count (); return SD_LONG; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 156 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 156 "kcc/Sources/kcc/lex.l"
 { count (); TKEYWORD (DATA); }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 157 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 157 "kcc/Sources/kcc/lex.l"
 { count (); TKEYWORD (PDATA); }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 158 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 158 "kcc/Sources/kcc/lex.l"
 { count (); TKEYWORD (REENTRANT); }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 159 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 159 "kcc/Sources/kcc/lex.l"
 { count (); TKEYWORD (SHADOWREGS); }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 160 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 160 "kcc/Sources/kcc/lex.l"
 { count (); TKEYWORD (SD_WPARAM); }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 161 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 161 "kcc/Sources/kcc/lex.l"
 { count (); return REGISTER; }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 162 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 162 "kcc/Sources/kcc/lex.l"
 { count (); return RETURN; }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 163 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 163 "kcc/Sources/kcc/lex.l"
 { count (); TKEYWORD (SFR); }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 164 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 164 "kcc/Sources/kcc/lex.l"
 { count (); TKEYWORD (SFR16); }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 165 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 165 "kcc/Sources/kcc/lex.l"
 { count (); TKEYWORD (SFR32); }
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 166 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 166 "kcc/Sources/kcc/lex.l"
 { count (); TKEYWORD (SBIT); }
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 167 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 167 "kcc/Sources/kcc/lex.l"
 { count (); return SD_SHORT; }
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 168 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 168 "kcc/Sources/kcc/lex.l"
 { count (); return SIGNED; }
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 169 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 169 "kcc/Sources/kcc/lex.l"
 { count (); return SIZEOF; }
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 170 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 170 "kcc/Sources/kcc/lex.l"
 { count (); return ALIGNOF; }
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 171 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 171 "kcc/Sources/kcc/lex.l"
 { count (); return OFFSETOF; }
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 172 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 172 "kcc/Sources/kcc/lex.l"
 { count (); TKEYWORD (XDATA); }
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 173 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 173 "kcc/Sources/kcc/lex.l"
 { count (); return STATIC; }
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 174 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 174 "kcc/Sources/kcc/lex.l"
 { count (); return STRUCT; }
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 175 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 175 "kcc/Sources/kcc/lex.l"
 { count (); return SWITCH; }
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 176 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 176 "kcc/Sources/kcc/lex.l"
 { count (); return TYPEDEF; }
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 177 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 177 "kcc/Sources/kcc/lex.l"
 { count (); return UNION; }
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 178 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 178 "kcc/Sources/kcc/lex.l"
 { count (); return UNSIGNED; }
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 179 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 179 "kcc/Sources/kcc/lex.l"
 { count (); return SD_VOID; }
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 180 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 180 "kcc/Sources/kcc/lex.l"
 { count (); return VOLATILE; }
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 181 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 181 "kcc/Sources/kcc/lex.l"
 { count (); TKEYWORD (USING); }
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 182 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 182 "kcc/Sources/kcc/lex.l"
 { count (); TKEYWORD (NAKED); }
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 183 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 183 "kcc/Sources/kcc/lex.l"
 { count (); return WHILE; }
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
-#line 184 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 184 "kcc/Sources/kcc/lex.l"
 { count (); TKEYWORD (XDATA); }
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
-#line 185 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 185 "kcc/Sources/kcc/lex.l"
 { count (); return VAR_ARGS; }
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
-#line 186 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 186 "kcc/Sources/kcc/lex.l"
 { count (); return TYPEOF; }
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
-#line 187 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 187 "kcc/Sources/kcc/lex.l"
 { count (); TKEYWORD (JAVANATIVE); }
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
-#line 188 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 188 "kcc/Sources/kcc/lex.l"
 { count (); TKEYWORD (OVERLAY); }
 	YY_BREAK
 case 71:
 YY_RULE_SETUP
-#line 189 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 189 "kcc/Sources/kcc/lex.l"
 { count (); TKEYWORD99 (INLINE); }
 	YY_BREAK
 case 72:
 YY_RULE_SETUP
-#line 190 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 190 "kcc/Sources/kcc/lex.l"
 { count (); return NORETURN;}
 	YY_BREAK
 case 73:
 YY_RULE_SETUP
-#line 191 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 191 "kcc/Sources/kcc/lex.l"
 { count (); TKEYWORD99 (RESTRICT); }
 	YY_BREAK
 case 74:
 YY_RULE_SETUP
-#line 192 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 192 "kcc/Sources/kcc/lex.l"
 { count (); return SMALLC; }
 	YY_BREAK
 case 75:
 YY_RULE_SETUP
-#line 193 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 193 "kcc/Sources/kcc/lex.l"
 { count (); return ADDRESSMOD; }
 	YY_BREAK
 case 76:
 YY_RULE_SETUP
-#line 194 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 194 "kcc/Sources/kcc/lex.l"
 { count (); return STATIC_ASSERT; }
 	YY_BREAK
 case 77:
 YY_RULE_SETUP
-#line 195 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 195 "kcc/Sources/kcc/lex.l"
 { count (); return ALIGNAS; }
 	YY_BREAK
 case 78:
 YY_RULE_SETUP
-#line 196 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 196 "kcc/Sources/kcc/lex.l"
 {
   if (!options.dollars_in_ident && strchr (yytext, '$'))
     {
@@ -2160,7 +2160,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 79:
 YY_RULE_SETUP
-#line 215 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 215 "kcc/Sources/kcc/lex.l"
 {
   if (!options.std_sdcc)
     {
@@ -2173,320 +2173,320 @@ YY_RULE_SETUP
 	YY_BREAK
 case 80:
 YY_RULE_SETUP
-#line 224 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 224 "kcc/Sources/kcc/lex.l"
 { count (); yylval.val = constVal (yytext); return CONSTANT; }
 	YY_BREAK
 case 81:
 YY_RULE_SETUP
-#line 225 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 225 "kcc/Sources/kcc/lex.l"
 { count (); yylval.val = constVal (yytext); return CONSTANT; }
 	YY_BREAK
 case 82:
 YY_RULE_SETUP
-#line 226 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 226 "kcc/Sources/kcc/lex.l"
 { count (); yylval.val = constVal (yytext); return CONSTANT; }
 	YY_BREAK
 case 83:
 /* rule 83 can match eol */
 YY_RULE_SETUP
-#line 227 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 227 "kcc/Sources/kcc/lex.l"
 { count (); yylval.val = charVal (yytext); return CONSTANT; /* ' make syntax highlighter happy */ }
 	YY_BREAK
 case 84:
 YY_RULE_SETUP
-#line 228 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 228 "kcc/Sources/kcc/lex.l"
 { count (); yylval.val = constFloatVal (yytext); return CONSTANT; }
 	YY_BREAK
 case 85:
 YY_RULE_SETUP
-#line 229 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 229 "kcc/Sources/kcc/lex.l"
 { count (); yylval.val = constFloatVal (yytext); return CONSTANT; }
 	YY_BREAK
 case 86:
 YY_RULE_SETUP
-#line 230 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 230 "kcc/Sources/kcc/lex.l"
 { count (); yylval.val = constFloatVal (yytext); return CONSTANT; }
 	YY_BREAK
 case 87:
 YY_RULE_SETUP
-#line 231 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 231 "kcc/Sources/kcc/lex.l"
 { count (); yylval.yystr = stringLiteral (0); return STRING_LITERAL; }
 	YY_BREAK
 case 88:
 YY_RULE_SETUP
-#line 232 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 232 "kcc/Sources/kcc/lex.l"
 { count (); if (!options.std_c95) werror(E_WCHAR_STRING_C95); yylval.yystr = stringLiteral ('L'); return STRING_LITERAL; }
 	YY_BREAK
 case 89:
 YY_RULE_SETUP
-#line 233 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 233 "kcc/Sources/kcc/lex.l"
 { count (); if (!options.std_c11) werror(E_WCHAR_STRING_C11); yylval.yystr = stringLiteral (0); return STRING_LITERAL; }
 	YY_BREAK
 case 90:
 YY_RULE_SETUP
-#line 234 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 234 "kcc/Sources/kcc/lex.l"
 { count (); if (!options.std_c11) werror(E_WCHAR_STRING_C11); yylval.yystr = stringLiteral ('u'); return STRING_LITERAL; }
 	YY_BREAK
 case 91:
 YY_RULE_SETUP
-#line 235 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 235 "kcc/Sources/kcc/lex.l"
 { count (); if (!options.std_c11) werror(E_WCHAR_STRING_C11); yylval.yystr = stringLiteral ('U'); return STRING_LITERAL; }
 	YY_BREAK
 case 92:
 YY_RULE_SETUP
-#line 236 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 236 "kcc/Sources/kcc/lex.l"
 { count (); yylval.yyint = RIGHT_ASSIGN; return RIGHT_ASSIGN; }
 	YY_BREAK
 case 93:
 YY_RULE_SETUP
-#line 237 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 237 "kcc/Sources/kcc/lex.l"
 { count (); yylval.yyint = LEFT_ASSIGN; return LEFT_ASSIGN; }
 	YY_BREAK
 case 94:
 YY_RULE_SETUP
-#line 238 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 238 "kcc/Sources/kcc/lex.l"
 { count (); yylval.yyint = ADD_ASSIGN; return ADD_ASSIGN; }
 	YY_BREAK
 case 95:
 YY_RULE_SETUP
-#line 239 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 239 "kcc/Sources/kcc/lex.l"
 { count (); yylval.yyint = SUB_ASSIGN; return SUB_ASSIGN; }
 	YY_BREAK
 case 96:
 YY_RULE_SETUP
-#line 240 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 240 "kcc/Sources/kcc/lex.l"
 { count (); yylval.yyint = MUL_ASSIGN; return MUL_ASSIGN; }
 	YY_BREAK
 case 97:
 YY_RULE_SETUP
-#line 241 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 241 "kcc/Sources/kcc/lex.l"
 { count (); yylval.yyint = DIV_ASSIGN; return DIV_ASSIGN; }
 	YY_BREAK
 case 98:
 YY_RULE_SETUP
-#line 242 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 242 "kcc/Sources/kcc/lex.l"
 { count (); yylval.yyint = MOD_ASSIGN; return MOD_ASSIGN; }
 	YY_BREAK
 case 99:
 YY_RULE_SETUP
-#line 243 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 243 "kcc/Sources/kcc/lex.l"
 { count (); yylval.yyint = AND_ASSIGN; return AND_ASSIGN; }
 	YY_BREAK
 case 100:
 YY_RULE_SETUP
-#line 244 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 244 "kcc/Sources/kcc/lex.l"
 { count (); yylval.yyint = XOR_ASSIGN; return XOR_ASSIGN; }
 	YY_BREAK
 case 101:
 YY_RULE_SETUP
-#line 245 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 245 "kcc/Sources/kcc/lex.l"
 { count (); yylval.yyint = OR_ASSIGN; return OR_ASSIGN; }
 	YY_BREAK
 case 102:
 YY_RULE_SETUP
-#line 246 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 246 "kcc/Sources/kcc/lex.l"
 { count (); return RIGHT_OP; }
 	YY_BREAK
 case 103:
 YY_RULE_SETUP
-#line 247 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 247 "kcc/Sources/kcc/lex.l"
 { count (); return LEFT_OP; }
 	YY_BREAK
 case 104:
 YY_RULE_SETUP
-#line 248 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 248 "kcc/Sources/kcc/lex.l"
 { count (); return INC_OP; }
 	YY_BREAK
 case 105:
 YY_RULE_SETUP
-#line 249 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 249 "kcc/Sources/kcc/lex.l"
 { count (); return DEC_OP; }
 	YY_BREAK
 case 106:
 YY_RULE_SETUP
-#line 250 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 250 "kcc/Sources/kcc/lex.l"
 { count (); return PTR_OP; }
 	YY_BREAK
 case 107:
 YY_RULE_SETUP
-#line 251 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 251 "kcc/Sources/kcc/lex.l"
 { count (); return AND_OP; }
 	YY_BREAK
 case 108:
 YY_RULE_SETUP
-#line 252 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 252 "kcc/Sources/kcc/lex.l"
 { count (); return OR_OP; }
 	YY_BREAK
 case 109:
 YY_RULE_SETUP
-#line 253 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 253 "kcc/Sources/kcc/lex.l"
 { count (); return LE_OP; }
 	YY_BREAK
 case 110:
 YY_RULE_SETUP
-#line 254 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 254 "kcc/Sources/kcc/lex.l"
 { count (); return GE_OP; }
 	YY_BREAK
 case 111:
 YY_RULE_SETUP
-#line 255 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 255 "kcc/Sources/kcc/lex.l"
 { count (); return EQ_OP; }
 	YY_BREAK
 case 112:
 YY_RULE_SETUP
-#line 256 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 256 "kcc/Sources/kcc/lex.l"
 { count (); return NE_OP; }
 	YY_BREAK
 case 113:
 YY_RULE_SETUP
-#line 257 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 257 "kcc/Sources/kcc/lex.l"
 { count (); return ';'; }
 	YY_BREAK
 case 114:
 YY_RULE_SETUP
-#line 258 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 258 "kcc/Sources/kcc/lex.l"
 { count (); ignoreTypedefType = 0; return '{'; }
 	YY_BREAK
 case 115:
 YY_RULE_SETUP
-#line 259 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 259 "kcc/Sources/kcc/lex.l"
 { count (); return '}'; }
 	YY_BREAK
 case 116:
 YY_RULE_SETUP
-#line 260 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 260 "kcc/Sources/kcc/lex.l"
 { count (); return ','; }
 	YY_BREAK
 case 117:
 YY_RULE_SETUP
-#line 261 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 261 "kcc/Sources/kcc/lex.l"
 { count (); return ':'; }
 	YY_BREAK
 case 118:
 YY_RULE_SETUP
-#line 262 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 262 "kcc/Sources/kcc/lex.l"
 { count (); return '='; }
 	YY_BREAK
 case 119:
 YY_RULE_SETUP
-#line 263 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 263 "kcc/Sources/kcc/lex.l"
 { count (); ignoreTypedefType = 0; return '('; }
 	YY_BREAK
 case 120:
 YY_RULE_SETUP
-#line 264 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 264 "kcc/Sources/kcc/lex.l"
 { count (); return ')'; }
 	YY_BREAK
 case 121:
 YY_RULE_SETUP
-#line 265 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 265 "kcc/Sources/kcc/lex.l"
 { count (); return '['; }
 	YY_BREAK
 case 122:
 YY_RULE_SETUP
-#line 266 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 266 "kcc/Sources/kcc/lex.l"
 { count (); return ']'; }
 	YY_BREAK
 case 123:
 YY_RULE_SETUP
-#line 267 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 267 "kcc/Sources/kcc/lex.l"
 { count (); return '.'; }
 	YY_BREAK
 case 124:
 YY_RULE_SETUP
-#line 268 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 268 "kcc/Sources/kcc/lex.l"
 { count (); return '&'; }
 	YY_BREAK
 case 125:
 YY_RULE_SETUP
-#line 269 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 269 "kcc/Sources/kcc/lex.l"
 { count (); return '!'; }
 	YY_BREAK
 case 126:
 YY_RULE_SETUP
-#line 270 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 270 "kcc/Sources/kcc/lex.l"
 { count (); return '~'; }
 	YY_BREAK
 case 127:
 YY_RULE_SETUP
-#line 271 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 271 "kcc/Sources/kcc/lex.l"
 { count (); return '-'; }
 	YY_BREAK
 case 128:
 YY_RULE_SETUP
-#line 272 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 272 "kcc/Sources/kcc/lex.l"
 { count (); return '+'; }
 	YY_BREAK
 case 129:
 YY_RULE_SETUP
-#line 273 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 273 "kcc/Sources/kcc/lex.l"
 { count (); return '*'; }
 	YY_BREAK
 case 130:
 YY_RULE_SETUP
-#line 274 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 274 "kcc/Sources/kcc/lex.l"
 { count (); return '/'; }
 	YY_BREAK
 case 131:
 YY_RULE_SETUP
-#line 275 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 275 "kcc/Sources/kcc/lex.l"
 { count (); return '%'; }
 	YY_BREAK
 case 132:
 YY_RULE_SETUP
-#line 276 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 276 "kcc/Sources/kcc/lex.l"
 { count (); return '<'; }
 	YY_BREAK
 case 133:
 YY_RULE_SETUP
-#line 277 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 277 "kcc/Sources/kcc/lex.l"
 { count (); return '>'; }
 	YY_BREAK
 case 134:
 YY_RULE_SETUP
-#line 278 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 278 "kcc/Sources/kcc/lex.l"
 { count (); return '^'; }
 	YY_BREAK
 case 135:
 YY_RULE_SETUP
-#line 279 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 279 "kcc/Sources/kcc/lex.l"
 { count (); return '|'; }
 	YY_BREAK
 case 136:
 YY_RULE_SETUP
-#line 280 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 280 "kcc/Sources/kcc/lex.l"
 { count (); return '?'; }
 	YY_BREAK
 case 137:
 YY_RULE_SETUP
-#line 281 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 281 "kcc/Sources/kcc/lex.l"
 { count (); process_pragma (yytext); }
 	YY_BREAK
 case 138:
 YY_RULE_SETUP
-#line 282 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 282 "kcc/Sources/kcc/lex.l"
 { count (); checkCurrFile (yytext); }
 	YY_BREAK
 case 139:
 /* rule 139 can match eol */
 YY_RULE_SETUP
-#line 284 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 284 "kcc/Sources/kcc/lex.l"
 { count (); }
 	YY_BREAK
 case 140:
 /* rule 140 can match eol */
 YY_RULE_SETUP
-#line 285 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 285 "kcc/Sources/kcc/lex.l"
 { count (); }
 	YY_BREAK
 case 141:
 YY_RULE_SETUP
-#line 286 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 286 "kcc/Sources/kcc/lex.l"
 { count (); }
 	YY_BREAK
 case 142:
 YY_RULE_SETUP
-#line 287 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 287 "kcc/Sources/kcc/lex.l"
 {
   int ch = input ();
 
@@ -2502,15 +2502,15 @@ YY_RULE_SETUP
 	YY_BREAK
 case 143:
 YY_RULE_SETUP
-#line 299 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 299 "kcc/Sources/kcc/lex.l"
 { count (); }
 	YY_BREAK
 case 144:
 YY_RULE_SETUP
-#line 300 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 300 "kcc/Sources/kcc/lex.l"
 ECHO;
 	YY_BREAK
-#line 2513 "/Users/lancelot/Library/Developer/Xcode/DerivedData/kcc-dmlhifhjjrlcwvfntnjcojbkgeei/Build/Intermediates.noindex/kcc.build/Debug/kcc_kcc.build/DerivedSources/lex.yy.c"
+#line 2513 "DerivedSources/lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(asm):
 	yyterminate();
@@ -3519,7 +3519,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 300 "/Users/lancelot/Developer/System/KnightOS/Toolchain/kcc/Sources/kcc/lex.l"
+#line 300 "kcc/Sources/kcc/lex.l"
 
 
 /* flex 2.5.31 undefines yytext_ptr, so we have to define it again */
