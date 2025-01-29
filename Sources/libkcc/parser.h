@@ -10,90 +10,122 @@
 #include <kcc/parser.h>
 
 #include <kcc/ast_node.h>
+#include <kcc/specifiers.h>
 #include <kcc/token_kind.h>
+#include <kcc/type.h>
+
+struct parser {
+	lexer_t lexer;
+
+	// TODO: store (optional) current attributes
+
+	/// Temporary storage for AST nodes.
+	struct ast_storage storage;
+
+	/// The current type
+	struct type type;
+
+	//TODO: store alignment qualifier
+
+	enum parser_mode mode : 1;
+
+	struct specifiers specifiers;
+};
 
 struct type Type;
 struct symbol *Symbol;
 
-struct ast_node *parse_unit();
+ast_t parse_unit(parser_t parser);
+
+void check_specifier(bool is_specifier);
 
 #pragma mark - Attribute Parsing
 
-struct ast_node *parse_attribute_sequence();
+/// Parses a list of attribute specifiers.
+ast_t parse_attribute_sequence(parser_t parser);
+
+/// Parses an attributes in the form `[[...]]`
+ast_t parse_attribute_specifier(parser_t parser);
 
 #pragma mark - Declaration Parsing
 
-struct ast_node *parse_declaration();
+/// Parses a single declaration which may contain many declarators.
+/// - Parameter isDefinitionAllowed: Whether to allow function definitions.
+ast_t parse_declaration(parser_t parser, bool isDefinitionAllowed);
 
-struct ast_node *parse_initializer();
+ast_t parse_initializer(parser_t parser);
 
-struct ast_node *parse_declarator(struct type type);
+ast_t parse_declarator(parser_t parser, struct type type);
 
-struct ast_node *parse_function_declaration(struct type type);
+ast_t parse_function_declaration(parser_t parser, struct type type);
 
 #pragma mark - Expression Parsing
 
-typedef struct ast_node *(*expression_callback)(bool required);
+typedef ast_t (*expression_callback)(parser_t parser, bool required);
 
 /// Parses an expression, including the comma expression.
 ///
 /// If this is within a comma-delimited list, use ``libkcc/parse_assignment_expression`` instead.
-struct ast_node *parse_expression();
+ast_t parse_expression(parser_t parser);
 
 /// Parses an expression, excludes assignment and comma operations.
-struct ast_node *parse_constant_expression();
+ast_t parse_constant_expression(parser_t parser);
 
-struct ast_node *parse_cast_expression(bool required);
+ast_t parse_cast_expression(parser_t parser, bool required);
 
-struct ast_node *parse_multiplicative_expression(bool required);
+ast_t parse_multiplicative_expression(parser_t parser, bool required);
 
-struct ast_node *parse_additive_expression(bool required);
+ast_t parse_additive_expression(parser_t parser, bool required);
 
-struct ast_node *parse_shift_expression(bool required);
+ast_t parse_shift_expression(parser_t parser, bool required);
 
-struct ast_node *parse_relational_expression(bool required);
+ast_t parse_relational_expression(parser_t parser, bool required);
 
-struct ast_node *parse_equality_expression(bool required);
+ast_t parse_equality_expression(parser_t parser, bool required);
 
-struct ast_node *parse_bitwise_and_expression(bool required);
+ast_t parse_bitwise_and_expression(parser_t parser, bool required);
 
-struct ast_node *parse_bitwise_xor_expression(bool required);
+ast_t parse_bitwise_xor_expression(parser_t parser, bool required);
 
-struct ast_node *parse_bitwise_or_expression(bool required);
+ast_t parse_bitwise_or_expression(parser_t parser, bool required);
 
-struct ast_node *parse_logical_and_expression(bool required);
+ast_t parse_logical_and_expression(parser_t parser, bool required);
 
-struct ast_node *parse_logical_or_expression(bool required);
+ast_t parse_logical_or_expression(parser_t parser, bool required);
 
-struct ast_node *parse_conditional_expression(bool required);
+ast_t parse_conditional_expression(parser_t parser, bool required);
 
-struct ast_node *parse_assignment_expression(bool required);
+ast_t parse_assignment_expression(parser_t parser, bool required);
 
 enum ast_kind assignment_operation(enum token_kind token);
 
-struct ast_node *parse_comma_operation(struct ast_node *operand);
+ast_t parse_comma_operation(parser_t parser, ast_t operand);
 
 #pragma mark - Literal Parsing
 
-struct ast_node *parse_string_literal();
+ast_t parse_string_literal(parser_t parser);
 
 #pragma mark - Statement Parsing
 
 /// Parse one or more statements.
-struct ast_node *parse_statements();
+ast_t parse_statements(parser_t parser);
 
-struct ast_node *parse_statement();
+ast_t parse_statement(parser_t parser);
 
-struct ast_node *parse_compound_statement();
+ast_t parse_compound_statement(parser_t parser);
 
-struct ast_node *parse_if_statement();
+ast_t parse_if_statement(parser_t parser);
 
-struct ast_node *parse_print_statement();
+ast_t parse_print_statement(parser_t parser);
 
 /// Parse the declaration of a variable.
-struct ast_node *parse_var_declaration();
+ast_t parse_var_declaration(parser_t parser);
 
-struct ast_node *parse_assignment_statement();
+ast_t parse_assignment_statement(parser_t parser);
+
+//MARK: - External Parsing
+
+ast_t parse_external_declaration(parser_t parser);
 
 #pragma mark - Utility Functions
 

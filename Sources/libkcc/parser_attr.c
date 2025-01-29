@@ -17,12 +17,12 @@
 
 #pragma mark - Attribute Parsing
 
-static struct ast_node *parse_nodiscard_attribute() {
-	struct ast_node *reason = nullptr;
+static ast_t parse_nodiscard_attribute(parser_t parser) {
+	ast_t reason = nullptr;
 
 	if (Token.kind == T_LPAREN) {
 		lexer_advance(Lexer);
-		reason = parse_string_literal();
+		reason = parse_string_literal(parser);
 		rparen();
 	}
 
@@ -30,17 +30,17 @@ static struct ast_node *parse_nodiscard_attribute() {
 	return nullptr;
 }
 
-static struct ast_node *parse_maybe_unused_attribute() {
+static ast_t parse_maybe_unused_attribute(parser_t parser) {
 	//TODO: maybe_unused_attribute node
 	return nullptr;
 }
 
-static struct ast_node *parse_deprecated_attribute() {
-	struct ast_node *reason = nullptr;
+static ast_t parse_deprecated_attribute(parser_t parser) {
+	ast_t reason = nullptr;
 
 	if (Token.kind == T_LPAREN) {
 		lexer_advance(Lexer);
-		reason = parse_string_literal();
+		reason = parse_string_literal(parser);
 		rparen();
 	}
 
@@ -48,24 +48,24 @@ static struct ast_node *parse_deprecated_attribute() {
 	return nullptr;
 }
 
-static struct ast_node *parse_fallthrough_attribute() {
+static ast_t parse_fallthrough_attribute(parser_t parser) {
 	//TODO: Validate using parser context
 	//TODO: fallthrough_attribute node
 	return nullptr;
 }
 
-static struct ast_node *parse_noreturn_attribute() {
+static ast_t parse_noreturn_attribute(parser_t parser) {
 	//TODO: noreturn_attribute node
 	return nullptr;
 }
 
-static struct ast_node *parse_unsequenced_attribute() {
+static ast_t parse_unsequenced_attribute(parser_t parser) {
 	//TODO: Validate using parser context
 	//TODO: unsequenced_attribute node
 	return nullptr;
 }
 
-static struct ast_node *parse_reproducible_attribute() {
+static ast_t parse_reproducible_attribute(parser_t parser) {
 	//TODO: Validate using parser context
 	//TODO: reproducible_attribute node
 	return nullptr;
@@ -89,7 +89,7 @@ static void balance(enum token_kind left, enum token_kind right, int *amount) {
 }
 
 //TODO: I doubt this would actually work
-static struct ast_node *parse_unknown_attribute() {
+static ast_t parse_unknown_attribute(parser_t parser) {
 	int paren = 0;
 	int bracket = 0;
 	int curly = 0;
@@ -108,20 +108,20 @@ static struct ast_node *parse_unknown_attribute() {
 
 #pragma mark - Attribute Sequence Parsing
 
-static struct ast_node *parse_attribute_invocation(enum attribute_kind attribute) {
+static ast_t parse_attribute_invocation(parser_t parser, enum attribute_kind attribute) {
 	switch (attribute) {
-	case A_NODISCARD: return parse_nodiscard_attribute();
-	case A_MAYBE_UNUSED: return parse_maybe_unused_attribute();
-	case A_DEPRECATED: return parse_deprecated_attribute();
-	case A_FALLTHROUGH: return parse_fallthrough_attribute();
-	case A_NORETURN: return parse_noreturn_attribute();
-	case A_UNSEQUENCED: return parse_unsequenced_attribute();
-	case A_REPRODUCIBLE: return parse_reproducible_attribute();
+	case A_NODISCARD: return parse_nodiscard_attribute(parser);
+	case A_MAYBE_UNUSED: return parse_maybe_unused_attribute(parser);
+	case A_DEPRECATED: return parse_deprecated_attribute(parser);
+	case A_FALLTHROUGH: return parse_fallthrough_attribute(parser);
+	case A_NORETURN: return parse_noreturn_attribute(parser);
+	case A_UNSEQUENCED: return parse_unsequenced_attribute(parser);
+	case A_REPRODUCIBLE: return parse_reproducible_attribute(parser);
 	default: return nullptr;
 	}
 }
 
-static bool parse_attribute_scope(enum attribute_scope *scope) {
+static bool parse_attribute_scope(parser_t parser, enum attribute_scope *scope) {
 	identifier();
 
 	if (Token.kind != T_COLON) {
@@ -143,23 +143,27 @@ static bool parse_attribute_scope(enum attribute_scope *scope) {
 	return true;
 }
 
-static struct ast_node *parse_attribute() {
+static ast_t parse_attribute(parser_t parser) {
 	enum attribute_scope scope;
 
-	if (!parse_attribute_scope(&scope))
-		return parse_unknown_attribute();
+	if (!parse_attribute_scope(parser, &scope))
+		return parse_unknown_attribute(parser);
 
 	struct attribute_syntax *attribute_match = attribute_lookup(scope, TokenSource);
 	//TODO: If deprecated warn
 
-	parse_attribute_invocation(attribute_match->attribute);
+	parse_attribute_invocation(parser, attribute_match->attribute);
 }
 
-struct ast_node *parse_attribute_sequence() {
-	struct ast_storage attributes = {};
+ast_t parse_attribute_specifier(parser_t parser) {
+	if (!lexer_match(parser->lexer, T_LBRACKET))
+		return nullptr;
 
-	lbracket();
-	lbracket();
+	if (!lexer_match(parser->lexer, T_LBRACKET)) {
+		//TODO: diagnostic error: missing bracket in attribute specifier
+	}
+
+	struct ast_storage attributes = {};
 
 	bool comma = true;
 	while (Token.kind != T_RBRACKET) {
@@ -167,7 +171,7 @@ struct ast_node *parse_attribute_sequence() {
 			fatal("expected comma after attribute");
 		comma = false;
 
-		struct ast_node *attribute = parse_attribute();
+		ast_t attribute = parse_attribute(parser);
 		ast_insert(&attributes, attribute);
 
 		if (Token.kind == T_COMMA) {
@@ -178,4 +182,9 @@ struct ast_node *parse_attribute_sequence() {
 
 	rbracket();
 	rbracket();
+}
+
+ast_t parse_attribute_sequence(parser_t parser) {
+	//TODO: Parse 0 or more specifiers!
+	return parse_attribute_specifier(parser);
 }

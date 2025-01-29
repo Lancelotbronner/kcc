@@ -1,63 +1,31 @@
 //
 //  parser.c
-//
+//  kcc2
 //
 //  Created by Christophe Bronner on 2024-07-04.
 //
 
 #include "parser.h"
-#include "globals.h"
 
-#include <kcc/diagnostics.h>
-#include <kcc/lexer.h>
+#include <kcc/lexer.h> // Token
 
-struct ast_node *parser_parse() {
-	lexer_advance(Lexer);
-	return parse_unit();
+#include <stdlib.h>
+
+size_t parser_size() {
+	return sizeof(struct parser);
 }
 
-void match(enum token_kind t, char *what) {
-	if (Token.kind != t)
-		fatals("expected", what);
-	lexer_advance(Lexer);
+parser_t parser_alloc() {
+	return malloc(sizeof(struct parser));
 }
 
-void semi() {
-	match(T_SEMICOLON, ";");
+void parser_init(parser_t parser, lexer_t lexer) {
+	*parser = (struct parser){
+		.lexer = lexer,
+	};
 }
 
-void identifier() {
-	match(T_IDENTIFIER, "identifier");
-}
-
-void lparen() {
-	match(T_LPAREN, "(");
-}
-
-void rparen() {
-	match(T_RPAREN, ")");
-}
-
-void lbrace() {
-	match(T_LCURLY, "{");
-}
-
-void rbrace() {
-	match(T_RCURLY, "}");
-}
-
-void lbracket() {
-	match(T_LBRACKET, "[");
-}
-
-void rbracket() {
-	match(T_RBRACKET, "]");
-}
-
-void comma() {
-	match(T_COMMA, ",");
-}
-
-void colon() {
-	match(T_COLON, ":");
+ast_t parser_parse(parser_t parser) {
+	lexer_advance(parser->lexer);
+	return parse_unit(parser);
 }

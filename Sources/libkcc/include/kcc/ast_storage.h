@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <kcc/types.h>
+
 #include <stdbool.h>
 #include <stddef.h>
 
@@ -17,10 +19,10 @@ struct ast_storage {
 	size_t length;
 	union {
 		/// The inline storage.
-		struct ast_node *storage[AST_INLINE_CAPACITY];
+		ast_t storage[AST_INLINE_CAPACITY];
 		struct {
 			/// The allocated storage. Only valid if `length > AST_INLINE_CAPACITY`.
-			struct ast_node **contents;
+			ast_t *contents;
 			/// The capacity of the allocated storage. Only valid if `length > AST_INLINE_CAPACITY`.
 			size_t capacity;
 		};
@@ -35,7 +37,7 @@ size_t ast_length(const struct ast_storage *storage);
 /// - Parameters:
 ///   - storage: The storage to access.
 ///   - i: The element to access.
-struct ast_node *ast_at(const struct ast_storage *storage, size_t i);
+ast_t ast_at(const struct ast_storage *storage, size_t i);
 
 /// Returns whether the specified storage is empty.
 /// - Parameter storage: The storage to query.
@@ -45,7 +47,7 @@ bool ast_empty(const struct ast_storage *storage);
 /// - Parameters:
 ///   - storage: The storage in which to store that node.
 ///   - node: The node to store.
-void ast_insert(struct ast_storage *storage, struct ast_node *node);
+void ast_insert(struct ast_storage *storage, ast_t node);
 
 /// Reserves capacity.
 /// - Parameters:

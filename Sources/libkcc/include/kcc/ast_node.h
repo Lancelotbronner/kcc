@@ -7,12 +7,13 @@
 
 #pragma once
 
-#include <stddef.h>
-
 #include "ast_storage.h"
 #include "token_modifiers.h"
 #include "type.h"
+#include <kcc/types.h>
 #include "symbol.h"
+
+#include <stddef.h>
 
 #pragma mark - Specialized Nodes
 
@@ -30,16 +31,16 @@ struct ast_unary_expression {
 	/// The resulting type of this binary expression, if any.
 	struct type type;
 	/// The value tree.
-	struct ast_node *operand;
+	ast_t operand;
 };
 
 struct ast_binary_expression {
 	/// The resulting type of this binary expression, if any.
 	struct type type;
 	/// Left value tree.
-	struct ast_node *lhs;
+	ast_t lhs;
 	/// Right value tree.
-	struct ast_node *rhs;
+	ast_t rhs;
 };
 
 struct ast_identifier {
@@ -54,44 +55,46 @@ struct ast_compound {
 
 struct ast_if {
 	/// The condition which determines the branch to take.
-	struct ast_node *condition;
+	ast_t condition;
 	/// The contents of the `true` branch.
-	struct ast_node *then_tree;
+	ast_t then_tree;
 	/// The contents of the `false` branch, optional.
-	struct ast_node *else_tree;
+	ast_t else_tree;
 };
 
 struct ast_while {
 	/// The condition for the loop to continue executing.
-	struct ast_node *condition;
+	ast_t condition;
 	/// The contents of the loop.
-	struct ast_node *loop;
+	ast_t loop;
 };
 
 struct ast_for {
 	/// The convenience declaration, optional.
-	struct ast_node *declaration;
+	ast_t declaration;
 	/// The operation to make before the loop starts, optional.
-	struct ast_node *preop;
+	ast_t preop;
 	/// The condition for the loop to continue executing.
-	struct ast_node *condition;
+	ast_t condition;
 	/// The operation to make after every loop execution.
-	struct ast_node *postop;
+	ast_t postop;
 	/// The contents of the loop.
-	struct ast_node *loop;
+	ast_t loop;
 };
 
 struct ast_function {
 	//TODO: return type
 	/// The associated symbol of the function.
 	struct symbol *symbol;
+	/// The contents of the function's declaration, optional.
+	ast_t declaration;
 	/// The contents of the function's definition, optional.
-	struct ast_node *definition;
+	ast_t definition;
 };
 
 struct ast_call_expression {
 	/// The expression being called.
-	struct ast_node *operand;
+	ast_t operand;
 	//TODO: Use ast_storage for more than one arguments
 	/// The arguments of the function, if any.
 	struct ast_storage arguments;
@@ -100,7 +103,7 @@ struct ast_call_expression {
 struct ast_declaration {
 	/// The base type of this declaration.
 	struct type type;
-	struct ast_node *type_tree;
+	ast_t type_tree;
 	/// The declarators of this declaration.
 	struct ast_storage declarators;
 };
@@ -111,21 +114,21 @@ struct ast_declarator {
 	/// The symbol of this declarator, if any.
 	struct symbol *symbol;
 	/// The inner declarator of this declarator.
-	struct ast_node *declarator;
+	ast_t declarator;
 	/// The initialization of this declarator, if any..
-	struct ast_node *initializer;
+	ast_t initializer;
 };
 
 struct ast_pointer_declarator {
 	/// The inner declarator of this declarator.
-	struct ast_node *declarator;
+	ast_t declarator;
 	//TODO: attribute list
 	//TODO: type qualifiers
 };
 
 struct ast_group_declarator {
 	/// The inner declarator of this declarator.
-	struct ast_node *declarator;
+	ast_t declarator;
 };
 
 struct ast_identifier_declarator {
@@ -136,9 +139,9 @@ struct ast_identifier_declarator {
 
 struct ast_array_declarator {
 	/// The inner declarator of this declarator.
-	struct ast_node *declarator;
+	ast_t declarator;
 	/// The expression of the array's size.
-	struct ast_node *size_tree;
+	ast_t size_tree;
 	//TODO: type qualifiers
 	//TODO: static flag
 	//TODO: variable length flag
@@ -146,38 +149,38 @@ struct ast_array_declarator {
 
 struct ast_function_declarator {
 	/// The inner declarator of this declarator.
-	struct ast_node *declarator;
+	ast_t declarator;
 	//TODO: attribute list
 };
 
 struct ast_generic_expression {
 	/// The expression whose type controls the generic selection.
-	struct ast_node *control;
+	ast_t control;
 	/// The generic associations.
 	struct ast_storage associations;
 };
 
 struct ast_generic_association {
 	/// The type expression or nil if its a default clause.
-	struct ast_node *key;
+	ast_t key;
 	/// The expression associated with the type.
-	struct ast_node *value;
+	ast_t value;
 };
 
 struct ast_parenthesized_expression {
 	/// The contents of the parenthesis.
-	struct ast_node *expression;
+	ast_t expression;
 };
 
 struct ast_comma_expression {
-	struct ast_node *discarded;
-	struct ast_node *returned;
+	ast_t discarded;
+	ast_t returned;
 };
 
 struct ast_cast_expression {
 	struct type type;
-	struct ast_node *operand;
-	struct ast_node *type_tree;
+	ast_t operand;
+	ast_t type_tree;
 };
 
 struct ast_string_literal {

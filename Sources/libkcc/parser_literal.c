@@ -25,7 +25,7 @@ static enum token_encoding_modifier parse_encoding_prefix() {
 		return ENCODING_WIDE;
 }
 
-struct ast_node *parse_string_literal() {
+ast_t parse_string_literal(parser_t parser) {
 	enum token_encoding_modifier encoding = ENCODING_NONE;
 
 	if (Token.kind == T_IDENTIFIER) {

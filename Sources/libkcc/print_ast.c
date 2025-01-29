@@ -9,9 +9,9 @@
 
 #include <stdio.h>
 
-typedef void (*print_callback)(struct ast_node *node);
+typedef void (*print_callback)(ast_t node);
 
-void print_node(struct tprinter *printer, struct ast_node *node, char *name, bool leaf) {
+void print_node(struct tprinter *printer, ast_t node, char *name, bool leaf) {
 	if (!node) return;
 	tprinter_item(printer, leaf);
 	if (!print_header(node, name))
@@ -37,7 +37,7 @@ void print_nodes(struct tprinter *printer, struct ast_storage *nodes, bool leaf)
 
 #pragma mark - AST Summary Printing
 
-void print_node_summary(struct ast_node *node) {
+void print_node_summary(ast_t node) {
 	switch (node->op) {
 		// Translation Unit
 	case N_UNIT:
@@ -118,7 +118,7 @@ void print_node_summary(struct ast_node *node) {
 	}
 }
 
-void print_node_body(struct tprinter *printer, struct ast_node *node) {
+void print_node_body(struct tprinter *printer, ast_t node) {
 	switch (node->op) {
 	case N_CAST:
 		print_node(printer, node->cast_expression.type_tree, "type", false);

@@ -17,7 +17,7 @@ size_t ast_length(const struct ast_storage *storage) {
 	return storage->length;
 }
 
-struct ast_node *ast_at(const struct ast_storage *storage, size_t i) {
+ast_t ast_at(const struct ast_storage *storage, size_t i) {
 	if (storage->length < AST_INLINE_CAPACITY)
 		return storage->storage[i];
 	if (!storage->contents)
@@ -29,7 +29,7 @@ bool ast_empty(const struct ast_storage *storage) {
 	return !storage->length;
 }
 
-void ast_insert(struct ast_storage *storage, struct ast_node *node) {
+void ast_insert(struct ast_storage *storage, ast_t node) {
 	if (storage->length < AST_INLINE_CAPACITY) {
 		storage->storage[storage->length++] = node;
 		return;
@@ -58,7 +58,7 @@ void ast_reserve(struct ast_storage *storage, size_t capacity) {
 	}
 
 	// We have to allocate new storage and move the inline over
-	struct ast_node **contents = malloc(capacity * sizeof(struct ast_node *));
+	ast_t *contents = malloc(capacity * sizeof(ast_t ));
 	memcpy(contents, &storage->storage, storage->length);
 	storage->contents = contents;
 	storage->capacity = capacity;

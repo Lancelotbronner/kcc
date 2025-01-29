@@ -12,12 +12,12 @@
 
 #pragma mark - Type Specifier Parsing
 
-static struct ast_node *parse_bitint_specifier() {
+static ast_t parse_bitint_specifier(parser_t parser) {
 	// Consume the keyword
 	lexer_advance(Lexer);
 
 	lparen();
-	struct ast_node *size = parse_constant_expression();
+	ast_t size = parse_constant_expression(parser);
 	rparen();
 
 	//TODO: Modify type
@@ -27,10 +27,10 @@ static struct ast_node *parse_bitint_specifier() {
 	return 0;
 }
 
-static struct ast_node *parse_type_component() {
+static ast_t parse_type_component(parser_t parser) {
 	switch (Token.kind) {
 		// Specifier
-	case T_BITINT: return parse_bitint_specifier();
+	case T_BITINT: return parse_bitint_specifier(parser);
 	case T_VOID:
 	case T_CHAR:
 	case T_SHORT:
@@ -58,7 +58,7 @@ static struct ast_node *parse_type_component() {
 		// Enums
 	case kenum:
 		// Atomics
-	case katomic:
+	case T_ATOMIC:
 		// Type Of
 	case ktypeof:
 	case ktypeof_unqual:
@@ -69,7 +69,7 @@ static struct ast_node *parse_type_component() {
 
 #pragma mark - Type Parsing
 
-struct ast_node *parse_type() {
+ast_t parse_type(parser_t parser) {
 	Type = (struct type){};
-	return parse_type_component();
+	return parse_type_component(parser);
 }

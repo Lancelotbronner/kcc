@@ -38,13 +38,13 @@ void token_print(struct token token) {
  }
  */
 
-void print_name(struct ast_node *node) {
+void print_name(ast_t node) {
 	char *nameof_node = node ? ast_nameof(node->op) : "<null>";
 	fputs(nameof_node ? nameof_node : "<unnamed>", stdout);
 	putchar(' ');
 }
 
-bool print_header(struct ast_node *node, char *name) {
+bool print_header(ast_t node, char *name) {
 	if (name && *name) {
 		fputs(name, stdout);
 		putchar(':');
@@ -60,7 +60,7 @@ bool print_header(struct ast_node *node, char *name) {
 
 #pragma mark - Node Printers
 
-void print_ast(struct ast_node *node) {
+void print_ast(ast_t node) {
 	struct tprinter printer = {};
 	print_node(&printer, node, "", true);
 }

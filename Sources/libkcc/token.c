@@ -94,7 +94,7 @@ enum token_kind token_keyword(char const *identifier, size_t length) {
 		switch (token) {
 		case 'doub': if (token2 == '\0\0le') return T_DOUBLE; else break;
 		case 'exte': if (token2 == '\0\0rn') return kextern; else break;
-		case 'inli': if (token2 == '\0\0ne') return kinline; else break;
+		case 'inli': if (token2 == '\0\0ne') return T_INLINE; else break;
 		case 'retu': if (token2 == '\0\0rn') return T_RETURN; else break;
 		case 'sign': if (token2 == '\0\0ed') return T_SIGNED; else break;
 		case 'size': if (token2 == '\0\0of') return T_SIZEOF; else break;
@@ -115,7 +115,7 @@ enum token_kind token_keyword(char const *identifier, size_t length) {
 		case 'defa': if (token2 == '\0ult') return T_DEFAULT; else break;
 		case 'null': if (token2 == '\0ptr') return T_NULLPTR; else break;
 		case 'type': if (token2 == '\0def') return ktypedef; else break;
-		case '_Ato': if (token2 == '\0mic') return katomic; else break;
+		case '_Ato': if (token2 == '\0mic') return T_ATOMIC; else break;
 		case '_Bit': if (token2 == '\0Int') return T_BITINT; else break;
 		case '_Pra': if (token2 == '\0gma') return T_PRAGMA; else break;
 		case 'fort': if (token2 == '\0ran') return kfortran; else break;
@@ -124,9 +124,9 @@ enum token_kind token_keyword(char const *identifier, size_t length) {
 	case 8:
 		switch (token) {
 		case 'regi': if (token2 == 'ster') return kregister; else break;
-		case 'rest': if (token2 == 'rict') return krestrict; else break;
+		case 'rest': if (token2 == 'rict') return T_RESTRICT; else break;
 		case 'unsi': if (token2 == 'gned') return T_UNSIGNED; else break;
-		case 'vola': if (token2 == 'tile') return kvolatile; else break;
+		case 'vola': if (token2 == 'tile') return T_VOLATILE; else break;
 		case '_Ali':
 			switch (token2) {
 			case 'gnas': return T_ALIGNAS;
@@ -138,7 +138,7 @@ enum token_kind token_keyword(char const *identifier, size_t length) {
 		break;
 	case 9: token3 >>= 24;
 		if (token == '_Nor' && token2 == 'etur' && token3 == 'n')
-			return knoreturn;
+			return T_NORETURN;
 		break;
 	case 10: token3 >>= 16;
 		if (token == '_Dec' && token2 == 'imal')

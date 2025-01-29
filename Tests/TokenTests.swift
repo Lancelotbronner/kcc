@@ -24,7 +24,7 @@ struct TokenTests {
 		#expect(token_keyword("double", 6) == T_DOUBLE)
 		#expect(token_keyword("nullptr", 7) == T_NULLPTR)
 		#expect(token_keyword("unsigned", 8) == T_UNSIGNED)
-		#expect(token_keyword("_Noreturn", 9) == knoreturn)
+		#expect(token_keyword("_Noreturn", 9) == T_NORETURN)
 		#expect(token_keyword("_Imaginary", 10) == kimaginary)
 		#expect(token_keyword("_Decimal32", 10) == T_DECIMAL32)
 		#expect(token_keyword("_Decimal64", 10) == T_DECIMAL64)

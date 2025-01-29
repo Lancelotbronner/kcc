@@ -10,15 +10,15 @@
 #include <kcc/ast.h>
 #include <kcc/lexer.h>
 
-struct ast_node *parse_unit() {
+ast_t parse_unit(parser_t parser) {
 	struct ast_storage declarations = {};
 
 	while (Token.kind != T_EOF) {
-		struct ast_node *declaration = parse_declaration();
+		ast_t declaration = parse_declaration(parser, true);
 		ast_insert(&declarations, declaration);
 	}
 
-	struct ast_node *node = ast_alloc();
+	ast_t node = ast_alloc();
 	ast_unit(node, declarations);
 	return node;
 }

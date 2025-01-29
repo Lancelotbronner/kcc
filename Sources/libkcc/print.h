@@ -26,10 +26,10 @@ void tprinter_unindent(struct tprinter *printer);
 
 void print_indentation(int depth);
 
-void print_name(struct ast_node *node);
-bool print_header(struct ast_node *node, char *name);
-void print_node_summary(struct ast_node *node);
-void print_node_body(struct tprinter *printer, struct ast_node *node);
+void print_name(ast_t node);
+bool print_header(ast_t node, char *name);
+void print_node_summary(ast_t node);
+void print_node_body(struct tprinter *printer, ast_t node);
 
-void print_node(struct tprinter *printer, struct ast_node *node, char *name, bool leaf);
+void print_node(struct tprinter *printer, ast_t node, char *name, bool leaf);
 void print_nodes(struct tprinter *printer, struct ast_storage *nodes, bool leaf);

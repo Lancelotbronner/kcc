@@ -12,11 +12,11 @@
 #include <kcc/lexer.h>
 #include <kcc/symtable.h>
 
-struct ast_node *parse_statements() {
-	struct ast_node *tree = parse_statement();
-	struct ast_node *node, *tmp;
+ast_t parse_statements(parser_t parser) {
+	ast_t tree = parse_statement(parser);
+	ast_t node, tmp;
 
-	while ((node = parse_statement())) {
+	while ((node = parse_statement(parser))) {
 		// If we already had a node, turn it into a list
 		if (tree->op != N_STATEMENTS) {
 			tmp = tree;
@@ -31,12 +31,12 @@ struct ast_node *parse_statements() {
 	return tree;
 }
 
-struct ast_node *parse_statement() {
+ast_t parse_statement(parser_t parser) {
 	switch (Token.kind) {
 		//TODO: T_INT is a declaration, which isn't included in statements
-	case T_INT: return parse_var_declaration();
-	case T_IDENTIFIER: return parse_assignment_statement();
-	case T_LCURLY: return parse_compound_statement();
+	case T_INT: return parse_var_declaration(parser);
+	case T_IDENTIFIER: return parse_assignment_statement(parser);
+	case T_LCURLY: return parse_compound_statement(parser);
 	case T_EOF: return nullptr;
 	default: fatalt("Unexpected token in statement");
 	}
@@ -44,8 +44,8 @@ struct ast_node *parse_statement() {
 
 #pragma mark - Statement Parsers
 
-struct ast_node *parse_compound_statement() {
-	struct ast_node *tree, *node;
+ast_t parse_compound_statement(parser_t parser) {
+	ast_t tree, node;
 
 	// Require a left curly bracket
 	lbrace();
@@ -60,7 +60,7 @@ struct ast_node *parse_compound_statement() {
 			return tree;
 		}
 
-		node = parse_statement();
+		node = parse_statement(parser);
 		if (!node) break;
 		ast_insert(&tree->compound.contents, node);
 	}
@@ -68,45 +68,45 @@ struct ast_node *parse_compound_statement() {
 	return tree;
 }
 
-struct ast_node *parse_if_statement() {
-	struct ast_node *condition, *then_tree, *else_tree = NULL;
+ast_t parse_if_statement(parser_t parser) {
+	ast_t condition, then_tree, else_tree = NULL;
 
 	match(T_IF, "if");
 
 	lparen();
-	condition = parse_expression();
+	condition = parse_expression(parser);
 	rparen();
 
-	then_tree = parse_statement();
+	then_tree = parse_statement(parser);
 
 	if (Token.kind == T_ELSE) {
 		lexer_advance(Lexer);
-		else_tree = parse_statement();
+		else_tree = parse_statement(parser);
 	}
 
-	struct ast_node *node = ast_alloc();
+	ast_t node = ast_alloc();
 	ast_if(node, condition, then_tree, else_tree);
 	return node;
 }
 
-struct ast_node *parse_while_statement() {
-	struct ast_node *condition, *loop = NULL;
+ast_t parse_while_statement(parser_t parser) {
+	ast_t condition, loop = NULL;
 
 	match(T_WHILE, "while");
 
 	lparen();
-	condition = parse_expression();
+	condition = parse_expression(parser);
 	rparen();
 
-	loop = parse_statement();
+	loop = parse_statement(parser);
 
-	struct ast_node *node = ast_alloc();
+	ast_t node = ast_alloc();
 	ast_while(node, condition, loop);
 	return node;
 }
 
-struct ast_node *parse_for_statement() {
-	struct ast_node *declaration, *preop, *condition, *postop, *loop = NULL;
+ast_t parse_for_statement(parser_t parser) {
+	ast_t declaration, preop, condition, postop, loop = NULL;
 
 	match(T_FOR, "for");
 	lparen();
@@ -114,23 +114,23 @@ struct ast_node *parse_for_statement() {
 	//TODO: parse the declaration
 	// If we have a declaration, preop becomes mandatory
 	declaration = nullptr;
-	preop = parse_expression();
+	preop = parse_expression(parser);
 	semi();
 
-	condition = parse_expression();
+	condition = parse_expression(parser);
 	semi();
 
-	postop = parse_expression();
+	postop = parse_expression(parser);
 
 	rparen();
-	loop = parse_statement();
+	loop = parse_statement(parser);
 
-	struct ast_node *node = ast_alloc();
+	ast_t node = ast_alloc();
 	ast_for(node, declaration, preop, condition, postop, loop);
 	return node;
 }
 
-struct ast_node *parse_var_declaration() {
+ast_t parse_var_declaration(parser_t parser) {
 	struct symbol *symbol;
 	struct type type;
 
@@ -146,8 +146,8 @@ struct ast_node *parse_var_declaration() {
 	return nullptr;
 }
 
-struct ast_node *parse_assignment_statement() {
-	struct ast_node *left, *right, *tree;
+ast_t parse_assignment_statement(parser_t parser) {
+	ast_t left, right, tree;
 	struct symbol *symbol;
 
 	// Ensure we have an identifier
@@ -166,7 +166,7 @@ struct ast_node *parse_assignment_statement() {
 	match(T_ASSIGN, "=");
 
 	// Parse the following expression
-	left = parse_expression();
+	left = parse_expression(parser);
 
 	// Make an assignment AST tree
 	tree = ast_alloc();

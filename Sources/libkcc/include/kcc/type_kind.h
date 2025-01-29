@@ -1,6 +1,6 @@
 //
 //  type.h
-//  
+//  kcc
 //
 //  Created by Christophe Bronner on 2024-07-07.
 //
@@ -12,6 +12,7 @@ enum type_kind : unsigned char {
 
 	// Special
 	TYP_VOID,
+	TYP_NULLPTR,
 
 	// Integers
 	TYP_BOOL,
@@ -19,13 +20,13 @@ enum type_kind : unsigned char {
 	TYP_SHORT,
 	TYP_INT,
 	TYP_LONG,
-	TYP_LONGLONG,
+	TYP_LLONG,
 	TYP_BITINT,
 
 	// Floats
 	TYP_FLOAT,
 	TYP_DOUBLE,
-	TYP_LONGDOUBLE,
+	TYP_LDOUBLE,
 
 	// Decimals
 	TYP_DECIMAL32,
@@ -33,6 +34,13 @@ enum type_kind : unsigned char {
 	TYP_DECIMAL128,
 
 	// Pointers
-	TYP_VOIDP,
-	TYP_NULLP,
+	TYP_POINTER,
+	TYP_ARRAY,
+	TYP_FUNCTION,
+
+	// Compounds
+	TYP_STRUCT,
+	TYP_ENUM,
+	TYP_BITFIELD,
+	TYP_ATOMIC,
 };
